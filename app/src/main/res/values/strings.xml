@@ -1,0 +1,123 @@
+<resources>
+    <string name="app_name">ProjectMppl</string>
+    <string name="riwayat">Riwayat</string>
+    <string name="beranda">Beranda</string>
+    <string name="profil">Profil</string>
+    <string name="tentang">Tentang</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="registrasi">Registrasi</string>
+    <string name="nama">Nama</string>
+    <string name="email">Email</string>
+    <string name="no_handphone">No Handphone</string>
+    <string name="pekerjaan">Pekerjaan</string>
+    <string name="sandi">Sandi</string>
+    <string name="konfirmasi_kata_sandi">Konfirmasi Kata Sandi</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_message_name_empty">Nama belum diisi!</string>
+    <string name="error_message_prodi_empty">Prodi belum diisi!</string>
+    <string name="error_message_noHP_empty">No HP belum diisi!</string>
+    <string name="error_message_pekerjaan_empty">Pekerjaan belum diisi!</string>
+    <string name="error_message_username_empty">Username belum diisi!</string>
+    <string name="error_message_password_empty">Password belum diisi!</string>
+    <string name="error_message_confirmPassword_empty">Password belum diisi!</string>
+    <string name="error_message_passwordNotEqual_empty">Password tidak cocok!</string>
+    <string name="logout">Logout</string>
+    <string name="welcome_to_trashy">Welcome to Trashy</string>
+
+    <array name="pekerjaan">
+        <item>Staff</item>
+        <item>Mahasiswa</item>
+    </array>
+
+    <string name="komputer">Komputer</string>
+    <string name="hp">Handphone</string>
+    <string name="prumah">Perlengkapan Rumah</string>
+    <string name="pakaian">Pakaian</string>
+
+    <string name="hardisk">Hardisk</string>
+    <string name="mouse">Mouse</string>
+    <string name="pc">PC</string>
+    <string name="speaker">Speaker</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="printer">Printer</string>
+
+    <string name="telepon_seluler">Telepon Seluler</string>
+    <string name="kabeldanCharger">Kabel dan Charger</string>
+    <string name="casing">Casing</string>
+    <string name="memory_card">Memory Card</string>
+    <string name="power_bank">Power Bank</string>
+    <string name="earphone">Earphone</string>
+
+    <string name="tv">TV</string>
+    <string name="kulkas">Kulkas</string>
+    <string name="mesin_cuci">Mesin Cuci</string>
+    <string name="kipas">Kipas</string>
+
+    <string name="kaos">Kaos</string>
+    <string name="kemeja">Kemeja</string>
+    <string name="jaket">Jaket</string>
+    <string name="selimut">Selimut</string>
+    <string name="sepatu">Sepatu</string>
+    <string name="tas">Tas</string>
+
+    <string name="bagus">Bagus</string>
+    <string name="rusak_ringan">Rusak Ringan</string>
+    <string name="rusak_berat">Rusak Berat</string>
+
+    <string name="title_activity_elektronik">Elektronik</string>
+    <string name="title_beranda">Beranda</string>
+    <string name="title_riwayat">Riwayat</string>
+    <string name="title_profil">Profil</string>
+    <string name="title_tentang">Tentang</string>
+    <string name="title_activity_tentang">Tentang</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_isitentang">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</string>
+    <string name="title_activity_nonorganik">Nonorganik</string>
+    <string name="title_activity_komputer">Komputer</string>
+    <string name="title_activity_elektronik1">Elektronik1</string>
+    <string name="title_activity_kantong">kantong</string>
+    <string name="title_activity_kantongantar">Kantongantar</string>
+    <string name="title_activity_kantong_jemput">kantongJemput</string>
+    <string name="kantong1">Non-Organik </string>
+    <string name="kantong11">Total berat : </string>
+    <string name="kantong_poin">Poin : </string>
+    <string name="batal">Batal</string>
+    <string name="metode">Metode</string>
+    <string name="antar">Antar</string>
+    <string name="jemput">Jemput</string>
+    <string name="charger">Charger</string>
+    <string name="jumlah">Jumlah</string>
+    <string name="kondisi">Kondisi</string>
+    <string name="title_activity_profil">profil</string>
+    <string name="poinku">Poin ku</string>
+    <string name="kuponku">Kupon ku</string>
+    <string name="title_activity_norganik">Norganik</string>
+    <string name="title_activity_non__organik">Non_Organik</string>
+    <string-array name="lokasi">
+        <item>Lokasi</item>
+        <item>GD 9</item>
+        <item>GD 5</item>
+        <item>GD 7</item>
+        <item>POST 1</item>
+    </string-array>
+
+
+</resources>

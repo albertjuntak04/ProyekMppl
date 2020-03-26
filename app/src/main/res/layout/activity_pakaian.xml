@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp">
+            <ImageView
+                android:id="@+id/img_pakaian"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                app:srcCompat="@drawable/pakaian" />
+
+            <TextView
+                android:id="@+id/txt_pakaian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pakaian"
+                android:textSize="24sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorKategori"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pilih sampah yang ingin ditukar:"
+                android:textSize="18sp"
+                android:textColor="@color/text"
+                android:textAlignment="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorList"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/txt_kaos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/kaos"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+
+            <TextView
+                android:id="@+id/txt_kemeja"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/kemeja"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+
+            <TextView
+                android:id="@+id/txt_jaket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/jaket"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+
+            <TextView
+                android:id="@+id/txt_selimut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/selimut"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+
+            <TextView
+                android:id="@+id/txt_sepatu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sepatu"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+
+            <TextView
+                android:id="@+id/txt_tas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tas"
+                android:textSize="20sp"
+                android:textColor="@color/text"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="4dp">
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jenis Sampah"
+        android:textSize="35dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorlatar"
+        android:layout_marginTop="3dp">
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="41dp"
+            tools:layout_editor_absoluteY="148dp"
+            tools:ignore="MissingConstraints">
+
+
+            <RadioButton
+                android:id="@+id/plastik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plastik"
+                tools:layout_editor_absoluteX="57dp"
+                tools:layout_editor_absoluteY="123dp" />
+
+            <RadioButton
+                android:id="@+id/kertas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kertas"
+                tools:layout_editor_absoluteX="57dp"
+                tools:layout_editor_absoluteY="163dp" />
+
+            <RadioButton
+                android:id="@+id/botol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Botol"
+                tools:layout_editor_absoluteX="57dp"
+                tools:layout_editor_absoluteY="199dp" />
+
+            <RadioButton
+                android:id="@+id/besi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Besi"
+                tools:layout_editor_absoluteX="57dp"
+                tools:layout_editor_absoluteY="233dp" />
+
+            <RadioButton
+                android:id="@+id/aluminium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aluminium"
+                tools:layout_editor_absoluteX="57dp"
+                tools:layout_editor_absoluteY="268dp" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="13dp">
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Berat Sampah"
+            android:textSize="20dp"
+            />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="52dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kg" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:background="@color/colorbotton"
+        android:text="Kantong"
+        android:textColor="@color/colortext"
+        android:layout_marginRight="10dp"/>
+
+
+</LinearLayout>
