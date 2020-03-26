@@ -27,22 +27,23 @@
 
         <ImageView
             android:id="@+id/dashboard_iv_kantong"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="15dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
 
         <ImageView
             android:id="@+id/dashboard_iv_profile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/woman" />
+            app:srcCompat="@drawable/woman"
+            />
 
         <TextView
             android:id="@+id/dashboard_tv_name"
@@ -166,12 +167,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:layout_margin="10dp">
+        android:layout_marginTop="5dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -179,8 +180,8 @@
             </TextView>
             <ImageView
                 android:id="@+id/img_nonorganik"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/nonorga"
                 android:layout_gravity="center_horizontal"></ImageView>
         </LinearLayout>
@@ -188,7 +189,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="5dp">
+            android:padding="10dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,8 +197,8 @@
             </TextView>
             <ImageView
                 android:id="@+id/img_elektronik"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/electronic"
                 android:layout_gravity="center_horizontal"></ImageView>
         </LinearLayout>
@@ -205,7 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="5dp">
+            android:padding="10dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,8 +214,8 @@
             </TextView>
             <ImageView
                 android:id="@+id/img_pakaian"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/pakaian"
                 android:layout_gravity="center_horizontal"></ImageView>
         </LinearLayout>

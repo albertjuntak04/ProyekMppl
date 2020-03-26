@@ -8,30 +8,31 @@ import android.os.Bundle;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListSampahAdapter;
-import com.example.projectmppl.data.PakaianData;
+import com.example.projectmppl.data.KomputerData;
 import com.example.projectmppl.model.Sampah;
 
 import java.util.ArrayList;
 
-public class PakaianActivity extends AppCompatActivity {
-    private RecyclerView rvPakaian;
+public class KomputerActivity extends AppCompatActivity {
+    private RecyclerView rvKomputer;
     private ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pakaian);
+        setContentView(R.layout.activity_komputer);
 
-        rvPakaian = findViewById(R.id.rv_pakaian);
-        rvPakaian.setHasFixedSize(true);
+        rvKomputer = findViewById(R.id.rv_komputer);
+        rvKomputer.setHasFixedSize(true);
 
-        list.addAll(PakaianData.getListData());
-        showRecylerView();
+        list.addAll(KomputerData.getListData());
+        showRecylerview();
+
     }
 
-    private void showRecylerView(){
-        rvPakaian.setLayoutManager(new LinearLayoutManager(this));
+    private void showRecylerview(){
+        rvKomputer.setLayoutManager(new LinearLayoutManager(this));
         ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this);
-        rvPakaian.setAdapter(listSampahAdapter);
+        rvKomputer.setAdapter(listSampahAdapter);
     }
 }

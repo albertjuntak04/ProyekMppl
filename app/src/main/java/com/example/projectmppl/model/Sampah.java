@@ -1,6 +1,6 @@
 package com.example.projectmppl.model;
 
-public class Pakaian {
+public class Sampah {
     private String name;
 
     public String getName() {

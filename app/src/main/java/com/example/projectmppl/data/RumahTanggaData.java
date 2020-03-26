@@ -4,22 +4,25 @@ import com.example.projectmppl.model.Sampah;
 
 import java.util.ArrayList;
 
-public class PakaianData {
+public class RumahTanggaData {
     private static String[] pakaianNames= {
-            "Kaos",
-            "Kemeja",
-            "jaket",
-            "Selimut",
-            "Sepatu",
-            "Tas"
+            "TV",
+            "Kulkas",
+            "Mesin Cuci",
+            "Vacuum cleaner",
+            "Kamera",
+            "Jam",
+            "Blender",
+            "Dispencer",
+            "Setrika"
     };
 
     public static ArrayList<Sampah> getListData() {
         ArrayList<Sampah> list = new ArrayList<>();
         for (int position = 0; position < pakaianNames.length; position++) {
-            Sampah pakaian = new Sampah();
-            pakaian.setName(pakaianNames[position]);
-            list.add(pakaian);
+            Sampah rumahTangga = new Sampah();
+            rumahTangga.setName(pakaianNames[position]);
+            list.add(rumahTangga);
         }
         return list;
     }

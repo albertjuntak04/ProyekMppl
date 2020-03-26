@@ -63,46 +63,12 @@
             android:layout_gravity="center_horizontal"
             android:background="@color/colorList"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txt_tv"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="3dp"
-                android:text="@string/tv"
-                android:textColor="@color/text"
-                android:textSize="20sp" />
+                android:id="@+id/rv_rumahtangga"
+                tools:listitem="@layout/item_daftar_sampah"></androidx.recyclerview.widget.RecyclerView>
 
-            <TextView
-                android:id="@+id/txt_kulkas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="3dp"
-                android:text="@string/kulkas"
-                android:textColor="@color/text"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/txt_mesin_cuci"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="3dp"
-                android:text="@string/mesin_cuci"
-                android:textColor="@color/text"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/txt_kipas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="3dp"
-                android:text="@string/kipas"
-                android:textColor="@color/text"
-                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

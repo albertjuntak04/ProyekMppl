@@ -20,16 +20,16 @@
             android:name=".activity.LoginRegister"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.PerlengkapanRumahTanggaActivity"
+            android:name=".activity.jenissampah.PerlengkapanRumahTanggaActivity"
             android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
         <activity android:name=".activity.jenissampah.PakaianActivity"
             android:parentActivityName=".activity.MainActivity"/>
         <activity android:name=".activity.KondisiActivity" />
         <activity
-            android:name=".activity.KomputerActivity"
+            android:name=".activity.jenissampah.KomputerActivity"
             android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
         <activity
-            android:name=".activity.HandphoneActivity"
+            android:name=".activity.jenissampah.HandphoneActivity"
             android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
         <activity
             android:name=".activity.jenissampah.ElektronikActivity"

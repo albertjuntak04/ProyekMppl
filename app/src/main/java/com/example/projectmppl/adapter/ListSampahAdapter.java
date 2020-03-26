@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KondisiActivity;
-import com.example.projectmppl.model.Pakaian;
+import com.example.projectmppl.model.Sampah;
 
 import java.util.ArrayList;
 
-public class ListPakaianAdapter extends RecyclerView.Adapter<ListPakaianAdapter.ListViewHolder> {
-    private ArrayList<Pakaian> listPakaian;
+public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.ListViewHolder> {
+    private ArrayList<Sampah> listPakaian;
     private Context context;
 
-    public ListPakaianAdapter(ArrayList<Pakaian> list, Context context){
+    public ListSampahAdapter(ArrayList<Sampah> list, Context context){
         this.listPakaian = list;
         this.context = context;
     }
@@ -34,7 +34,7 @@ public class ListPakaianAdapter extends RecyclerView.Adapter<ListPakaianAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        Pakaian pakaian = listPakaian.get(position);
+        Sampah pakaian = listPakaian.get(position);
         holder.namePakaian.setText(pakaian.getName());
         holder.namePakaian.setOnClickListener(new View.OnClickListener() {
             @Override

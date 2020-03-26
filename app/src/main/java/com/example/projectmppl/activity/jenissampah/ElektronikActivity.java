@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.activity.HandphoneActivity;
-import com.example.projectmppl.activity.KomputerActivity;
-import com.example.projectmppl.activity.PerlengkapanRumahTanggaActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

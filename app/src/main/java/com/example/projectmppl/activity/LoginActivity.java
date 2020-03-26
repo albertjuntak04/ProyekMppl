@@ -61,11 +61,11 @@ public class LoginActivity extends AppCompatActivity {
         initFirebase();
 
         ButterKnife.bind(this);
-        loggedIn = isLoggedIn();
-        if (loggedIn) {
-            //  go to dashboard
-            goToDashboard();
-        }
+//        loggedIn = isLoggedIn();
+//        if (loggedIn) {
+//            //  go to dashboard
+//            goToDashboard();
+//        }
         hideProgress();
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
