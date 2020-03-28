@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    tools:context=".activity.KantongActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/colorlatar"
-            android:layout_margin="6dp">
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="6dp">
             <TextView
                 android:id="@+id/jenis_sampah"
                 android:layout_width="match_parent"
@@ -90,6 +93,15 @@
                     android:layout_marginStart="10dp"
                     android:text="0"></TextView>
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:indeterminateDrawable="@drawable/custom_progressbar"
+                ></ProgressBar>
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -97,8 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/item_sampah"
-            tools:itemCount="1"
-            android:layout_margin="5dp">
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp">
         </androidx.recyclerview.widget.RecyclerView>
 
         <RelativeLayout

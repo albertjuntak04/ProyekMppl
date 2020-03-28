@@ -40,7 +40,7 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, KondisiActivity.class);
-                intent.putExtra("Nama",listPakaian.get(holder.getAdapterPosition()).getName());
+                intent.putExtra("NamaSampah",listPakaian.get(holder.getAdapterPosition()).getName());
                 context.startActivity(intent);
             }
         });
