@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.projectmppl.R;
+import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.User;
 import com.google.android.material.snackbar.Snackbar;
@@ -58,6 +59,10 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         ButterKnife.bind(this);
         initFirebase();
         kantong.setOnClickListener(this::onClick);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("totalPoint", "aku");
+//        MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
+//        metodeAntarFragment.setArguments(bundle);
 
         hideProgress();
 
@@ -177,4 +182,5 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         editBerat.setText("");
         editRingan.setText("");
     }
+
 }

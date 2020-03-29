@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.DaftarKupon;
@@ -18,6 +19,7 @@ import com.example.projectmppl.activity.jenissampah.ElektronikActivity;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
+import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +42,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView pakaian;
     @BindView(R.id.dashboard_iv_kantong)
     ImageView kantong;
+    @BindView(R.id.dashboard_tv_garbagechange)
+    TextView textView;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -56,6 +60,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         elektronik.setOnClickListener(this::onClick);
         pakaian.setOnClickListener(this::onClick);
         kantong.setOnClickListener(this::onClick);
+
+//        textView.setText(name);
         return view;
 
     }

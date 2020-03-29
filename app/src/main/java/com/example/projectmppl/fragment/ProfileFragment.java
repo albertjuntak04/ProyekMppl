@@ -32,10 +32,10 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    @BindView(R.id.keluar)
+//    @BindView(R.id.keluar)
     Button keluar;
 
-    @BindView(R.id.edit_nama)
+//    @BindView(R.id.edit_nama)
     TextView editNama;
     private View view;
     private User user;
@@ -54,7 +54,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
+        keluar = view.findViewById(R.id.keluar);
         keluar.setOnClickListener(this::onClick);
+
+
+        editNama = view.findViewById(R.id.edit_nama);
 
         return view;
     }

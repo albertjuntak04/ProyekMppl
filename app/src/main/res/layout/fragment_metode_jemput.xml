@@ -14,12 +14,13 @@
         android:layout_height="wrap_content"
         android:text="Jemput" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:layout_width="278dp"
         android:layout_height="56dp"
         android:hint="Masukkan lokasi"
         android:id="@+id/input_lokasi"
         android:layout_below="@+id/textView2"/>
+
 
 
     <ImageButton
@@ -40,7 +41,7 @@
         android:layout_below="@+id/image_sampah"/>
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btn_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Request"

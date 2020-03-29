@@ -3,10 +3,12 @@ package com.example.projectmppl.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ProgressBar;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListKantongAdapter;
+import com.example.projectmppl.fragment.HomeFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
@@ -34,6 +37,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
 
     private static final String TAG = "KantongActivity";
+    public static String KEY_ACTIVITY = "DaftarSampah";
     @BindView(R.id.recycleview)
     RecyclerView recyclerViewData;
 
@@ -41,11 +45,11 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
     private FirebaseAuth firebaseAuth;
     private List<Kantong> listData;
     private List<String> listKey;
-    private List<String> listJenisSampah;
+    private ArrayList<String> idSampah;
+    private int totalPoint;
     @BindView(R.id.progress)
     ProgressBar progressBar;
     private ListKantongAdapter kantongAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +59,9 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.frame_layout_content_dashboard, new MetodeAntarFragment(), MetodeAntarFragment.class.getSimpleName())
-                .commit();
-
         initFirebase();
-        loadDataFirebase();
+
+        loadDataFirebase(new MetodeAntarFragment());
     }
 
     private void initFirebase() {
@@ -74,7 +75,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         switch (item.getItemId()) {
-
             case R.id.action_antar:
                 fragment = new MetodeAntarFragment();
                 break;
@@ -83,7 +83,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                 break;
         }
 
-        return loadFragment(fragment);
+        return loadDataFirebase(fragment);
     }
 
     // method untuk load fragment yang sesuai
@@ -97,11 +97,12 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         return false;
     }
 
-    private void loadDataFirebase() {
+    private boolean loadDataFirebase(Fragment fragment) {
         showProgress();
+        totalPoint = 0;
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
-        listJenisSampah = new ArrayList<>();
+        idSampah = new ArrayList<>();
         firebaseDatabase.getReference()
                 .child("kantong")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
@@ -114,7 +115,11 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                             Kantong kantong = dataItem.getValue(Kantong.class);
                             listKey.add(dataItem.getKey());
                             listData.add(kantong);
+                            idSampah.add(kantong.getIdSampah());
+                            totalPoint = totalPoint+kantong.getJumlahPoint();
                         }
+                        putList(idSampah,totalPoint,fragment);
+
                         kantongAdapter = new ListKantongAdapter(listData);
                         recyclerViewData.setAdapter(kantongAdapter);
                     }
@@ -124,6 +129,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                         hideProgress();
                     }
                 });
+        return true;
     }
 
     private void hideProgress() {
@@ -132,5 +138,16 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void putList(ArrayList<String> list, int totalPoint, Fragment fragment) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(KEY_ACTIVITY, list);
+        bundle.putInt("totalPoint", totalPoint);
+        fragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout_content_dashboard, fragment)
+                .commit();
     }
 }
