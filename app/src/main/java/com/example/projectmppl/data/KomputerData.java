@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class KomputerData {
     private static String[] komputerNames= {
-            "Hardisk",
+            "Harddisk",
             "Mouse",
             "Monitor",
             "Keyboard",

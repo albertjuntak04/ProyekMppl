@@ -19,10 +19,12 @@ import java.util.ArrayList;
 public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.ListViewHolder> {
     private ArrayList<Sampah> listPakaian;
     private Context context;
+    private String jenisSampah;
 
-    public ListSampahAdapter(ArrayList<Sampah> list, Context context){
+    public ListSampahAdapter(ArrayList<Sampah> list, Context context, String jenisSampah){
         this.listPakaian = list;
         this.context = context;
+        this.jenisSampah = jenisSampah;
     }
 
     @NonNull
@@ -41,6 +43,7 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
             public void onClick(View view) {
                 Intent intent = new Intent(context, KondisiActivity.class);
                 intent.putExtra("NamaSampah",listPakaian.get(holder.getAdapterPosition()).getName());
+                intent.putExtra("JenisSampah",jenisSampah);
                 context.startActivity(intent);
             }
         });

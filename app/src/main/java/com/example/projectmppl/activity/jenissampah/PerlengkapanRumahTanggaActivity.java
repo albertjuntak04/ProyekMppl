@@ -32,7 +32,7 @@ public class PerlengkapanRumahTanggaActivity extends AppCompatActivity {
 
     private void showRecycleView(){
         rvRumahTangga.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this);
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"PRT");
         rvRumahTangga.setAdapter(listSampahAdapter);
     }
 

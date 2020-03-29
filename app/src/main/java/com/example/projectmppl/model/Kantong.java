@@ -3,6 +3,7 @@ package com.example.projectmppl.model;
 public class Kantong {
     private String idPenukar;
     private String idSampah;
+    private String jenisSampah;
     private int jumlah;
     private int jumlahPoint;
 
@@ -10,11 +11,20 @@ public class Kantong {
 
     }
 
-    public Kantong(String idPenukar, String idSampah, int jumlah, int jumlahPoint) {
+    public Kantong(String idPenukar, String idSampah, int jumlah, int jumlahPoint, String jenisSampah) {
         this.idPenukar = idPenukar;
         this.idSampah = idSampah;
         this.jumlah = jumlah;
         this.jumlahPoint = jumlahPoint;
+        this.jenisSampah = jenisSampah;
+    }
+
+    public String getJenisSampah() {
+        return jenisSampah;
+    }
+
+    public void setJenisSampah(String jenisSampah) {
+        this.jenisSampah = jenisSampah;
     }
 
     public String getIdPenukar() {

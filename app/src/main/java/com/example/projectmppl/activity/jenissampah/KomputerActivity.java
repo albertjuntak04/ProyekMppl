@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.projectmppl.R;
+import com.example.projectmppl.activity.KondisiActivity;
 import com.example.projectmppl.adapter.ListSampahAdapter;
 import com.example.projectmppl.data.KomputerData;
 import com.example.projectmppl.model.Sampah;
@@ -28,11 +30,12 @@ public class KomputerActivity extends AppCompatActivity {
         list.addAll(KomputerData.getListData());
         showRecylerview();
 
+
     }
 
     private void showRecylerview(){
         rvKomputer.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this);
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"komputer");
         rvKomputer.setAdapter(listSampahAdapter);
     }
 }

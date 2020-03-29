@@ -88,9 +88,9 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                         // Untuk mengambil idSampah yang diberikan oleh pengguna
 
                         String idSampah = dataSnapshot.child("sampah")
-                                .child("komputer")
+                                .child(getIntent().getStringExtra("JenisSampah"))
                                 .child(getIntent().getStringExtra("NamaSampah"))
-                                .child("id")
+                                .child("nama")
                                 .getValue().toString();
 
                         //
@@ -117,14 +117,16 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int berat = Integer.parseInt(dataSnapshot.child("sampah").child("komputer").child(getIntent().getStringExtra("NamaSampah")).child("berat").getValue().toString());
-                int ringan = Integer.parseInt(dataSnapshot.child("sampah").child("komputer").child(getIntent().getStringExtra("NamaSampah")).child("ringan").getValue().toString());
-                int bagus = Integer.parseInt(dataSnapshot.child("sampah").child("komputer").child(getIntent().getStringExtra("NamaSampah")).child("bagus").getValue().toString());
+                int berat = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("berat").getValue().toString());
+                int ringan = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("ringan").getValue().toString());
+                int bagus = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("bagus").getValue().toString());
 
                 int jumlah = sampahBagus+sampahBerat+sampahRingan;
                 int totalPoint = berat*sampahBerat + ringan * sampahRingan + bagus*sampahBagus;
 
-                Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint);
+                String namaSampah = getIntent().getStringExtra("JenisSampah");
+
+                Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint,namaSampah);
                 databaseReference.child("kantong")
                         .child(idPengguna.replaceAll("\\.", "_"))
                         .child("data")

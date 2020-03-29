@@ -4,6 +4,8 @@ package com.example.projectmppl.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,10 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.LoginRegister;
+import com.example.projectmppl.model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +34,14 @@ import butterknife.ButterKnife;
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.keluar)
     Button keluar;
+
+    @BindView(R.id.edit_nama)
+    TextView editNama;
     private View view;
+    private User user;
+
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -39,6 +55,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
         keluar.setOnClickListener(this::onClick);
+
         return view;
     }
 
@@ -54,4 +71,42 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initFirebase();
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+        database.getReference()
+                .child("pengguna")
+                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        viewProfile(user);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+    }
+
+    private void initFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private void viewProfile(User user){
+        editNama.setText(user.getNama());
+
+    }
+
+
 }

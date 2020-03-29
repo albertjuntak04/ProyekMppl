@@ -41,6 +41,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
     private FirebaseAuth firebaseAuth;
     private List<Kantong> listData;
     private List<String> listKey;
+    private List<String> listJenisSampah;
     @BindView(R.id.progress)
     ProgressBar progressBar;
     private ListKantongAdapter kantongAdapter;
@@ -100,6 +101,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         showProgress();
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
+        listJenisSampah = new ArrayList<>();
         firebaseDatabase.getReference()
                 .child("kantong")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))

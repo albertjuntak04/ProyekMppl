@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         initFirebase();
-        getReference = FirebaseDatabase.getInstance().getReference("penukarsampah");
+        getReference = FirebaseDatabase.getInstance().getReference("pengguna");
         hideProgress();
         spinnerPekerjaan.setPrompt("Pekerjaan");
         if(getSupportActionBar() != null){
