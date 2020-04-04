@@ -5,6 +5,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,11 +15,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.User;
+import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class KondisiActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -59,11 +66,6 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         ButterKnife.bind(this);
         initFirebase();
         kantong.setOnClickListener(this::onClick);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("totalPoint", "aku");
-//        MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
-//        metodeAntarFragment.setArguments(bundle);
-
         hideProgress();
 
 
@@ -74,25 +76,26 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.kantong:
                 showProgress();
+                ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+                LiveData<DataSnapshot> liveData = viewModel.getdataKondisi();
                 // Mengambil data yang diberikan oleh pengguna
                 String username = firebaseAuth.getCurrentUser().getEmail();
                 int jumlahBagus = Integer.parseInt(String.valueOf(editBagus.getText()));
                 int jumlahRingan = Integer.parseInt(String.valueOf(editRingan.getText()));
                 int jumlahBerat = Integer.parseInt(String.valueOf(editBerat.getText()));
 
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference ref = database.getReference();
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                liveData.observe(this, new Observer<DataSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    public void onChanged(DataSnapshot dataSnapshot) {
                         // Untuk mengambil idSampah yang diberikan oleh pengguna
 
-                        String idSampah = dataSnapshot.child("sampah")
+                        String idSampah = dataSnapshot
                                 .child(getIntent().getStringExtra("JenisSampah"))
                                 .child(getIntent().getStringExtra("NamaSampah"))
                                 .child("nama")
@@ -102,63 +105,57 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                         insertToKantong(idSampah,username,jumlahBerat,jumlahRingan, jumlahBagus);
 
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
                 });
-
-
 
         }
     }
 
     private void insertToKantong(String idSampah, String idPengguna, int sampahBerat, int sampahRingan, int sampahBagus){
-        String id = databaseReference.push().getKey();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        Kantong kantong;
-        DatabaseReference ref = database.getReference();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataKondisi();
+
+        liveData.observe(this, new Observer<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int berat = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("berat").getValue().toString());
-                int ringan = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("ringan").getValue().toString());
-                int bagus = Integer.parseInt(dataSnapshot.child("sampah").child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("bagus").getValue().toString());
+            public void onChanged(DataSnapshot dataSnapshot) {
+                int berat = Integer.parseInt(dataSnapshot.child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("berat").getValue().toString());
+                int ringan = Integer.parseInt(dataSnapshot.child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("ringan").getValue().toString());
+                int bagus = Integer.parseInt(dataSnapshot.child(getIntent().getStringExtra("JenisSampah")).child(getIntent().getStringExtra("NamaSampah")).child("bagus").getValue().toString());
 
                 int jumlah = sampahBagus+sampahBerat+sampahRingan;
                 int totalPoint = berat*sampahBerat + ringan * sampahRingan + bagus*sampahBagus;
 
-                String namaSampah = getIntent().getStringExtra("JenisSampah");
+                if (totalPoint!=0){
+                    String namaSampah = getIntent().getStringExtra("JenisSampah");
 
-                Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint,namaSampah);
-                databaseReference.child("kantong")
-                        .child(idPengguna.replaceAll("\\.", "_"))
-                        .child("data")
-                        .push()
-                        .setValue(kantong);
-                hideProgress();
-                clearFields();
+                    Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint,namaSampah);
+                    databaseReference.child("kantong")
+                            .child(idPengguna.replaceAll("\\.", "_"))
+                            .child("data")
+                            .push()
+                            .setValue(kantong);
+                    hideProgress();
+                    clearFields();
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(KondisiActivity.this);
-                alertDialogBuilder.setTitle("Permintaan");
-                alertDialogBuilder.setMessage("Sampah Anda telah dimasukkan kedalam Kantong!");
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(KondisiActivity.this);
+                    alertDialogBuilder.setTitle("Permintaan");
+                    alertDialogBuilder.setMessage("Sampah Anda telah dimasukkan kedalam Kantong!");
 
-                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
 
-                    }
-                });
-                alertDialogBuilder.show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                    alertDialogBuilder.show();
+                }else {
+                    Toast.makeText(KondisiActivity.this,"Silahkan isi jumlah yang diinginkan",LENGTH_SHORT).show();
+                }
 
             }
         });
+
     }
 
     private void hideProgress() {

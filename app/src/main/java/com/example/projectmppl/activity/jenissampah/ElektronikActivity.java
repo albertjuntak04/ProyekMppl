@@ -49,17 +49,4 @@ public class ElektronikActivity extends AppCompatActivity  {
             }
         });
     }
-//
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()){
-//            case R.id.img_komputer:
-//
-//            case R.id.img_hp:
-//
-//            case R.id.img_prumah:
-//
-//        }
-//
-//    }
 }

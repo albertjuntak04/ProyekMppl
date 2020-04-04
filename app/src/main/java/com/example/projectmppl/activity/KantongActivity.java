@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ import com.example.projectmppl.fragment.HomeFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
+import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -59,6 +63,8 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
+
+
         initFirebase();
 
         loadDataFirebase(new MetodeAntarFragment());
@@ -97,40 +103,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         return false;
     }
 
-    private boolean loadDataFirebase(Fragment fragment) {
-        showProgress();
-        totalPoint = 0;
-        listKey = new ArrayList<>();
-        listData = new ArrayList<>();
-        idSampah = new ArrayList<>();
-        firebaseDatabase.getReference()
-                .child("kantong")
-                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
-                .child("data")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        hideProgress();
-                        for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-                            Kantong kantong = dataItem.getValue(Kantong.class);
-                            listKey.add(dataItem.getKey());
-                            listData.add(kantong);
-                            idSampah.add(kantong.getIdSampah());
-                            totalPoint = totalPoint+kantong.getJumlahPoint();
-                        }
-                        putList(idSampah,totalPoint,fragment);
-
-                        kantongAdapter = new ListKantongAdapter(listData);
-                        recyclerViewData.setAdapter(kantongAdapter);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        hideProgress();
-                    }
-                });
-        return true;
-    }
 
     private void hideProgress() {
         progressBar.setVisibility(View.GONE);
@@ -149,5 +121,37 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                 .beginTransaction()
                 .replace(R.id.frame_layout_content_dashboard, fragment)
                 .commit();
+    }
+
+    private boolean loadDataFirebase(Fragment fragment) {
+        showProgress();
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+        totalPoint = 0;
+        listKey = new ArrayList<>();
+        listData = new ArrayList<>();
+        idSampah = new ArrayList<>();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    hideProgress();
+                    for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                        Kantong kantong = dataItem.getValue(Kantong.class);
+                        listKey.add(dataItem.getKey());
+                        listData.add(kantong);
+                        idSampah.add(kantong.getIdSampah());
+                        totalPoint = totalPoint+kantong.getJumlahPoint();
+                    }
+                    putList(idSampah,totalPoint,fragment);
+
+                    kantongAdapter = new ListKantongAdapter(listData);
+                    recyclerViewData.setAdapter(kantongAdapter);
+
+                }
+
+            }
+        });
+        return true;
     }
 }

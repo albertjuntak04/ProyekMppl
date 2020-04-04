@@ -9,7 +9,7 @@ public class RumahTanggaData {
             "TV",
             "Kulkas",
             "Mesin Cuci",
-            "Vacuum cleaner",
+            "VacuumCleaner",
             "Kamera",
             "Jam",
             "Blender",

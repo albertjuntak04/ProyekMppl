@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
@@ -74,12 +75,15 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
         String metode = "Penjemputan";
         String status = "Request";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        switch (view.getId()){
-            case R.id.btn_request:
-                Transaksi transaksi = new Transaksi("url",list,username,metode,status,datetime,totalPoint,lokasi);
+        if (lokasi.isEmpty()){
+            if (view.getId() == R.id.btn_request) {
+                Transaksi transaksi = new Transaksi("url", list, username, metode, status, datetime, totalPoint, lokasi);
                 addTransaksi(transaksi);
-
+            }
+        }else {
+            Toast.makeText(getContext(),"Silahkan masukkan lokasi",Toast.LENGTH_SHORT).show();
         }
+
 
     }
 

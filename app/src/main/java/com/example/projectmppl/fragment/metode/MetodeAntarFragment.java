@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
@@ -77,13 +78,15 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         String metode = "Antar";
         String status = "Request";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        switch (view.getId()){
-            case R.id.btn_request:
-                Transaksi transaksi = new Transaksi("url",list,username,metode,status,datetime,totalPoint,lokasi);
-                addTransaksi(transaksi);
-
+        if (lokasi!=null){
+            switch (view.getId()){
+                case R.id.btn_request:
+                    Transaksi transaksi = new Transaksi("url",list,username,metode,status,datetime,totalPoint,lokasi);
+                    addTransaksi(transaksi);
+            }
+        }else{
+            Toast.makeText(getContext(),"Silahkan masukkan lokasi",Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
