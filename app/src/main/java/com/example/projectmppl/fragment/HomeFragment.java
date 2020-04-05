@@ -60,8 +60,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         elektronik.setOnClickListener(this::onClick);
         pakaian.setOnClickListener(this::onClick);
         kantong.setOnClickListener(this::onClick);
-
-//        textView.setText(name);
         return view;
 
     }
@@ -94,6 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.dashboard_iv_kantong:
                 Intent kantong = new Intent(getActivity(), KantongActivity.class);
+                kantong.putExtra("removeData","remove");
                 startActivity(kantong);
         }
 

@@ -1,11 +1,19 @@
 package com.example.projectmppl.fragment.metode;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +25,12 @@ import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
+import com.example.projectmppl.activity.KondisiActivity;
+import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.model.Transaksi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,7 +38,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,8 +56,12 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     Button btnRequest;
     @BindView(R.id.textView2)
     TextView textView;
+
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference2;
+    private FirebaseDatabase firebaseDatabase;
+    private ListKantongAdapter listKantongAdapter = new ListKantongAdapter();
 
 
 
@@ -78,14 +97,13 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         String metode = "Antar";
         String status = "Request";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        if (lokasi!=null){
-            switch (view.getId()){
-                case R.id.btn_request:
-                    Transaksi transaksi = new Transaksi("url",list,username,metode,status,datetime,totalPoint,lokasi);
-                    addTransaksi(transaksi);
+        if (totalPoint != 0){
+            if (view.getId() == R.id.btn_request) {
+                Transaksi transaksi = new Transaksi("url", list, username, metode, status, datetime, totalPoint, lokasi);
+                addTransaksi(transaksi);
             }
         }else{
-            Toast.makeText(getContext(),"Silahkan masukkan lokasi",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Silahkan memasukkan sampah terlebih dahulu",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -94,14 +112,14 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         super.onStart();
     }
 
-    //
-
 
     public void addTransaksi(Transaksi transaksi){
         databaseReference
                 .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
                 .push()
                 .setValue(transaksi);
+        removeData(transaksi);
+
 
     }
 
@@ -109,4 +127,14 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
     }
+
+    private void removeData(Transaksi transaksi){
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+        databaseReference2.child(transaksi.getIdPenukar().replaceAll("\\.", "_")).removeValue();
+        Intent intent = new Intent(getActivity(),KantongActivity.class);
+        intent.putExtra("removeData","removeData");
+        getActivity().startActivity(intent);
+    }
+
+
 }

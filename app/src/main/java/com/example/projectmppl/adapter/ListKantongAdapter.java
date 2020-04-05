@@ -28,11 +28,16 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
 
+    public ListKantongAdapter(){
+
+    }
+
     public ListKantongAdapter(List<Kantong> listKantong){
         this.listKantong = listKantong;
 //        this.listJenisSampah = listJenisSampah;
 //        this.listnama = nama;
     }
+
 
 
     @NonNull
@@ -79,4 +84,17 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
             ButterKnife.bind(this, itemView);
         }
     }
+
+
+
+    public void removeItem(int position) {
+        listKantong.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, listKantong.size());
+    }
+
+//    public void clear() {
+//        listKantong.clear(); // clear list
+//        li.notifyDataSetChanged();
+//    }
 }

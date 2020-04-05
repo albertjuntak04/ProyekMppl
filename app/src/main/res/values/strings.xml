@@ -119,6 +119,11 @@
         <item>GD 7</item>
         <item>POST 1</item>
     </string-array>
+    <string name="tentang_info">Trashy adalah platform yang bertujuan untuk sebagai sarana dalam pengumpulan sampah dilingkungan kampus Institut Teknolodi Del.
+        Aplikasi ini menghubungkan penukar sampah (mahasiswa, dosen/staff) dengan kolektor agen sampah yang ada dilingkungan kampus agar lebih mudah
+        melakukan transaksi sampah, seperti sampah non organik, pakaian, dan elektronik. Lakukan permintaan penukaran di aplikasi, ada pilihan untuk dijemput
+        dan diantar, kolektor terdekat akan menjemput dan membayar sampahmu dalam bentuk poin.
+        Kumpulkan poin sebanyak mungkin dan tukarkan dengan berbagai jenis kupon menarik yang ada.</string>
 
 
 </resources>

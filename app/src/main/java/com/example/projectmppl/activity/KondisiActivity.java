@@ -68,6 +68,7 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         kantong.setOnClickListener(this::onClick);
         hideProgress();
 
+        final String sender=this.getIntent().getExtras().getString("removeData");
 
     }
 
@@ -145,12 +146,14 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
+                            finish();
 
                         }
                     });
                     alertDialogBuilder.show();
                 }else {
                     Toast.makeText(KondisiActivity.this,"Silahkan isi jumlah yang diinginkan",LENGTH_SHORT).show();
+                    hideProgress();
                 }
 
             }
@@ -175,9 +178,9 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void clearFields() {
-        editBagus.setText("");
-        editBerat.setText("");
-        editRingan.setText("");
+        editBagus.setText("0");
+        editBerat.setText("0");
+        editRingan.setText("0");
     }
 
 }

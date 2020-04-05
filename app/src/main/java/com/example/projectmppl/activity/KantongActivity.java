@@ -1,6 +1,7 @@
 package com.example.projectmppl.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,11 +12,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListKantongAdapter;
@@ -37,6 +40,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
 
@@ -48,7 +53,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     private List<Kantong> listData;
-    private List<String> listKey;
+    private ArrayList<String> listKey;
     private ArrayList<String> idSampah;
     private int totalPoint;
     @BindView(R.id.progress)
@@ -62,6 +67,9 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         ButterKnife.bind(this);
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+
+        String value = getIntent().getStringExtra("removeData");
 
 
 
@@ -112,10 +120,11 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void putList(ArrayList<String> list, int totalPoint, Fragment fragment) {
+    private void putList(ArrayList<String> list, int totalPoint, Fragment fragment,ArrayList<String> listKey) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(KEY_ACTIVITY, list);
         bundle.putInt("totalPoint", totalPoint);
+        bundle.putStringArrayList("listKey", listKey);
         fragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -143,15 +152,45 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                         idSampah.add(kantong.getIdSampah());
                         totalPoint = totalPoint+kantong.getJumlahPoint();
                     }
-                    putList(idSampah,totalPoint,fragment);
+                    putList(idSampah,totalPoint,fragment,listKey);
 
                     kantongAdapter = new ListKantongAdapter(listData);
-                    recyclerViewData.setAdapter(kantongAdapter);
+
+
+                    final String sender=getIntent().getExtras().getString("removeData");
+
+                    //IF ITS THE FRAGMENT THEN RECEIVE DATA
+                    if(!sender.equals("removeData"))
+                    {
+                        recyclerViewData.setAdapter(kantongAdapter);
+
+                    }else{
+                       listData.clear();
+                       kantongAdapter.notifyDataSetChanged();
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(KantongActivity.this);
+                        alertDialogBuilder.setTitle("Permintaan");
+                        alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
+                        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                Intent intent = new Intent(KantongActivity.this, MainActivity.class);
+                                startActivity(intent);
+
+                            }
+                        });
+                        alertDialogBuilder.show();
+                    }
+
+                    }
 
                 }
-
-            }
         });
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }

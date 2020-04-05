@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
+
     private static final DatabaseReference mDatabase = FirebaseDatabase.getInstance()
             .getReference()
             .child("kantong")
