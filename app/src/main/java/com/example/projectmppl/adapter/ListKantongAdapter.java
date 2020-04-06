@@ -93,8 +93,4 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         notifyItemRangeChanged(position, listKantong.size());
     }
 
-//    public void clear() {
-//        listKantong.clear(); // clear list
-//        li.notifyDataSetChanged();
-//    }
 }

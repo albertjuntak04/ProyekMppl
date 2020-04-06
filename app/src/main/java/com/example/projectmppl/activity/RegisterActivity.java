@@ -142,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 alertDialogBuilder.setMessage("Your account has been registered. Please sign in use your username and password.");
 
                                 // Save new User
-                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password));
+                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password,0));
                                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {

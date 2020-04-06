@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projectmppl.R;
@@ -29,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +55,10 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
 
     @BindView(R.id.kantong_activity)
     ConstraintLayout constraintLayout;
+    @BindView(R.id.namabarang)
+    TextView namaBarang;
+    @BindView(R.id.img_sampah)
+    ImageView imageSampah;
 
 
     private FirebaseAuth firebaseAuth;
@@ -68,7 +75,10 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         kantong.setOnClickListener(this::onClick);
         hideProgress();
 
-        final String sender=this.getIntent().getExtras().getString("removeData");
+        String namaSampah = getIntent().getStringExtra("NamaSampah");
+        namaBarang.setText(namaSampah);
+        showSampah();
+
 
     }
 
@@ -101,6 +111,15 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                                 .child(getIntent().getStringExtra("NamaSampah"))
                                 .child("nama")
                                 .getValue().toString();
+
+                        String imageUrl =dataSnapshot
+                                .child(getIntent().getStringExtra("JenisSampah"))
+                                .child(getIntent().getStringExtra("NamaSampah"))
+                                .child("gambar")
+                                .getValue().toString();
+
+                        // Menampilkan gambar sampah
+                        Picasso.get().load(imageUrl).into(imageSampah);
 
                         //
                         insertToKantong(idSampah,username,jumlahBerat,jumlahRingan, jumlahBagus);
@@ -140,7 +159,7 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(KondisiActivity.this);
                     alertDialogBuilder.setTitle("Permintaan");
-                    alertDialogBuilder.setMessage("Sampah Anda telah dimasukkan kedalam Kantong!");
+                    alertDialogBuilder.setMessage("Sampah Anda telah dimasukkan kedalam Kantong");
 
                     alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -181,6 +200,28 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         editBagus.setText("0");
         editBerat.setText("0");
         editRingan.setText("0");
+    }
+
+    private void showSampah(){
+        showProgress();
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataKondisi();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                // Untuk mengambil idSampah yang diberikan oleh pengguna
+
+                String imageUrl =dataSnapshot
+                        .child(getIntent().getStringExtra("JenisSampah"))
+                        .child(getIntent().getStringExtra("NamaSampah"))
+                        .child("gambar")
+                        .getValue().toString();
+
+                // Menampilkan gambar sampah
+                Picasso.get().load(imageUrl).into(imageSampah);
+                hideProgress();
+            }
+        });
     }
 
 }

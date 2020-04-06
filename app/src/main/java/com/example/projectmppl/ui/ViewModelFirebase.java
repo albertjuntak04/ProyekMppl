@@ -20,8 +20,16 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     private static final DatabaseReference kondisi = FirebaseDatabase.getInstance()
             .getReference()
             .child("sampah");
+
+    private static final DatabaseReference databaseUser = FirebaseDatabase.getInstance()
+            .getReference()
+            .child("pengguna")
+            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"));
+
+
     private final FirebaseQueryLiveData liveDataKantong = new FirebaseQueryLiveData(mDatabase);
     private final FirebaseQueryLiveData liveDataKondisi = new FirebaseQueryLiveData(kondisi);
+    private final FirebaseQueryLiveData liveDataDataUser = new FirebaseQueryLiveData(databaseUser);
 
     @NonNull
     public LiveData<DataSnapshot> getdataSnapshotLiveData(){
@@ -31,5 +39,10 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     @NonNull
     public LiveData<DataSnapshot> getdataKondisi(){
         return liveDataKondisi;
+    }
+
+    @NonNull
+    public LiveData<DataSnapshot> getdataUser(){
+        return liveDataDataUser;
     }
 }

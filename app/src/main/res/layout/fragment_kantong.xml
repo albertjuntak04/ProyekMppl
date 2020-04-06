@@ -1,111 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize">
-
-    <RelativeLayout
-        android:id="@+id/kantongawal"
-        android:layout_width="349dp"
-        android:layout_height="113dp"
-        android:layout_margin="30dp"
-        android:background="@color/colorlatar"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="3dp">
-
-        <TextView
-            android:id="@+id/txt_kantong1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="13dp"
-            android:text="@string/kantong1"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_kantong12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_kantong1"
-            android:layout_marginStart="20dp"
-            android:text="@string/kantong11"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_kantong13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_kantong12"
-            android:layout_marginStart="20dp"
-            android:text="@string/kantong_poin"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btn_kantong1"
-            android:layout_width="80dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="-120dp"
-            android:layout_marginTop="80dp"
-            android:layout_toRightOf="@id/txt_kantong13"
-            android:background="@color/merahbutton"
-            android:text="@string/batal"
-            android:textColor="@color/colortext" />
-    </RelativeLayout>
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview"
         android:layout_width="match_parent"
-        android:layout_height="194dp"
-        app:layout_constraintBottom_toTopOf="@+id/kantongawal1"
-        app:layout_constraintTop_toBottomOf="@+id/kantongawal"
-        tools:listitem="@layout/item_sampah">
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_sampah"
+        tools:itemCount="5"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="6dp">
     </androidx.recyclerview.widget.RecyclerView>
-
-    <RelativeLayout
-        android:id="@+id/kantongawal1"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="280dp">
-
-
-        <TextView
-            android:id="@+id/txt_metode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/metode"
-            android:layout_marginLeft="30dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/btn_antar"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@color/birubutton"
-        android:text="antar"
-        android:textColor="@color/colortext"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="67dp"
-        tools:layout_editor_absoluteY="320dp" />
-
-    <Button
-        android:id="@+id/btn_jemput"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@color/hijaubutton"
-        android:text="@string/jemput"
-        android:textColor="@color/colortext"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="233dp"
-        tools:layout_editor_absoluteY="320dp" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:indeterminateDrawable="@drawable/custom_progressbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"></ProgressBar>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
 

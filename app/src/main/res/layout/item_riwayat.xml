@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.RiwayatFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colortext"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ditolak"
+            android:textColor="@color/merahbutton"
+            android:layout_gravity="right"/>
+
+        <TextView
+            android:id="@+id/tgl_pemesanan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 Januari 2020"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/jenis_nonorganik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Non-Organik:"/>
+
+            <TextView
+                android:id="@+id/list_nonorganik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sampah Plastik"
+                android:paddingStart="10dp"/>
+
+            <TextView
+                android:id="@+id/jumlah_organik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 Kg"
+                android:layout_marginStart="100dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/jenis_elektronik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elektronik:"/>
+
+            <TextView
+                android:id="@+id/list_elektronik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Charger Bagus"
+                android:paddingStart="10dp"/>
+            <TextView
+                android:id="@+id/jumlah_elektronik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 Pcs"
+                android:layout_marginStart="120dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/txt_metode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Metode:" />
+            <TextView
+                android:id="@+id/metode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Antar"
+                android:paddingStart="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/poin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poin:"/>
+            <TextView
+                android:id="@+id/total_poin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:paddingStart="10dp"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/hapus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colortext"
+            app:srcCompat="@drawable/ic_delete_forever_black_24dp"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+</FrameLayout>

@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,11 @@ import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
+import com.example.projectmppl.ui.ViewModelFirebase;
+import com.google.firebase.database.DataSnapshot;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener  {
     private View view;
     @BindView(R.id.kupon)
     CardView cardView;
@@ -44,6 +52,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     ImageView kantong;
     @BindView(R.id.dashboard_tv_garbagechange)
     TextView textView;
+    @BindView(R.id.dashboard_tv_name)
+    TextView tvName;
+    @BindView(R.id.total_poin)
+    TextView totalPoin;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -60,6 +72,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         elektronik.setOnClickListener(this::onClick);
         pakaian.setOnClickListener(this::onClick);
         kantong.setOnClickListener(this::onClick);
+
+        showProfile();
+
         return view;
 
     }
@@ -92,10 +107,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.dashboard_iv_kantong:
                 Intent kantong = new Intent(getActivity(), KantongActivity.class);
-                kantong.putExtra("removeData","remove");
+                kantong.putExtra("saveData","remove");
                 startActivity(kantong);
+
+
         }
 
+    }
+
+    public void showProfile(){
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                // Untuk menampilkan dataUser
+                String name = dataSnapshot.child("nama").getValue().toString();
+                String poin = dataSnapshot.child("poin").getValue().toString();
+                tvName.setText(name);
+                totalPoin.setText(poin);
+
+
+            }
+        });
     }
 
 }
