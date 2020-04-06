@@ -56,12 +56,12 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RegisterActivity"
-            android:label="Register"
+            android:label="Daftar"
             android:parentActivityName=".activity.LoginRegister"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
-            android:label="Login"
+            android:label="Masuk"
             android:parentActivityName=".activity.LoginRegister"
             android:screenOrientation="portrait"/>
         <activity
@@ -75,5 +75,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

@@ -73,7 +73,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
         pakaian.setOnClickListener(this::onClick);
         kantong.setOnClickListener(this::onClick);
 
-        showProfile();
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                // Untuk menampilkan dataUser
+                String name = dataSnapshot.child("nama").getValue().toString();
+                String poin = dataSnapshot.child("poin").getValue().toString();
+                tvName.setText("Nama");
+                totalPoin.setText(poin);
+
+
+            }
+        });
 
         return view;
 
@@ -115,21 +128,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
 
     }
 
-    public void showProfile(){
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
-        liveData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                // Untuk menampilkan dataUser
-                String name = dataSnapshot.child("nama").getValue().toString();
-                String poin = dataSnapshot.child("poin").getValue().toString();
-                tvName.setText(name);
-                totalPoin.setText(poin);
 
-
-            }
-        });
-    }
 
 }

@@ -34,8 +34,6 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
 
     public ListKantongAdapter(List<Kantong> listKantong){
         this.listKantong = listKantong;
-//        this.listJenisSampah = listJenisSampah;
-//        this.listnama = nama;
     }
 
 

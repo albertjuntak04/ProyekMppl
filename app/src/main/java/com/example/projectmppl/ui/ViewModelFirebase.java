@@ -9,8 +9,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
 
+public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     private static final DatabaseReference mDatabase = FirebaseDatabase.getInstance()
             .getReference()
             .child("kantong")
@@ -26,10 +26,17 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
             .child("pengguna")
             .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"));
 
+    private static final DatabaseReference dataTransaksi = FirebaseDatabase.getInstance()
+            .getReference()
+            .child("transaksipenukaransampah")
+            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"));
+
 
     private final FirebaseQueryLiveData liveDataKantong = new FirebaseQueryLiveData(mDatabase);
     private final FirebaseQueryLiveData liveDataKondisi = new FirebaseQueryLiveData(kondisi);
     private final FirebaseQueryLiveData liveDataDataUser = new FirebaseQueryLiveData(databaseUser);
+
+    private final FirebaseQueryLiveData liveDataTransaksi = new FirebaseQueryLiveData(dataTransaksi);
 
     @NonNull
     public LiveData<DataSnapshot> getdataSnapshotLiveData(){
@@ -44,5 +51,10 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     @NonNull
     public LiveData<DataSnapshot> getdataUser(){
         return liveDataDataUser;
+    }
+
+    @NonNull
+    public LiveData<DataSnapshot> getdataTransaksi(){
+        return liveDataTransaksi;
     }
 }

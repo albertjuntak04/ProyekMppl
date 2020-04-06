@@ -5,8 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    android:padding="15dp">
+    android:background="#fff">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +15,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="7dp"
             android:src="@drawable/gambar"
             app:civ_border_color="@color/colorAccent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="30dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="6dp"
             android:layout_toEndOf="@+id/img_profile"
             android:id="@+id/poin">
             <LinearLayout
@@ -41,34 +41,33 @@
                 android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="30dp"
-                    android:layout_height="25dp"
+                    android:layout_width="36dp"
+                    android:layout_height="28dp"
                     app:srcCompat="@drawable/ic_redeem_black_24dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/poinku"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="5dp"/>
+                    android:textSize="20dp"
+                    android:layout_marginLeft="8dp"/>
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="30dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="27dp"
                     app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/kuponku"
-                    android:textSize="18dp"
-                    android:layout_marginLeft="5dp"/>
+                    android:textSize="20dp"
+                    android:layout_marginLeft="8dp"/>
             </LinearLayout>
         </LinearLayout>
         <Button
@@ -92,16 +91,22 @@
         android:layout_margin="10dp"
         android:paddingTop="30dp"
         android:id="@+id/edit_profile">
+        <TextView
+            android:id="@+id/judulNama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <TextView
                 android:id="@+id/edit_nama"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:ems="10"
-                android:text="Nama:"
-                android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="24dp"
                 tools:layout_editor_absoluteY="163dp"
                 tools:ignore="MissingConstraints" />
@@ -116,17 +121,26 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/judulEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-            <EditText
+            android:layout_height="wrap_content">
+            <TextView
                 android:id="@+id/edit_email"
                 android:layout_width="match_parent"
-                android:layout_height="47dp"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:text="Email:"
-                android:inputType="textEmailAddress" />
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="163dp"
+                tools:ignore="MissingConstraints" />
             <ImageButton
                 android:id="@+id/btn_edit_email"
                 android:layout_width="wrap_content"
@@ -136,16 +150,25 @@
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/judlNoHP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No. HP :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-            <EditText
+            android:layout_height="wrap_content">
+            <TextView
                 android:id="@+id/edit_noHp"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:text="No.Hp"
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="163dp"
                 tools:ignore="MissingConstraints" />
             <ImageButton
                 android:id="@+id/btn_edit_noHp"
@@ -155,30 +178,72 @@
                 app:srcCompat="@drawable/ic_mode_edit_black_24dp"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/judlPekerjaan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pekerjaan :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/pekerjaan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pekerjaan"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:textSize="20sp"
-                android:textStyle="bold"></TextView>
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="163dp"
+                tools:ignore="MissingConstraints"></TextView>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/judlJenisKelamin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jenis Kelamin :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-            <EditText
-                android:id="@+id/editText6"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/jenis_kelamin"
                 android:layout_width="match_parent"
-                android:layout_height="47dp"
+                android:layout_height="50dp"
                 android:ems="10"
-                android:text="Kata sandi"
-                android:inputType="textPassword" />
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="163dp"
+                tools:ignore="MissingConstraints"></TextView>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/judlPw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password :"
+            android:ems="10"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/edit_password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:ems="10"
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="163dp"
+                tools:ignore="MissingConstraints" />
             <ImageButton
                 android:id="@+id/btn_edit_sandi"
                 android:layout_width="wrap_content"

@@ -118,7 +118,7 @@ public class KantongFragment extends Fragment {
                     hideProgress();
                     for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
                         Kantong kantong = dataItem.getValue(Kantong.class);
-                        listKey.add(dataItem.getKey());
+//                        listKey.add(dataItem.getKey());
                         listData.add(kantong);
                         idSampah.add(kantong.getIdSampah());
                         totalPoint = totalPoint+kantong.getJumlahPoint();
