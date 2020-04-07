@@ -93,8 +93,6 @@ public class MetodeAntarFragment extends Fragment {
                 .setValue(transaksi);
         removeData(transaksi);
 
-
-
     }
 
     private void initFirebase() {
