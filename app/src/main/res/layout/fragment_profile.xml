@@ -38,44 +38,72 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="36dp"
-                    android:layout_height="28dp"
-                    app:srcCompat="@drawable/ic_redeem_black_24dp" />
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/poinku"
                     android:textSize="20dp"
                     android:layout_marginLeft="8dp"/>
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="36dp"
+                       android:layout_height="28dp"
+                       app:srcCompat="@drawable/savemoney" />
+                   <TextView
+                       android:id="@+id/my_poin"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="0"
+                       android:textSize="20dp"
+                       android:layout_marginLeft="8dp"/>
+               </LinearLayout>
+
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="35dp"
-                    android:layout_height="27dp"
-                    app:srcCompat="@drawable/ic_monetization_on_black_24dp" />
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/kuponku"
                     android:textSize="20dp"
                     android:layout_marginLeft="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="28dp"
+                        app:srcCompat="@drawable/coupon" />
+                    <TextView
+                        android:id="@+id/my_coupon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="8dp"/>
+                </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
         <Button
             android:id="@+id/keluar"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="bottom|right"
-            android:background="@color/hijaubutton"
+            android:background="@drawable/btn_keluar"
             android:text="Keluar"
             android:textColor="@color/colortext"
             android:layout_alignParentEnd="true"
@@ -258,9 +286,9 @@
     <Button
         android:id="@+id/btn_simpan"
         android:layout_width="237dp"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:text="Simpan"
-        android:background="@color/colorbotton"
+        android:background="@drawable/btn_login"
         android:textColor="@color/colortext"
         android:layout_below="@+id/edit_profile"
         android:layout_centerHorizontal="true"

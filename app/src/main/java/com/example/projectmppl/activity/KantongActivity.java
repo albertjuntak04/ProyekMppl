@@ -30,6 +30,8 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
     private static final String TAG = "KantongActivity";
     public static String KEY_ACTIVITY = "DaftarSampah";
+
+    private final String SIMPLE_FRAGMENT_TAG = "myfragmenttag";
 //    @BindView(R.id.recycleview)
 //    RecyclerView recyclerViewData;
 
@@ -48,7 +50,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
 
 //    private MySimpleFragment fragmentSimple;
-    private final String SIMPLE_FRAGMENT_TAG = "myfragmenttag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +63,25 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         metodeJemputFragment = new MetodeJemputFragment();
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
+//
+//        if (savedInstanceState != null) { // saved instance state, fragment may exist
+//            // look up the instance that already exists by tag
+//            kantongFragment = (KantongFragment)
+//                    getSupportFragmentManager().findFragmentByTag(SIMPLE_FRAGMENT_TAG);
+//        } else if (kantongFragment == null) {
+//            // only create fragment if they haven't been instantiated already
+//            kantongFragment = new KantongFragment();
+//        }
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame_layout_content_dashboard, kantongFragment)
-                .commit();
+        if (!kantongFragment.isInLayout()){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout_content_dashboard, kantongFragment, SIMPLE_FRAGMENT_TAG)
+                    .commit();
+        }
+
+
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout_content_dashboard, metodeAntarFragment)
@@ -153,4 +168,12 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 //        kantongFragment.loadDataFirebase(removeData);
         kantongFragment.removeData();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+
 }

@@ -66,6 +66,7 @@ public class RiwayatFragment extends Fragment {
 
     public void loadDataFirebase() {
         showProgress();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
         listKey = new ArrayList<>();
@@ -75,7 +76,7 @@ public class RiwayatFragment extends Fragment {
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
                     hideProgress();
-                    for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
                         Transaksi transaksi = dataItem.getValue(Transaksi.class);
                         listKey.add(dataItem.getKey());
                         listData.add(transaksi);

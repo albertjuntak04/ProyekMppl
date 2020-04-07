@@ -12,42 +12,41 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
-    private static final String Log_tag = "FirebaseQueryLiveData";
-    private final Query query;
-    private final MyValueEventListner listner = new MyValueEventListner();
+    private static final String LOG_TAG = "FirebaseQueryLiveData";
 
-    public FirebaseQueryLiveData(Query query){
+    private final Query query;
+    private final MyValueEventListener listener = new MyValueEventListener();
+
+    public FirebaseQueryLiveData(Query query) {
         this.query = query;
     }
 
-    public FirebaseQueryLiveData(DatabaseReference ref){
+    public FirebaseQueryLiveData(DatabaseReference ref) {
         this.query = ref;
     }
 
     @Override
-    protected void onActive(){
-        Log.d(Log_tag, "onActive");
-        query.addValueEventListener(listner);
+    protected void onActive() {
+        Log.d(LOG_TAG, "onActive");
+        query.addValueEventListener(listener);
     }
 
     @Override
-    protected void onInactive(){
-        Log.d(Log_tag, "onInactive");
-        query.removeEventListener(listner);
+    protected void onInactive() {
+        Log.d(LOG_TAG, "onInactive");
+        query.removeEventListener(listener);
     }
 
-    private class MyValueEventListner implements ValueEventListener {
-
+    private class MyValueEventListener implements ValueEventListener {
         @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        public void onDataChange(DataSnapshot dataSnapshot) {
             setValue(dataSnapshot);
         }
 
         @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.d(Log_tag, "Can't listened to query "+query, databaseError.toException());
+        public void onCancelled(DatabaseError databaseError) {
+            Log.e(LOG_TAG, "Can't listen to query " + query, databaseError.toException());
         }
     }
-
 }
 

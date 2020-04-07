@@ -50,6 +50,10 @@ public class KantongFragment extends Fragment {
     @BindView(R.id.recycleview)
     RecyclerView recyclerViewData;
 
+
+    private int someStateValue;
+    private final String SOME_VALUE_KEY = "someValueToSave";
+
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     private List<Kantong> listData;
@@ -62,9 +66,10 @@ public class KantongFragment extends Fragment {
     private ListKantongAdapter kantongAdapter;
     private MetodeJemputFragment metodeJemputFragment;
 
-    private int someStateValue;
-    private final String SOME_VALUE_KEY = "someValueToSave";
     private FragmentKantongListener listener;
+
+    int counter = 0;
+
 
     public interface  FragmentKantongListener{
         void onInputKantongFragmentSent (ArrayList<String> input, int totalPoint, ArrayList<String> listKey);
@@ -83,28 +88,20 @@ public class KantongFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-
         initFirebase();
         loadDataFirebase("showData");
-
         return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
     }
 
     public void loadDataFirebase(String removeData) {
-//        removeData = "showData";
         showProgress();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
         totalPoint = 0;
@@ -116,7 +113,7 @@ public class KantongFragment extends Fragment {
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
                     hideProgress();
-                    for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
                         Kantong kantong = dataItem.getValue(Kantong.class);
 //                        listKey.add(dataItem.getKey());
                         listData.add(kantong);
@@ -131,6 +128,7 @@ public class KantongFragment extends Fragment {
 
             }
         });
+        counter++;
     }
 
     private void initFirebase() {

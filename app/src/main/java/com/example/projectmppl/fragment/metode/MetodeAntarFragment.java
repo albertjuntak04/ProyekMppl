@@ -116,7 +116,7 @@ public class MetodeAntarFragment extends Fragment {
         String lokasi = lokasiSpinner.getSelectedItem().toString();
         String username = firebaseAuth.getCurrentUser().getEmail();
         String metode = "Antar";
-        String status = "Request";
+        String status = "Diproses";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         if (totalPoint != 0){

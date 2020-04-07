@@ -13,9 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     private static final DatabaseReference mDatabase = FirebaseDatabase.getInstance()
             .getReference()
-            .child("kantong")
-            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"))
-            .child("data");
+            .child("kantong");
 
     private static final DatabaseReference kondisi = FirebaseDatabase.getInstance()
             .getReference()
@@ -23,13 +21,12 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
 
     private static final DatabaseReference databaseUser = FirebaseDatabase.getInstance()
             .getReference()
-            .child("pengguna")
-            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"));
+            .child("pengguna");
 
     private static final DatabaseReference dataTransaksi = FirebaseDatabase.getInstance()
             .getReference()
-            .child("transaksipenukaransampah")
-            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"));
+            .child("transaksipenukaransampah");
+
 
 
     private final FirebaseQueryLiveData liveDataKantong = new FirebaseQueryLiveData(mDatabase);

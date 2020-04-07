@@ -1,5 +1,6 @@
 package com.example.projectmppl.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,12 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         holder.metode.setText(String.valueOf(transaksi.getMetode()));
         holder.totalPoin.setText(String.valueOf(transaksi.getTotalPoin()));
         holder.jumlahElektronik.setText(String.valueOf(transaksi.getIdSampah().size()));
+        holder.status.setText(String.valueOf(transaksi.getStatus()));
+        if (String.valueOf(transaksi.getStatus()).equals("Diproses")){
+            holder.status.setTextColor(Color.GREEN);
+        }else {
+            holder.status.setTextColor(Color.RED);
+        }
     }
 
     @Override
@@ -67,6 +74,8 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         TextView totalPoin;
         @BindView(R.id.hapus)
         Button btnHapus;
+        @BindView(R.id.status)
+        TextView status;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

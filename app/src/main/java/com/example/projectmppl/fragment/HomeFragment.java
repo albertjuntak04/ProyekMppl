@@ -24,6 +24,7 @@ import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.ui.ViewModelFirebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -75,13 +76,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
 
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         liveData.observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
                 // Untuk menampilkan dataUser
-                String name = dataSnapshot.child("nama").getValue().toString();
-                String poin = dataSnapshot.child("poin").getValue().toString();
-                tvName.setText("Nama");
+                String name = dataSnapshot.child(currentUser).child("nama").getValue().toString();
+                String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
+                tvName.setText(name);
                 totalPoin.setText(poin);
 
 
@@ -122,8 +124,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
                 Intent kantong = new Intent(getActivity(), KantongActivity.class);
                 kantong.putExtra("saveData","remove");
                 startActivity(kantong);
-
-
         }
 
     }

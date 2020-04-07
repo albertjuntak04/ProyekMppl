@@ -40,6 +40,8 @@ import static android.app.Activity.RESULT_OK;
  */
 public class MetodeJemputFragment extends Fragment implements View.OnClickListener {
 
+
+
     private View view;
     @BindView(R.id.input_lokasi)
     EditText lokasiPenjemputan;
@@ -135,7 +137,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Complete action using"), 1);
     }
 
     @Override

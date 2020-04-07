@@ -94,13 +94,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
+//        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     private void loadDataFirebase() {
         firebaseDatabase.getReference()
                 .child("pengguna")
-                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
