@@ -33,7 +33,9 @@ import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +70,6 @@ public class KantongFragment extends Fragment {
 
     private FragmentKantongListener listener;
 
-    int counter = 0;
-
-
     public interface  FragmentKantongListener{
         void onInputKantongFragmentSent (ArrayList<String> input, int totalPoint, ArrayList<String> listKey);
     }
@@ -99,36 +98,75 @@ public class KantongFragment extends Fragment {
 
     }
 
-    public void loadDataFirebase(String removeData) {
-        showProgress();
-        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-        totalPoint = 0;
-        listKey = new ArrayList<>();
-        listData = new ArrayList<>();
-        idSampah = new ArrayList<>();
-        liveData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    hideProgress();
-                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
-                        Kantong kantong = dataItem.getValue(Kantong.class);
-//                        listKey.add(dataItem.getKey());
-                        listData.add(kantong);
-                        idSampah.add(kantong.getIdSampah());
-                        totalPoint = totalPoint+kantong.getJumlahPoint();
-                    }
-                    putList(idSampah,totalPoint,listKey);
-
-                    kantongAdapter = new ListKantongAdapter(listData);
-                    recyclerViewData.setAdapter(kantongAdapter);
-                }
-
-            }
-        });
-    }
+//    public void loadDataFirebase(String removeData) {
+//        showProgress();
+//        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+//        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+//        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+//        totalPoint = 0;
+//        listKey = new ArrayList<>();
+//        listData = new ArrayList<>();
+//        idSampah = new ArrayList<>();
+//        liveData.observe(this, new Observer<DataSnapshot>() {
+//            @Override
+//            public void onChanged(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot != null){
+//                    hideProgress();
+//                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
+//                        Kantong kantong = dataItem.getValue(Kantong.class);
+////                        listKey.add(dataItem.getKey());
+//                        listData.add(kantong);
+//                        idSampah.add(kantong.getIdSampah());
+//                        totalPoint = totalPoint+kantong.getJumlahPoint();
+//                    }
+//                    putList(idSampah,totalPoint,listKey);
+//
+//                    kantongAdapter = new ListKantongAdapter(listData);
+//                    recyclerViewData.setAdapter(kantongAdapter);
+//                }
+//
+//            }
+//        });
+////        counter++;
+//    }
+//
+//    private void loadDataFirebase(String removeData) {
+//        showProgress();
+//        totalPoint = 0;
+//        listKey = new ArrayList<>();
+//        listData = new ArrayList<>();
+//        idSampah = new ArrayList<>();
+//        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+//        firebaseDatabase.getReference()
+//                .child("kantong")
+//                .child(currentUser)
+//                .child("data")
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot != null){
+//                            hideProgress();
+//                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+//                                Kantong kantong = dataItem.getValue(Kantong.class);
+//                                listKey.add(dataItem.getKey());
+//                                listData.add(kantong);
+//                                idSampah.add(kantong.getIdSampah());
+//                                totalPoint = totalPoint+kantong.getJumlahPoint();
+//                            }
+//                            putList(idSampah,totalPoint,listKey);
+//                            kantongAdapter = new ListKantongAdapter(listData);
+//                            recyclerViewData.setAdapter(kantongAdapter);
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        hideProgress();
+//                    }
+//
+//                });
+//    }
 
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -147,7 +185,6 @@ public class KantongFragment extends Fragment {
 
     private void putList(ArrayList<String> list, int totalPoint,ArrayList<String> listKey) {
         listener.onInputKantongFragmentSent(list,totalPoint,listKey);
-
     }
 
     @Override
@@ -174,13 +211,6 @@ public class KantongFragment extends Fragment {
         kantongAdapter.notifyDataSetChanged();
 
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
 
 }
 
