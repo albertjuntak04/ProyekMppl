@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showMessageBox(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Login");
+        alertDialogBuilder.setTitle("Masuk");
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {

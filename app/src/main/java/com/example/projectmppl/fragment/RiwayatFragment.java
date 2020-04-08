@@ -101,4 +101,12 @@ public class RiwayatFragment extends Fragment {
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         recyclerViewData.setHasFixedSize(true);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        listData.clear();
+        listRiwayatAdapter = new ListRiwayatAdapter(listData);
+        recyclerViewData.setAdapter(listRiwayatAdapter);
+    }
 }

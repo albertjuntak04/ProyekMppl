@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.KondisiActivity;
+import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.fragment.KantongFragment;
 import com.example.projectmppl.model.Transaksi;
@@ -125,8 +126,6 @@ public class MetodeAntarFragment extends Fragment {
                     addTransaksi(transaksi);
                 }
             });
-        }else{
-            Toast.makeText(getContext(),"Silahkan memasukkan sampah terlebih dahulu",Toast.LENGTH_LONG).show();
         }
     }
 

@@ -52,6 +52,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="20dp"
         android:background="@color/colorbotton"
-        android:text="Kirim"
+        android:text="Request"
         android:textColor="@color/colortext" />
 </RelativeLayout>

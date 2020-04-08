@@ -1,6 +1,7 @@
 package com.example.projectmppl.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +81,10 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         namaBarang.setText(namaSampah);
         showSampah();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
 
     }
 
@@ -117,6 +123,13 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                                 .child(getIntent().getStringExtra("NamaSampah"))
                                 .child("gambar")
                                 .getValue().toString();
+
+                        String jenisSampah = dataSnapshot
+                                .child(getIntent().getStringExtra("JenisSampah"))
+                                .child(getIntent().getStringExtra("NamaSampah"))
+                                .child("jenis")
+                                .getValue().toString();
+
 
                         // Menampilkan gambar sampah
                         Picasso.get().load(imageUrl).into(imageSampah);
@@ -217,11 +230,32 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                         .child("gambar")
                         .getValue().toString();
 
-                // Menampilkan gambar sampah
+                String title =dataSnapshot
+                        .child(getIntent().getStringExtra("JenisSampah"))
+                        .child(getIntent().getStringExtra("NamaSampah"))
+                        .child("jenis")
+                        .getValue().toString();
+
+
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setTitle(title);
                 Picasso.get().load(imageUrl).into(imageSampah);
                 hideProgress();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
 }

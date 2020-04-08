@@ -35,7 +35,8 @@
             android:screenOrientation="portrait"
             android:label="Pakaian"/>
         <activity android:name=".activity.KondisiActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+          />
         <activity
             android:name=".activity.jenissampah.KomputerActivity"
             android:parentActivityName=".activity.jenissampah.ElektronikActivity"

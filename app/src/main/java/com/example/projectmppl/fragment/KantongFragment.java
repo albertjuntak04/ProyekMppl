@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
@@ -51,6 +53,7 @@ public class KantongFragment extends Fragment {
     public static String KEY_ACTIVITY = "DaftarSampah";
     @BindView(R.id.recycleview)
     RecyclerView recyclerViewData;
+    public ViewModelFirebase viewModelFirebase;
 
 
     private int someStateValue;
@@ -64,11 +67,16 @@ public class KantongFragment extends Fragment {
     private int totalPoint;
     @BindView(R.id.progress)
     ProgressBar progressBar;
+    @BindView(R.id.kondisi_kantong)
+    TextView kondisiKantong;
     private  View view;
     private ListKantongAdapter kantongAdapter;
     private MetodeJemputFragment metodeJemputFragment;
 
     private FragmentKantongListener listener;
+
+    private LiveData liveData;
+
 
     public interface  FragmentKantongListener{
         void onInputKantongFragmentSent (ArrayList<String> input, int totalPoint, ArrayList<String> listKey);
@@ -98,75 +106,40 @@ public class KantongFragment extends Fragment {
 
     }
 
-//    public void loadDataFirebase(String removeData) {
-//        showProgress();
-//        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-//        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-//        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-//        totalPoint = 0;
-//        listKey = new ArrayList<>();
-//        listData = new ArrayList<>();
-//        idSampah = new ArrayList<>();
-//        liveData.observe(this, new Observer<DataSnapshot>() {
-//            @Override
-//            public void onChanged(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot != null){
-//                    hideProgress();
-//                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
-//                        Kantong kantong = dataItem.getValue(Kantong.class);
-////                        listKey.add(dataItem.getKey());
-//                        listData.add(kantong);
-//                        idSampah.add(kantong.getIdSampah());
-//                        totalPoint = totalPoint+kantong.getJumlahPoint();
-//                    }
-//                    putList(idSampah,totalPoint,listKey);
-//
-//                    kantongAdapter = new ListKantongAdapter(listData);
-//                    recyclerViewData.setAdapter(kantongAdapter);
-//                }
-//
-//            }
-//        });
-////        counter++;
-//    }
-
-    private void loadDataFirebase(String removeData) {
+    public void loadDataFirebase(String removeData) {
         showProgress();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
         totalPoint = 0;
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
         idSampah = new ArrayList<>();
-        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-        firebaseDatabase.getReference()
-                .child("kantong")
-                .child(currentUser)
-                .child("data")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot != null){
-                            hideProgress();
-                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-                                Kantong kantong = dataItem.getValue(Kantong.class);
-                                listKey.add(dataItem.getKey());
-                                listData.add(kantong);
-                                idSampah.add(kantong.getIdSampah());
-                                totalPoint = totalPoint+kantong.getJumlahPoint();
-                            }
-                            putList(idSampah,totalPoint,listKey);
-                            kantongAdapter = new ListKantongAdapter(listData);
-                            recyclerViewData.setAdapter(kantongAdapter);
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
 
-                        }
+                    hideProgress();
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
+                        Kantong kantong = dataItem.getValue(Kantong.class);
+//                        listKey.add(dataItem.getKey());
+                        listData.add(kantong);
+                        idSampah.add(kantong.getIdSampah());
+                        totalPoint = totalPoint+kantong.getJumlahPoint();
                     }
+                    putList(idSampah,totalPoint,listKey);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        hideProgress();
-                    }
+                    kantongAdapter = new ListKantongAdapter(listData);
+                    recyclerViewData.setAdapter(kantongAdapter);
+                    kondisiKantong.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
-                });
+//        counter++;
     }
+
 
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -184,7 +157,7 @@ public class KantongFragment extends Fragment {
     }
 
     private void putList(ArrayList<String> list, int totalPoint,ArrayList<String> listKey) {
-        listener.onInputKantongFragmentSent(list,totalPoint,listKey);
+            listener.onInputKantongFragmentSent(list,totalPoint,listKey);
     }
 
     @Override
@@ -212,5 +185,38 @@ public class KantongFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unSubScriber();
+    }
+
+    private void unSubScriber(){
+        if (viewModelFirebase != null && viewModelFirebase.getdataSnapshotLiveData().hasObservers()){
+            viewModelFirebase.getdataSnapshotLiveData().removeObserver((Observer<? super DataSnapshot>) getActivity());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("Tag", "FragmentA.onDestroyView() has been called.");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Tag", "FragmentA.onResume() has been called.");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("Tag", "FragmentA.onPause() has been called.");
+        listData.clear();
+        kantongAdapter = new ListKantongAdapter(listData);
+        recyclerViewData.setAdapter(kantongAdapter);
+    }
 }
 

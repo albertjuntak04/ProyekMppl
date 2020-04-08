@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     private static final String LOG_TAG = "FirebaseQueryLiveData";
+    private int count = 0;
 
     private final Query query;
     private final MyValueEventListener listener = new MyValueEventListener();
@@ -29,12 +31,19 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     protected void onActive() {
         Log.d(LOG_TAG, "onActive");
         query.addValueEventListener(listener);
+
     }
 
     @Override
     protected void onInactive() {
         Log.d(LOG_TAG, "onInactive");
         query.removeEventListener(listener);
+    }
+
+    @Override
+    public void removeObserver(@NonNull Observer<? super DataSnapshot> observer) {
+        super.removeObserver(observer);
+
     }
 
     private class MyValueEventListener implements ValueEventListener {

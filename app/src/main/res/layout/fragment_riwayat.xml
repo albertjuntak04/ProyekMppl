@@ -6,16 +6,31 @@
     tools:context=".fragment.RiwayatFragment"
     android:layout_marginBottom="60dp">
 
+
+
    <RelativeLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
+       <com.google.android.material.appbar.AppBarLayout
+           android:layout_width="match_parent"
+           android:layout_height="53dp"
+           android:background="#2DBB54"
+           android:id="@+id/appbar">
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:text="Riwayat"
+               android:textSize="40sp"
+               android:layout_marginLeft="10dp"></TextView>
+       </com.google.android.material.appbar.AppBarLayout>
 
        <androidx.recyclerview.widget.RecyclerView
            android:id="@+id/rv_riwayat"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            tools:itemCount="7"
-           tools:listitem="@layout/item_riwayat"></androidx.recyclerview.widget.RecyclerView>
+           tools:listitem="@layout/item_riwayat"
+           android:layout_below="@+id/appbar"></androidx.recyclerview.widget.RecyclerView>
        <ProgressBar
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"

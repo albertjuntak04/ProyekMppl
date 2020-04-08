@@ -63,15 +63,7 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         metodeJemputFragment = new MetodeJemputFragment();
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
-//
-//        if (savedInstanceState != null) { // saved instance state, fragment may exist
-//            // look up the instance that already exists by tag
-//            kantongFragment = (KantongFragment)
-//                    getSupportFragmentManager().findFragmentByTag(SIMPLE_FRAGMENT_TAG);
-//        } else if (kantongFragment == null) {
-//            // only create fragment if they haven't been instantiated already
-//            kantongFragment = new KantongFragment();
-//        }
+
 
         if (!kantongFragment.isInLayout()){
             getSupportFragmentManager()
