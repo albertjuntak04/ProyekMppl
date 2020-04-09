@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public class HandphoneData {
     private static String[] sampahNames= {
-            "Telepon Seluler",
-            "Kabel data dan Charger",
+            "TeleponSeluler",
+            "Charger",
             "Casing",
-            "Power bank",
+            "PowerBank",
             "Earphone"
     };
 

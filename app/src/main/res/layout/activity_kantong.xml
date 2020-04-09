@@ -10,29 +10,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_sampah"
-            tools:itemCount="5"
-            android:layout_marginRight="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="6dp">
-        </androidx.recyclerview.widget.RecyclerView>
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progress"
-            android:indeterminateDrawable="@drawable/custom_progressbar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="90dp"></ProgressBar>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/kantong_content">
+           <include layout="@layout/kantong_content"
+               >
+           </include>
+       </LinearLayout>
+<!--        <ProgressBar-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/progress"-->
+<!--            android:indeterminateDrawable="@drawable/custom_progressbar"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginTop="90dp"></ProgressBar>-->
 
         <LinearLayout
             android:id="@+id/kantongawal1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recycleview"
+            android:layout_below="@+id/kantong_content"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/txt_metode"

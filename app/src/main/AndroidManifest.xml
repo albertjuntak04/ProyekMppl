@@ -12,46 +12,71 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.jenissampah.NonOrganikActivity"
-            android:parentActivityName=".activity.MainActivity"></activity>
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".activity.KantongActivity"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:label="Kantong"/>
         <activity
             android:name=".activity.LoginRegister"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.jenissampah.PerlengkapanRumahTanggaActivity"
-            android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
+            android:parentActivityName=".activity.jenissampah.ElektronikActivity"
+            android:screenOrientation="portrait"
+            android:label="Perlengkapan Rumah"/>
         <activity android:name=".activity.jenissampah.PakaianActivity"
-            android:parentActivityName=".activity.MainActivity"/>
-        <activity android:name=".activity.KondisiActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:label="Pakaian"/>
+        <activity android:name=".activity.KondisiActivity"
+            android:screenOrientation="portrait"
+          />
         <activity
             android:name=".activity.jenissampah.KomputerActivity"
-            android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
+            android:parentActivityName=".activity.jenissampah.ElektronikActivity"
+            android:screenOrientation="portrait"
+            android:label="Komputer"/>
         <activity
             android:name=".activity.jenissampah.HandphoneActivity"
-            android:parentActivityName=".activity.jenissampah.ElektronikActivity" />
+            android:parentActivityName=".activity.jenissampah.ElektronikActivity"
+            android:screenOrientation="portrait"
+            android:label="Handphone"/>
         <activity
             android:name=".activity.jenissampah.ElektronikActivity"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:label="Elektronik"/>
         <activity android:name=".activity.PenukaranKupon"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:label="Kupon"/>
         <activity android:name=".activity.DaftarKupon"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RegisterActivity"
-            android:label="Register"
-            android:parentActivityName=".activity.LoginRegister" />
+            android:label="Daftar"
+            android:parentActivityName=".activity.LoginRegister"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
-            android:label="Login"
-            android:parentActivityName=".activity.LoginRegister" />
+            android:label="Masuk"
+            android:parentActivityName=".activity.LoginRegister"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,5 +84,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

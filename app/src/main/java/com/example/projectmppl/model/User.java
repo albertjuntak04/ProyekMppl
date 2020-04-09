@@ -12,21 +12,30 @@ public class User {
     private String pekerjaan;
     private String jenisKelamin;
     private String password;
+    private int poin;
 
-    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password) {
+    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, int poin) {
         this.nama = nama;
         this.email = email;
         this.noHP = noHP;
         this.pekerjaan = pekerjaan;
         this.jenisKelamin = jenisKelamin;
         this.password = password;
+        this.poin = poin;
     }
 
     public User(){
+        
 
     }
 
+    public int getPoin() {
+        return poin;
+    }
 
+    public void setPoin(int poin) {
+        this.poin = poin;
+    }
 
     public String getNama() {
         return nama;

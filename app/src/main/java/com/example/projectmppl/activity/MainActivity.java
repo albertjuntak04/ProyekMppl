@@ -1,10 +1,13 @@
 package com.example.projectmppl.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -18,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +31,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
+        ProfileFragment myFragment = new ProfileFragment();
+
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.frame_layout_content_dashboard, new HomeFragment(), HomeFragment.class.getSimpleName())
+                .replace(R.id.frame_layout_content_dashboard, new HomeFragment(), HomeFragment.class.getSimpleName())
                 .commit();
+
     }
 
 
@@ -46,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.action_profil:
                 fragment = new ProfileFragment();
+
                 break;
             case R.id.action_tentang:
                 fragment = new TentangFragment();

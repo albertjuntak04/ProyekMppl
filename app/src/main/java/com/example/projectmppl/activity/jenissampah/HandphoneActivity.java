@@ -11,6 +11,8 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KondisiActivity;
 import com.example.projectmppl.adapter.ListSampahAdapter;
 import com.example.projectmppl.data.HandphoneData;
+import com.example.projectmppl.fragment.HomeFragment;
+import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.model.Sampah;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class HandphoneActivity extends AppCompatActivity {
         showRecyclerView();
         Intent intent = new Intent(this, KondisiActivity.class);
         intent.putExtra("jenisSampah", "HP_dan_Aksesoris");
+
     }
 
     private void showRecyclerView() {

@@ -138,11 +138,11 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 //  signup success
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(RegisterActivity.this);
-                                alertDialogBuilder.setTitle("Signup");
-                                alertDialogBuilder.setMessage("Your account has been registered. Please sign in use your username and password.");
+                                alertDialogBuilder.setTitle("Daftar");
+                                alertDialogBuilder.setMessage("Akun Anda berhasil di daftar. Silahkan masuk menggunakan akun Anda");
 
                                 // Save new User
-                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password));
+                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password,0));
                                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -155,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity {
                             } else {
                                 task.getException().printStackTrace();
                                 //  signup fail
-                                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "registered has been failed! Please try again.", Snackbar.LENGTH_INDEFINITE);
+                                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Proses pendaftaran gagal, silahkan coba lagi", Snackbar.LENGTH_INDEFINITE);
                                 snackbar.setAction("OK", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

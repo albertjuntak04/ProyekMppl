@@ -34,7 +34,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
 
-        <ImageView
+
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/dashboard_iv_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -42,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/woman"
+            app:srcCompat="@drawable/gambar"
             />
 
         <TextView
@@ -50,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Oky Purba"
+            android:text="Nama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dashboard_iv_profile" />
@@ -81,7 +82,7 @@
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:layout_margin="3dp"
-                        android:src="@drawable/recyclingbox" />
+                        android:src="@drawable/savemoney" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -100,7 +101,7 @@
                             android:id="@+id/total_poin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1000" />
+                            android:text="0" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -146,7 +147,7 @@
                             android:id="@+id/total_kupon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1000" />
+                            android:text="0" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -167,7 +168,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:padding="15dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -182,7 +184,7 @@
                 android:id="@+id/img_nonorganik"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/nonorga"
+                android:src="@drawable/nonorganik"
                 android:layout_gravity="center_horizontal"></ImageView>
         </LinearLayout>
         <LinearLayout
@@ -199,8 +201,9 @@
                 android:id="@+id/img_elektronik"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/electronic"
-                android:layout_gravity="center_horizontal"></ImageView>
+                android:src="@drawable/elektronik"
+                android:layout_gravity="center_horizontal">
+            </ImageView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,9 +220,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/pakaian"
-                android:layout_gravity="center_horizontal"></ImageView>
+                android:layout_gravity="center_horizontal">
+            </ImageView>
         </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>
