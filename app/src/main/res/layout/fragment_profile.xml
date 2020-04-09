@@ -144,7 +144,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <EditText
                     android:id="@+id/edit_nama"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -175,7 +175,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <EditText
                     android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -204,7 +204,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <EditText
                     android:id="@+id/edit_noHp"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -233,14 +233,14 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <EditText
                     android:id="@+id/pekerjaan"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:ems="10"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints"></TextView>
+                    tools:ignore="MissingConstraints"></EditText>
                 <ImageButton
                     android:id="@+id/btn_edit_pekerjaan"
                     android:layout_width="wrap_content"
@@ -285,7 +285,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
+                <EditText
                     android:id="@+id/edit_password"
                     android:inputType="textPassword"
                     android:layout_width="match_parent"
