@@ -86,13 +86,50 @@
                 android:id="@+id/list_elektronik"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Charger Bagus"
+                android:text="-"
                 android:paddingStart="10dp"/>
             <TextView
                 android:id="@+id/jumlah_elektronik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2"
+                android:text="0"
+                android:layout_marginStart="12dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pcs" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="3dp">
+            <TextView
+                android:id="@+id/jenis_pakaian"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Pakaian"/>
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text=":"/>
+
+            <TextView
+                android:id="@+id/list_pakaian"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="- "
+                android:paddingStart="10dp"/>
+            <TextView
+                android:id="@+id/jumlah_pakaian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
                 android:layout_marginStart="12dp"/>
             <TextView
                 android:layout_width="wrap_content"

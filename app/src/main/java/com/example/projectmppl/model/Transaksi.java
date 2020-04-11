@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Transaksi {
     private String gambar;
-    private ArrayList<String> idSampah;
+    private ArrayList<Kantong> kantongElektronik = null;
+    private ArrayList<KantongNonOrganik> kantongNonOrganiks = null;
     private String idPenukar;
     private String metode;
     private String status;
@@ -18,16 +19,27 @@ public class Transaksi {
 
     }
 
-    public Transaksi(String gambar, ArrayList<String> idSampah, String idPenukar, String metode, String status, String taggalRequest, int totalPoin, String lokasi) {
+    public Transaksi(String gambar, ArrayList<Kantong> kantongElektronik, String idPenukar, String metode, String status, String taggalRequest, int totalPoin, String lokasi, ArrayList<KantongNonOrganik>kantongNonOrganiks) {
         this.gambar = gambar;
-        this.idSampah = idSampah;
+        this.kantongElektronik = kantongElektronik;
         this.idPenukar = idPenukar;
         this.metode = metode;
         this.status = status;
         this.taggalRequest = taggalRequest;
         this.totalPoin = totalPoin;
         this.lokasi = lokasi;
+        this.kantongNonOrganiks = kantongNonOrganiks;
+
     }
+
+    public ArrayList<KantongNonOrganik> getKantongNonOrganiks() {
+        return kantongNonOrganiks;
+    }
+
+    public void setKantongNonOrganiks(ArrayList<KantongNonOrganik> kantongNonOrganiks) {
+        this.kantongNonOrganiks = kantongNonOrganiks;
+    }
+
 
     public String getGambar() {
         return gambar;
@@ -37,12 +49,12 @@ public class Transaksi {
         this.gambar = gambar;
     }
 
-    public ArrayList<String> getIdSampah() {
-        return idSampah;
+    public ArrayList<Kantong> getKantongElektronik() {
+        return kantongElektronik;
     }
 
-    public void setIdSampah(ArrayList<String> idSampah) {
-        this.idSampah = idSampah;
+    public void setKantongElektronik(ArrayList<Kantong> kantongElektronik) {
+        this.kantongElektronik = kantongElektronik;
     }
 
     public String getIdPenukar() {

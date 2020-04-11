@@ -22,24 +22,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorlatar"
-        android:layout_marginTop="3dp">
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="41dp"
-            tools:layout_editor_absoluteY="148dp"
-            tools:ignore="MissingConstraints">
-
-
-            <RadioButton
+        android:layout_marginTop="3dp"
+        android:orientation="vertical"
+        android:id="@+id/list_sampah">
+            <CheckBox
                 android:id="@+id/plastik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Plastik"
                 tools:layout_editor_absoluteX="57dp"
-                tools:layout_editor_absoluteY="123dp" />
+                tools:layout_editor_absoluteY="123dp"
+                />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/kertas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +42,7 @@
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="163dp" />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/botol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,7 +50,7 @@
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="199dp" />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/besi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,14 +58,13 @@
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="233dp" />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/aluminium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Aluminium"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="268dp" />
-        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout
@@ -84,24 +78,32 @@
             android:layout_height="wrap_content"
             android:text="Berat Sampah"
             android:textSize="20dp"
+            android:layout_marginTop="18dp"
             />
 
-        <EditText
-            android:id="@+id/editText"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="52dp"
-            android:layout_height="31dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            style="@style/TextInputLayoutHint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/totalberat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kg" />
+            android:text="Kg"
+            android:layout_marginTop="15dp"/>
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_request"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="right"

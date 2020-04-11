@@ -8,7 +8,7 @@ public class PakaianData {
     private static String[] pakaianNames= {
             "Kaos",
             "Kemeja",
-            "jaket",
+            "Jaket",
             "Selimut",
             "Sepatu",
             "Tas"

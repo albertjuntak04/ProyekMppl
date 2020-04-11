@@ -18,17 +18,12 @@ import android.widget.TextView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.DaftarKupon;
-import com.example.projectmppl.activity.jenissampah.ElektronikActivity;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
-import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,7 +108,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
                 startActivity(nonOrganik);
                 break;
             case R.id.img_elektronik:
-                Intent elektronik = new Intent(getActivity(), ElektronikActivity.class);
+                Intent elektronik = new Intent(getActivity(), com.example.projectmppl.activity.jenissampah.ElektronikActivity.class);
                 startActivity(elektronik);
                 break;
             case R.id.img_pakaian:

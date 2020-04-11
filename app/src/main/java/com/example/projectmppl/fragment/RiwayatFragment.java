@@ -40,6 +40,7 @@ public class RiwayatFragment extends Fragment {
 
     private View view;
     private List<Transaksi> listData;
+    private ArrayList<Kantong> listKantong;
     private List<String> listKey;
     @BindView(R.id.rv_riwayat)
     RecyclerView recyclerViewData;
@@ -71,6 +72,8 @@ public class RiwayatFragment extends Fragment {
         LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
+        listKantong = new ArrayList<>();
+        final int[] index = {0};
         liveData.observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
@@ -78,10 +81,9 @@ public class RiwayatFragment extends Fragment {
                     hideProgress();
                     for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
                         Transaksi transaksi = dataItem.getValue(Transaksi.class);
-                        listKey.add(dataItem.getKey());
                         listData.add(transaksi);
                     }
-                    listRiwayatAdapter = new ListRiwayatAdapter(listData);
+                    listRiwayatAdapter = new ListRiwayatAdapter(listData,getContext());
                     recyclerViewData.setAdapter(listRiwayatAdapter);
                 }
 
@@ -106,7 +108,7 @@ public class RiwayatFragment extends Fragment {
     public void onPause() {
         super.onPause();
         listData.clear();
-        listRiwayatAdapter = new ListRiwayatAdapter(listData);
+        listRiwayatAdapter = new ListRiwayatAdapter(listData,getActivity());
         recyclerViewData.setAdapter(listRiwayatAdapter);
     }
 }

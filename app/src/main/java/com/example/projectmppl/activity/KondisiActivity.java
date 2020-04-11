@@ -161,10 +161,11 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                 if (totalPoint!=0){
                     String namaSampah = getIntent().getStringExtra("JenisSampah");
 
-                    Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint,namaSampah);
+                    Kantong kantong = new Kantong(idPengguna, idSampah, jumlah, totalPoint,namaSampah,sampahBagus,sampahRingan,sampahBerat);
                     databaseReference.child("kantong")
                             .child(idPengguna.replaceAll("\\.", "_"))
                             .child("data")
+                            .child("elektronik")
                             .push()
                             .setValue(kantong);
                     hideProgress();

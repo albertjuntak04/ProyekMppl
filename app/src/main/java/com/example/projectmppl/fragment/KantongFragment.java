@@ -2,14 +2,10 @@ package com.example.projectmppl.fragment;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -17,33 +13,26 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-<<<<<<< HEAD
-=======
 import android.util.Log;
->>>>>>> riwayat
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-<<<<<<< HEAD
-=======
+
 import android.widget.TextView;
->>>>>>> riwayat
+
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.activity.KantongActivity;
-import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
-import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
+import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
+import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,43 +48,45 @@ public class KantongFragment extends Fragment {
     public static String KEY_ACTIVITY = "DaftarSampah";
     @BindView(R.id.recycleview)
     RecyclerView recyclerViewData;
-<<<<<<< HEAD
-=======
+    @BindView(R.id.recycleviewNonOrganik)
+    RecyclerView recyclerViewNonOrganik;
+
     public ViewModelFirebase viewModelFirebase;
->>>>>>> riwayat
-
-
     private int someStateValue;
     private final String SOME_VALUE_KEY = "someValueToSave";
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     private List<Kantong> listData;
+    private List<KantongNonOrganik> listDataNonOrganik;
     private ArrayList<String> listKey;
-    private ArrayList<String> idSampah;
+    private ArrayList<Kantong> idSampah;
+    private ArrayList<KantongNonOrganik> idSampahNonOrganik;
+    private ArrayList<String>idSampahElektronik;
     private int totalPoint;
     @BindView(R.id.progress)
     ProgressBar progressBar;
-<<<<<<< HEAD
-=======
+
+
     @BindView(R.id.kondisi_kantong)
     TextView kondisiKantong;
->>>>>>> riwayat
+
     private  View view;
     private ListKantongAdapter kantongAdapter;
+    private ListNonOrganikAdapter listNonOrganikAdapter;
     private MetodeJemputFragment metodeJemputFragment;
 
-    private FragmentKantongListener listener;
+    private FragmentElektronikListener listener;
 
-<<<<<<< HEAD
-=======
     private LiveData liveData;
 
-
->>>>>>> riwayat
-    public interface  FragmentKantongListener{
-        void onInputKantongFragmentSent (ArrayList<String> input, int totalPoint, ArrayList<String> listKey);
+    public interface FragmentElektronikListener {
+        void onInputKantongFragmentSent (ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint, ArrayList<String> listKey);
+//        void onInputNonOrganikFragmentSent (ArrayList<KantongNonOrganik> input, int totalPoint, ArrayList<String> listKey);
     }
+
+
+
 
     public KantongFragment() {
         // Required empty public constructor
@@ -111,7 +102,7 @@ public class KantongFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         initFirebase();
-        loadDataFirebase("showData");
+        initView();
         return view;
     }
 
@@ -121,104 +112,52 @@ public class KantongFragment extends Fragment {
 
     }
 
-<<<<<<< HEAD
-//    public void loadDataFirebase(String removeData) {
-//        showProgress();
-//        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-//        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-//        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-//        totalPoint = 0;
-//        listKey = new ArrayList<>();
-//        listData = new ArrayList<>();
-//        idSampah = new ArrayList<>();
-//        liveData.observe(this, new Observer<DataSnapshot>() {
-//            @Override
-//            public void onChanged(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot != null){
-//                    hideProgress();
-//                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
-//                        Kantong kantong = dataItem.getValue(Kantong.class);
-////                        listKey.add(dataItem.getKey());
-//                        listData.add(kantong);
-//                        idSampah.add(kantong.getIdSampah());
-//                        totalPoint = totalPoint+kantong.getJumlahPoint();
-//                    }
-//                    putList(idSampah,totalPoint,listKey);
-//
-//                    kantongAdapter = new ListKantongAdapter(listData);
-//                    recyclerViewData.setAdapter(kantongAdapter);
-//                }
-//
-//            }
-//        });
-////        counter++;
-//    }
-//
-//    private void loadDataFirebase(String removeData) {
-//        showProgress();
-//        totalPoint = 0;
-//        listKey = new ArrayList<>();
-//        listData = new ArrayList<>();
-//        idSampah = new ArrayList<>();
-//        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-//        firebaseDatabase.getReference()
-//                .child("kantong")
-//                .child(currentUser)
-//                .child("data")
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        if (dataSnapshot != null){
-//                            hideProgress();
-//                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-//                                Kantong kantong = dataItem.getValue(Kantong.class);
-//                                listKey.add(dataItem.getKey());
-//                                listData.add(kantong);
-//                                idSampah.add(kantong.getIdSampah());
-//                                totalPoint = totalPoint+kantong.getJumlahPoint();
-//                            }
-//                            putList(idSampah,totalPoint,listKey);
-//                            kantongAdapter = new ListKantongAdapter(listData);
-//                            recyclerViewData.setAdapter(kantongAdapter);
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        hideProgress();
-//                    }
-//
-//                });
-//    }
-=======
+
     public void loadDataFirebase(String removeData) {
         showProgress();
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-        totalPoint = 0;
+//        totalPoint = 0;
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
         idSampah = new ArrayList<>();
+        totalPoint = 0;
+        listDataNonOrganik = new ArrayList<>();
+        idSampahNonOrganik = new ArrayList<>();
+        idSampahElektronik = new ArrayList<>();
         liveData.observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
 
                     hideProgress();
-                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").getChildren()) {
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
                         Kantong kantong = dataItem.getValue(Kantong.class);
-//                        listKey.add(dataItem.getKey());
                         listData.add(kantong);
-                        idSampah.add(kantong.getIdSampah());
+                        idSampah.add(kantong);
+                        idSampahElektronik.add(kantong.getIdSampah());
                         totalPoint = totalPoint+kantong.getJumlahPoint();
                     }
-                    putList(idSampah,totalPoint,listKey);
+
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
+                        KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
+                        listDataNonOrganik.add(kantongNonOrganik);
+                        idSampahNonOrganik.add(kantongNonOrganik);
+                        totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
+                    }
+
+                    putList(idSampah,idSampahNonOrganik,totalPoint,listKey);
+
+                    listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik);
+                    recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
 
                     kantongAdapter = new ListKantongAdapter(listData);
                     recyclerViewData.setAdapter(kantongAdapter);
+                    listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik);
+                    recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
                     kondisiKantong.setVisibility(View.INVISIBLE);
+//                    loadDataNonOrganik("showData");
                 }
             }
         });
@@ -226,13 +165,16 @@ public class KantongFragment extends Fragment {
 //        counter++;
     }
 
->>>>>>> riwayat
+
+
 
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewData.setHasFixedSize(true);
+        recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewNonOrganik.setHasFixedSize(true);
     }
 
     private void hideProgress() {
@@ -243,19 +185,18 @@ public class KantongFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void putList(ArrayList<String> list, int totalPoint,ArrayList<String> listKey) {
-<<<<<<< HEAD
-        listener.onInputKantongFragmentSent(list,totalPoint,listKey);
-=======
-            listener.onInputKantongFragmentSent(list,totalPoint,listKey);
->>>>>>> riwayat
+    private void putList(ArrayList<Kantong> list,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint,ArrayList<String> listKey) {
+
+        listener.onInputKantongFragmentSent(list,kantongNonOrganiks,totalPoint,listKey);
     }
+
+
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentKantongListener){
-            listener = (FragmentKantongListener) context;
+        if (context instanceof FragmentElektronikListener){
+            listener = (FragmentElektronikListener) context;
         }else {
             throw new RuntimeException(context.toString()
             + " must implement FragmentListener");
@@ -271,13 +212,14 @@ public class KantongFragment extends Fragment {
 
     public void removeData() {
         listData.clear();
+        listDataNonOrganik.clear();
         kantongAdapter = new ListKantongAdapter();
+        listNonOrganikAdapter = new ListNonOrganikAdapter();
+        listNonOrganikAdapter.notifyDataSetChanged();
         kantongAdapter.notifyDataSetChanged();
 
     }
 
-<<<<<<< HEAD
-=======
 
     @Override
     public void onDestroy() {
@@ -311,6 +253,10 @@ public class KantongFragment extends Fragment {
         kantongAdapter = new ListKantongAdapter(listData);
         recyclerViewData.setAdapter(kantongAdapter);
     }
->>>>>>> riwayat
+
+    public void initView(){
+        loadDataFirebase("showData");
+//        loadDataNonOrganik("showData");
+    }
 }
 

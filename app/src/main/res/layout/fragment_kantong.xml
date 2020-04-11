@@ -6,16 +6,25 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleviewNonOrganik"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_sampah"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="6dp">
+    </androidx.recyclerview.widget.RecyclerView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_sampah"
-        tools:itemCount="5"
         android:layout_marginRight="6dp"
         android:layout_marginLeft="6dp"
-        android:layout_marginTop="6dp">
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/recycleviewNonOrganik">
     </androidx.recyclerview.widget.RecyclerView>
     <TextView
         android:id="@+id/kondisi_kantong"

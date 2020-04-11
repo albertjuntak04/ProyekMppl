@@ -1,22 +1,55 @@
 package com.example.projectmppl.model;
 
-public class Kantong {
+import java.util.ArrayList;
+
+public class Kantong  {
     private String idPenukar;
     private String idSampah;
     private String jenisSampah;
     private int jumlah;
     private int jumlahPoint;
+    private int bagus;
+    private int sedang;
+    private int berat;
 
     public Kantong(){
 
     }
 
-    public Kantong(String idPenukar, String idSampah, int jumlah, int jumlahPoint, String jenisSampah) {
+    public Kantong(String idPenukar, String idSampah, int jumlah, int jumlahPoint, String jenisSampah, int bagus, int ringan, int berat ) {
         this.idPenukar = idPenukar;
         this.idSampah = idSampah;
         this.jumlah = jumlah;
         this.jumlahPoint = jumlahPoint;
         this.jenisSampah = jenisSampah;
+        this.berat = berat;
+        this.sedang = ringan;
+        this.bagus = bagus;
+    }
+
+
+    public int getBagus() {
+        return bagus;
+    }
+
+    public void setBagus(int bagus) {
+        this.bagus = bagus;
+    }
+
+    public int getSedang() {
+        return sedang;
+    }
+
+    public void setSedang(int sedang) {
+        this.sedang = sedang;
+    }
+
+    public int getBerat() {
+        return berat;
+    }
+
+    public void setBerat(int berat) {
+        this.berat = berat;
     }
 
     public String getJenisSampah() {

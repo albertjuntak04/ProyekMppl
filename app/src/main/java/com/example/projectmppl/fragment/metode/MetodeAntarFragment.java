@@ -3,38 +3,24 @@ package com.example.projectmppl.fragment.metode;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.RectF;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
-import com.example.projectmppl.activity.KondisiActivity;
-import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
-import com.example.projectmppl.fragment.KantongFragment;
+import com.example.projectmppl.model.Kantong;
+import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,12 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,9 +90,9 @@ public class MetodeAntarFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void sendData(ArrayList<String> listKey, int totalPoint, ArrayList<String> list){
+    public void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks, int totalPoint, ArrayList<String> list){
         initFirebase();
-        String lokasi = lokasiSpinner.getSelectedItem().toString();
+        String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
         String username = firebaseAuth.getCurrentUser().getEmail();
         String metode = "Antar";
         String status = "Diproses";
@@ -122,8 +102,9 @@ public class MetodeAntarFragment extends Fragment {
             btnRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi);
+                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks);
                     addTransaksi(transaksi);
+
                 }
             });
         }

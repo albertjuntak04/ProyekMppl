@@ -3,7 +3,6 @@ package com.example.projectmppl.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,27 +10,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.model.Kantong;
+import com.example.projectmppl.model.KantongNonOrganik;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.ViewHolder> {
-    private List<Kantong> listKantong;
+public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAdapter.ViewHolder> {
+    private List<KantongNonOrganik> listKantong;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
 
-    public ListKantongAdapter(){
+    public ListNonOrganikAdapter(){
 
     }
 
-    public ListKantongAdapter(List<Kantong> listKantong){
+    public ListNonOrganikAdapter(List<KantongNonOrganik> listKantong){
         this.listKantong = listKantong;
     }
 
@@ -39,18 +41,17 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListNonOrganikAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sampah, null);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Kantong kantong = listKantong.get(position);
+    public void onBindViewHolder(@NonNull ListNonOrganikAdapter.ViewHolder holder, int position) {
+        KantongNonOrganik kantong = listKantong.get(position);
         holder.jumlah.setText(String.valueOf(kantong.getJumlah()));
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
         holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
-
     }
 
     @Override

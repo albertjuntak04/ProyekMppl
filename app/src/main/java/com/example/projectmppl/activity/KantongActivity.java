@@ -16,6 +16,7 @@ import com.example.projectmppl.fragment.KantongFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
+import com.example.projectmppl.model.KantongNonOrganik;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentKantongListener, MetodeAntarFragment.MetodeAntarFragmentListener{
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener, MetodeAntarFragment.MetodeAntarFragmentListener{
 
 
     private static final String TAG = "KantongActivity";
@@ -151,13 +152,14 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
 
     @Override
-    public void onInputKantongFragmentSent(ArrayList<String> input, int totalPoint, ArrayList<String> listKey) {
-        metodeAntarFragment.sendData(input,totalPoint,listKey);
+    public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint, ArrayList<String> listKey) {
+        metodeAntarFragment.sendData(input,kantongNonOrganiks,totalPoint,listKey);
     }
+
+
 
     @Override
     public void onInputKantongFragmentSent(String removeData) {
-//        kantongFragment.loadDataFirebase(removeData);
         kantongFragment.removeData();
     }
 
