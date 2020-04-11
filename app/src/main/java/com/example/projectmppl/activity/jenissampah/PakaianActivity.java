@@ -33,7 +33,7 @@ public class PakaianActivity extends AppCompatActivity {
 
     private void showRecylerView(){
         rvPakaian.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"Pakaian");
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"Pakaian","pakaian");
         rvPakaian.setAdapter(listSampahAdapter);
     }
 }

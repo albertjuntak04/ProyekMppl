@@ -20,11 +20,13 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
     private ArrayList<Sampah> listPakaian;
     private Context context;
     private String jenisSampah;
+    private String kategoriSampah;
 
-    public ListSampahAdapter(ArrayList<Sampah> list, Context context, String jenisSampah){
+    public ListSampahAdapter(ArrayList<Sampah> list, Context context, String jenisSampah, String kategori){
         this.listPakaian = list;
         this.context = context;
         this.jenisSampah = jenisSampah;
+        this.kategoriSampah = kategori;
     }
 
     @NonNull
@@ -44,6 +46,7 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
                 Intent intent = new Intent(context, KondisiActivity.class);
                 intent.putExtra("NamaSampah",listPakaian.get(holder.getAdapterPosition()).getName());
                 intent.putExtra("JenisSampah",jenisSampah);
+                intent.putExtra("KategoriSampah" ,kategoriSampah);
                 context.startActivity(intent);
             }
         });

@@ -90,7 +90,7 @@ public class MetodeAntarFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks, int totalPoint, ArrayList<String> list){
+    public void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> list){
         initFirebase();
         String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
         String username = firebaseAuth.getCurrentUser().getEmail();
@@ -102,7 +102,7 @@ public class MetodeAntarFragment extends Fragment {
             btnRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks);
+                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
                     addTransaksi(transaksi);
 
                 }

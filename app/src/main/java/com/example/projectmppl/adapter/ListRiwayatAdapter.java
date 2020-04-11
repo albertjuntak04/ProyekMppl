@@ -40,7 +40,9 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
     private Kantong kantong = new Kantong();
     private ArrayList<String> daftarElektronik;
     private ArrayList<String> daftarNonOrganik;
+    private ArrayList<String> daftarPakaian;
     private int jumlahElektronik = 0;
+    private int jumlahPakaian = 0;
     private int totalBerat = 0;
     private List<KantongNonOrganik> kantongNonOrganikList;
     private Context context;
@@ -70,8 +72,10 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         Transaksi transaksi = listTransaksi.get(position);
         daftarElektronik = new ArrayList<>();
         daftarNonOrganik = new ArrayList<>();
+        daftarPakaian = new ArrayList<>();
         jumlahElektronik = 0;
         totalBerat = 0;
+        jumlahPakaian = 0;
         holder.tanggalPemesanan.setText(String.valueOf(transaksi.getTaggalRequest()));
         holder.metode.setText(String.valueOf(transaksi.getMetode()));
         holder.elektronik.setText(String.valueOf(transaksi.getKantongElektronik()));
@@ -112,8 +116,19 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
             holder.jumlahOrganik.setText(String.valueOf(totalBerat));
         }
 
+        if (transaksi.getKantongPakaian() == null){
+            holder.pakaian.setText(String.valueOf("-"));
+            holder.jumlahPakaian.setText(String.valueOf(0));
+        }else {
+            for (int index = 0;index<transaksi.getKantongPakaian().size();index++ ){
+                Kantong kantongPakaian = transaksi.getKantongPakaian().get(index);
+                daftarPakaian.add(String.valueOf(kantongPakaian.getIdSampah()));
+                jumlahPakaian = jumlahPakaian + kantongPakaian.getJumlah();
+            }
 
-
+            holder.pakaian.setText(String.valueOf(daftarPakaian));
+            holder.jumlahPakaian.setText(String.valueOf(jumlahPakaian));
+        }
     }
 
     @Override
@@ -132,6 +147,10 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         TextView elektronik;
         @BindView(R.id.jumlah_elektronik)
         TextView jumlahElektronik;
+        @BindView(R.id.list_pakaian)
+        TextView pakaian;
+        @BindView(R.id.jumlah_pakaian)
+        TextView jumlahPakaian;
         @BindView(R.id.metode)
         TextView metode;
         @BindView(R.id.total_poin)

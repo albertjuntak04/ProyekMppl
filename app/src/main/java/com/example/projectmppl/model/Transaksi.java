@@ -7,6 +7,7 @@ public class Transaksi {
     private String gambar;
     private ArrayList<Kantong> kantongElektronik = null;
     private ArrayList<KantongNonOrganik> kantongNonOrganiks = null;
+    private ArrayList<Kantong> kantongPakaian = null;
     private String idPenukar;
     private String metode;
     private String status;
@@ -19,7 +20,7 @@ public class Transaksi {
 
     }
 
-    public Transaksi(String gambar, ArrayList<Kantong> kantongElektronik, String idPenukar, String metode, String status, String taggalRequest, int totalPoin, String lokasi, ArrayList<KantongNonOrganik>kantongNonOrganiks) {
+    public Transaksi(String gambar, ArrayList<Kantong> kantongElektronik, String idPenukar, String metode, String status, String taggalRequest, int totalPoin, String lokasi, ArrayList<KantongNonOrganik>kantongNonOrganiks, ArrayList<Kantong>kantongPakaian) {
         this.gambar = gambar;
         this.kantongElektronik = kantongElektronik;
         this.idPenukar = idPenukar;
@@ -29,6 +30,7 @@ public class Transaksi {
         this.totalPoin = totalPoin;
         this.lokasi = lokasi;
         this.kantongNonOrganiks = kantongNonOrganiks;
+        this.kantongPakaian = kantongPakaian;
 
     }
 
@@ -40,6 +42,14 @@ public class Transaksi {
         this.kantongNonOrganiks = kantongNonOrganiks;
     }
 
+
+    public ArrayList<Kantong> getKantongPakaian() {
+        return kantongPakaian;
+    }
+
+    public void setKantongPakaian(ArrayList<Kantong> kantongPakaian) {
+        this.kantongPakaian = kantongPakaian;
+    }
 
     public String getGambar() {
         return gambar;

@@ -35,7 +35,7 @@ public class KomputerActivity extends AppCompatActivity {
 
     private void showRecylerview(){
         rvKomputer.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"komputer");
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"komputer","elektronik");
         rvKomputer.setAdapter(listSampahAdapter);
     }
 }

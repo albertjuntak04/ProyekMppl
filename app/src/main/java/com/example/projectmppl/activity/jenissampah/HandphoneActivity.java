@@ -38,7 +38,7 @@ public class HandphoneActivity extends AppCompatActivity {
 
     private void showRecyclerView() {
         rvHandphone.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listHandphoneAdapter = new ListSampahAdapter(list,this,"HP_dan_Aksesoris");
+        ListSampahAdapter listHandphoneAdapter = new ListSampahAdapter(list,this,"HP_dan_Aksesoris","elektronik");
         rvHandphone.setAdapter(listHandphoneAdapter);
     }
 

@@ -13,7 +13,7 @@ public class RumahTanggaData {
             "Kamera",
             "Jam",
             "Blender",
-            "Dispencer",
+            "Dispenser",
             "Setrika"
     };
 

@@ -50,6 +50,8 @@ public class KantongFragment extends Fragment {
     RecyclerView recyclerViewData;
     @BindView(R.id.recycleviewNonOrganik)
     RecyclerView recyclerViewNonOrganik;
+    @BindView(R.id.recycleviewPakaian)
+    RecyclerView recyclerViewPakaian;
 
     public ViewModelFirebase viewModelFirebase;
     private int someStateValue;
@@ -63,6 +65,8 @@ public class KantongFragment extends Fragment {
     private ArrayList<Kantong> idSampah;
     private ArrayList<KantongNonOrganik> idSampahNonOrganik;
     private ArrayList<String>idSampahElektronik;
+    private ArrayList<String> idPakaian;
+    private ArrayList<Kantong> listPakaian;
     private int totalPoint;
     @BindView(R.id.progress)
     ProgressBar progressBar;
@@ -73,6 +77,7 @@ public class KantongFragment extends Fragment {
 
     private  View view;
     private ListKantongAdapter kantongAdapter;
+    private ListKantongAdapter kantongAdapterPakaian;
     private ListNonOrganikAdapter listNonOrganikAdapter;
     private MetodeJemputFragment metodeJemputFragment;
 
@@ -81,7 +86,7 @@ public class KantongFragment extends Fragment {
     private LiveData liveData;
 
     public interface FragmentElektronikListener {
-        void onInputKantongFragmentSent (ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint, ArrayList<String> listKey);
+        void onInputKantongFragmentSent (ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> listKey);
 //        void onInputNonOrganikFragmentSent (ArrayList<KantongNonOrganik> input, int totalPoint, ArrayList<String> listKey);
     }
 
@@ -122,8 +127,10 @@ public class KantongFragment extends Fragment {
         listKey = new ArrayList<>();
         listData = new ArrayList<>();
         idSampah = new ArrayList<>();
+        listPakaian = new ArrayList<>();
         totalPoint = 0;
         listDataNonOrganik = new ArrayList<>();
+        idPakaian = new ArrayList<>();
         idSampahNonOrganik = new ArrayList<>();
         idSampahElektronik = new ArrayList<>();
         liveData.observe(this, new Observer<DataSnapshot>() {
@@ -147,22 +154,29 @@ public class KantongFragment extends Fragment {
                         totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
                     }
 
-                    putList(idSampah,idSampahNonOrganik,totalPoint,listKey);
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
+                        Kantong kantongPakaian = dataItem.getValue(Kantong.class);
+                        listPakaian.add(kantongPakaian);
+                        totalPoint = totalPoint+kantongPakaian.getJumlahPoint();
+                    }
+
+                    putList(idSampah,idSampahNonOrganik,listPakaian,totalPoint,listKey);
 
                     listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik);
                     recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
 
                     kantongAdapter = new ListKantongAdapter(listData);
+                    kantongAdapterPakaian = new ListKantongAdapter(listPakaian);
+
                     recyclerViewData.setAdapter(kantongAdapter);
-                    listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik);
-                    recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
+                    recyclerViewPakaian.setAdapter(kantongAdapterPakaian);
+
+
                     kondisiKantong.setVisibility(View.INVISIBLE);
-//                    loadDataNonOrganik("showData");
                 }
             }
         });
 
-//        counter++;
     }
 
 
@@ -173,6 +187,9 @@ public class KantongFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewData.setHasFixedSize(true);
+
+        recyclerViewPakaian.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewPakaian.setHasFixedSize(true);
         recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewNonOrganik.setHasFixedSize(true);
     }
@@ -185,9 +202,9 @@ public class KantongFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void putList(ArrayList<Kantong> list,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint,ArrayList<String> listKey) {
+    private void putList(ArrayList<Kantong> list,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint,ArrayList<String> listKey) {
 
-        listener.onInputKantongFragmentSent(list,kantongNonOrganiks,totalPoint,listKey);
+        listener.onInputKantongFragmentSent(list,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
     }
 
 
@@ -213,6 +230,7 @@ public class KantongFragment extends Fragment {
     public void removeData() {
         listData.clear();
         listDataNonOrganik.clear();
+        listPakaian.clear();
         kantongAdapter = new ListKantongAdapter();
         listNonOrganikAdapter = new ListNonOrganikAdapter();
         listNonOrganikAdapter.notifyDataSetChanged();
@@ -250,8 +268,11 @@ public class KantongFragment extends Fragment {
         super.onPause();
         Log.d("Tag", "FragmentA.onPause() has been called.");
         listData.clear();
-        kantongAdapter = new ListKantongAdapter(listData);
-        recyclerViewData.setAdapter(kantongAdapter);
+        listDataNonOrganik.clear();
+        listPakaian.clear();
+
+        listNonOrganikAdapter.notifyDataSetChanged();
+        kantongAdapter.notifyDataSetChanged();
     }
 
     public void initView(){

@@ -152,8 +152,8 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
 
     @Override
-    public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint, ArrayList<String> listKey) {
-        metodeAntarFragment.sendData(input,kantongNonOrganiks,totalPoint,listKey);
+    public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> listKey) {
+        metodeAntarFragment.sendData(input,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
     }
 
 
