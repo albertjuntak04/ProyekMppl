@@ -95,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                 int jenisKelamin = radioGroup.getCheckedRadioButtonId();
                 String password = editTextPassword.getText().toString().trim();
                 String confirmPassword = editTextConfirmPassword.getText().toString().trim();
-                radioButton = (RadioButton) findViewById(jenisKelamin);
+                radioButton = findViewById(jenisKelamin);
 
                 String genre = (String) radioButton.getText();
                 signup(name, email, noHP, pekerjaan, genre, password, confirmPassword);

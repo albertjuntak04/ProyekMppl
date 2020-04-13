@@ -24,7 +24,7 @@
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="Total berat "
+                android:text="@string/total_berat"
                 android:textStyle="bold" />
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="Total Poin "
+                android:text="@string/total_poin"
                 android:textStyle="bold" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="0"></TextView>
+                android:text="@string/_0"></TextView>
 
         </LinearLayout>
     <View

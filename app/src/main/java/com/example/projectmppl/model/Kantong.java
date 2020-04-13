@@ -1,7 +1,5 @@
 package com.example.projectmppl.model;
 
-import java.util.ArrayList;
-
 public class Kantong  {
     private String idPenukar;
     private String idSampah;

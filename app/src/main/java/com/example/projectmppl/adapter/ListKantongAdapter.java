@@ -3,7 +3,6 @@ package com.example.projectmppl.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,11 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.model.Kantong;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.ViewHolder> {
     private List<Kantong> listKantong;
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
 
     public ListKantongAdapter(){
@@ -65,7 +61,7 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         TextView total;
         @BindView(R.id.jenis_sampah)
         TextView jenisSampah;
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

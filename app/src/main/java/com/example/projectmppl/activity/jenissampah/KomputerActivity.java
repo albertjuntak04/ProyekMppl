@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.activity.KondisiActivity;
 import com.example.projectmppl.adapter.ListSampahAdapter;
 import com.example.projectmppl.data.KomputerData;
 import com.example.projectmppl.model.Sampah;
@@ -17,7 +15,7 @@ import java.util.ArrayList;
 
 public class KomputerActivity extends AppCompatActivity {
     private RecyclerView rvKomputer;
-    private ArrayList<Sampah> list = new ArrayList<>();
+    private final ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

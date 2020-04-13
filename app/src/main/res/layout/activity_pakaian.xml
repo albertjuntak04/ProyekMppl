@@ -50,7 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pilih sampah yang ingin ditukar:"
+                android:text="@string/pilih_sampah_yang_ingin_ditukar"
                 android:textAlignment="center"
                 android:textColor="@color/text"
                 android:textSize="18sp" />

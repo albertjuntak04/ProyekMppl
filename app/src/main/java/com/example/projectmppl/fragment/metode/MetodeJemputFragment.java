@@ -2,9 +2,7 @@ package com.example.projectmppl.fragment.metode;
 
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +56,6 @@ import static android.app.Activity.RESULT_OK;
 public class MetodeJemputFragment extends Fragment implements View.OnClickListener {
 
 
-
-    private View view;
     @BindView(R.id.input_lokasi)
     EditText lokasiPenjemputan;
     @BindView(R.id.btn_request_jemput)
@@ -72,7 +68,6 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     TextView textView;
     @BindView(R.id.progress)
     ProgressBar progressBar;
-    private DatabaseReference databaseReference2;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -104,12 +99,10 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_metode_jemput, container, false);
-        btnRequest = (Button) view.findViewById(R.id.btn_request);
-        ButterKnife.bind(this,view);
-        btnRequest.setOnClickListener(this::onClick);
-        btnTambahGambar.setOnClickListener(this::onClick);
-        textView.setText(String.valueOf(totalPoint));
+        View view = inflater.inflate(R.layout.fragment_metode_jemput, container, false);
+        ButterKnife.bind(this, view);
+        btnRequest.setOnClickListener(this);
+        btnTambahGambar.setOnClickListener(this);
         hideProgress();
 
 
@@ -126,22 +119,14 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.tambah_gambar:
-                openFileChooser();
-
-
+        if (view.getId() == R.id.tambah_gambar) {
+            openFileChooser();
         }
 
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    public void addTransaksi(Transaksi transaksi){
+    private void addTransaksi(Transaksi transaksi){
         databaseReference
                 .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
                 .push()
@@ -173,73 +158,63 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
             if (mImageUri != null) {
                 Picasso.get().load(mImageUri).into(imageSampah);
             }
+
         }
+        this.listKey.clear();
+        this.kantongNonOrganiks.clear();
+        this.inputPakaian.clear();
+        this.list.clear();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
 
-    public void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks, ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> list){
+    private void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks, ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> list){
         initFirebase();
         String lokasi = lokasiPenjemputan.getText().toString().trim();
-        String username = firebaseAuth.getCurrentUser().getEmail();
-        String metode = "Antar";
+        String username = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
+        String metode = "Jemput";
         String status = "Diproses";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         if (totalPoint != 0){
-            btnRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mImageUri !=null){
-                        StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                                + "." + getFileExtension(mImageUri));
-                        fileReference.putFile(mImageUri)
-                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
+            btnRequest.setOnClickListener(view -> {
+                if (mImageUri !=null){
+                    StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+                            + "." + getFileExtension(mImageUri));
+                    fileReference.putFile(mImageUri)
+                            .addOnSuccessListener(taskSnapshot -> {
+                                Handler handler = new Handler();
+                                handler.postDelayed(() -> {
 //                                                mProgressBar.setProgress(0);
-                                            }
-                                        }, 500);
+                                }, 500);
 
-                                        Transaksi transaksi = new Transaksi(taskSnapshot.getStorage().getDownloadUrl().toString(), listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
-                                        addTransaksi(transaksi);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
+                                Transaksi transaksi = new Transaksi(taskSnapshot.getStorage().getDownloadUrl().toString(), listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
+                                addTransaksi(transaksi);
+                            }).addOnFailureListener(e -> {
 
-                                    }
-                                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                        showProgress();
-                                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                        progressBar.setProgress((int) progress);
+                    }).addOnProgressListener(taskSnapshot -> {
+                        showProgress();
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressBar.setProgress((int) progress);
 
-                                    }
-                                });
-
-                    }
-                    else {
-                        Toast.makeText(getContext(),"Tidak ada foto yang dipilih",Toast.LENGTH_SHORT).show();
-                    }
+                    });
 
                 }
+                else {
+                    Toast.makeText(getContext(),"Tidak ada foto yang dipilih",Toast.LENGTH_SHORT).show();
+                }
+
             });
         }
     }
 
     private String getFileExtension(Uri uri) {
-        ContentResolver cR = getActivity().getContentResolver();
+        ContentResolver cR = Objects.requireNonNull(getActivity()).getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void removeData(Transaksi transaksi){
-        databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
         databaseReference2.child(transaksi.getIdPenukar().replaceAll("\\.", "_")).removeValue();
         Intent intent = new Intent(getActivity(), KantongActivity.class);
         intent.putExtra("saveData","removeData");
@@ -257,21 +232,14 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     public void onPause() {
         super.onPause();
         Log.d("Tag", "FragmentJemput.onPause() has been called.");
-        this.listKey.clear();
-        this.kantongNonOrganiks.clear();
-        this.inputPakaian.clear();
-        this.list.clear();
+
     }
 
     private void hideProgress() {
         progressBar.setVisibility(View.GONE);
-
-
     }
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
-
-
     }
 }

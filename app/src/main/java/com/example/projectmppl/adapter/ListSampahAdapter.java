@@ -17,10 +17,10 @@ import com.example.projectmppl.model.Sampah;
 import java.util.ArrayList;
 
 public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.ListViewHolder> {
-    private ArrayList<Sampah> listPakaian;
-    private Context context;
-    private String jenisSampah;
-    private String kategoriSampah;
+    private final ArrayList<Sampah> listPakaian;
+    private final Context context;
+    private final String jenisSampah;
+    private final String kategoriSampah;
 
     public ListSampahAdapter(ArrayList<Sampah> list, Context context, String jenisSampah, String kategori){
         this.listPakaian = list;
@@ -58,8 +58,8 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
     }
 
     public class ListViewHolder extends RecyclerView.ViewHolder {
-        TextView namePakaian;
-        public ListViewHolder(@NonNull View itemView) {
+        final TextView namePakaian;
+        ListViewHolder(@NonNull View itemView) {
             super(itemView);
             namePakaian = itemView.findViewById(R.id.txt_nama_sampah);
         }

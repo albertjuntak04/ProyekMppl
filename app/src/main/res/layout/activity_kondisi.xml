@@ -55,8 +55,8 @@
                 android:id="@+id/kondisi"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Kondisi Barang"
-                android:layout_marginLeft="10dp"
+                android:text="@string/kondisi_barang"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:textSize="20sp" />
 
@@ -64,8 +64,8 @@
                 android:id="@+id/jumlah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:text="Jumlah"
+                android:layout_marginStart="35dp"
+                android:text="@string/jumlah"
                 android:textAlignment="center"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -85,7 +85,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:indeterminateDrawable="@drawable/custom_progressbar"
-                ></ProgressBar>
+                >
+            </ProgressBar>
 
             <LinearLayout
                 android:id="@+id/layout_bagus"
@@ -104,7 +105,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginStart="35dp"
                     style="@style/TextInputLayoutHint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -135,7 +136,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginStart="35dp"
                     style="@style/TextInputLayoutHint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -168,7 +169,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginStart="35dp"
                     style="@style/TextInputLayoutHint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -189,7 +190,7 @@
             android:layout_marginStart="290dp"
             android:layout_marginTop="50dp"
             android:background="@color/button"
-            android:text="Kantong"
+            android:text="@string/kantong"
             android:textColor="@color/textputih" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

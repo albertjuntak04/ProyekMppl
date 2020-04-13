@@ -11,15 +11,13 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KondisiActivity;
 import com.example.projectmppl.adapter.ListSampahAdapter;
 import com.example.projectmppl.data.HandphoneData;
-import com.example.projectmppl.fragment.HomeFragment;
-import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.model.Sampah;
 
 import java.util.ArrayList;
 
 public class HandphoneActivity extends AppCompatActivity {
     private RecyclerView rvHandphone;
-    private ArrayList<Sampah> list = new ArrayList<>();
+    private final ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -25,6 +25,8 @@ import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,7 +35,6 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener  {
-    private View view;
     @BindView(R.id.kupon)
     CardView cardView;
     @BindView(R.id.poin)
@@ -60,29 +61,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        cardView.setOnClickListener(this::onClick);
-        cardPoin.setOnClickListener(this::onClick);
-        nonOrganik.setOnClickListener(this::onClick);
-        elektronik.setOnClickListener(this::onClick);
-        pakaian.setOnClickListener(this::onClick);
-        kantong.setOnClickListener(this::onClick);
+        cardView.setOnClickListener(this);
+        cardPoin.setOnClickListener(this);
+        nonOrganik.setOnClickListener(this);
+        elektronik.setOnClickListener(this);
+        pakaian.setOnClickListener(this);
+        kantong.setOnClickListener(this);
 
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataUser();
-        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
-        liveData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                // Untuk menampilkan dataUser
-                String name = dataSnapshot.child(currentUser).child("nama").getValue().toString();
-                String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
-                tvName.setText(name);
-                totalPoin.setText(poin);
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        liveData.observe(this, dataSnapshot -> {
+            // Untuk menampilkan dataUser
+            String name = dataSnapshot.child(currentUser).child("nama").getValue().toString();
+            String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
+            tvName.setText(name);
+            totalPoin.setText(poin);
 
 
-            }
         });
 
         return view;
@@ -96,12 +94,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.kupon:
+            case R.id.poin:
                 Intent intent = new Intent(getActivity(), DaftarKupon.class);
                 startActivity(intent);
-                break;
-            case R.id.poin:
-                Intent intent1 = new Intent(getActivity(), DaftarKupon.class);
-                startActivity(intent1);
                 break;
             case R.id.img_nonorganik:
                 Intent nonOrganik = new Intent(getActivity(), NonOrganikActivity.class);

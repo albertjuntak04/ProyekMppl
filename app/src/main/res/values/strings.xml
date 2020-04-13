@@ -124,6 +124,36 @@
         melakukan transaksi sampah, seperti sampah non organik, pakaian, dan elektronik. Lakukan permintaan penukaran di aplikasi, ada pilihan untuk dijemput
         dan diantar, kolektor terdekat akan menjemput dan membayar sampahmu dalam bentuk poin.
         Kumpulkan poin sebanyak mungkin dan tukarkan dengan berbagai jenis kupon menarik yang ada.</string>
+    <string name="pilih_sampah_yang_ingin_ditukar">Pilih sampah yang ingin ditukar:</string>
+    <string name="kondisi_barang">Kondisi Barang</string>
+    <string name="kantong">Kantong</string>
+    <string name="e_mail">E-mail</string>
+    <string name="kata_sandi">Kata Sandi</string>
+    <string name="masuk">Masuk</string>
+    <string name="daftar">Daftar</string>
+    <string name="jenis_sampah">Jenis Sampah</string>
+    <string name="plastik">Plastik</string>
+    <string name="kertas">Kertas</string>
+    <string name="botol">Botol</string>
+    <string name="besi">Besi</string>
+    <string name="aluminium">Aluminium</string>
+    <string name="kg">Kg</string>
+    <string name="jenis_kelamin">Jenis Kelamin</string>
+    <string name="perempuan">Perempuan</string>
+    <string name="laki_laki">Laki-Laki</string>
+    <string name="mari_jaga_lingkungan">Mari Jaga Lingkungan</string>
+    <string name="_0">0</string>
+    <string name="tukar_sampah">Tukar Sampah</string>
+    <string name="non_organik">Non Organik</string>
+    <string name="elektronik">Elektronik</string>
+    <string name="masukkan_lokasi">Masukkan lokasi</string>
+    <string name="tambahkan_gambar">Tambahkan gambar</string>
+    <string name="tanggal">20 Januari 2020</string>
+    <string name="pcs">pcs</string>
+    <string name="poin">Poin</string>
+    <string name="total_berat">Total berat</string>
+    <string name="total_poin">Total Poin</string>
+    <string name="request">Request</string>
 
 
 </resources>

@@ -14,20 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.adapter.ListRiwayatAdapter;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,10 +36,7 @@ import butterknife.ButterKnife;
 public class RiwayatFragment extends Fragment {
 
 
-    private View view;
     private List<Transaksi> listData;
-    private ArrayList<Kantong> listKantong;
-    private List<String> listKey;
     @BindView(R.id.rv_riwayat)
     RecyclerView recyclerViewData;
     @BindView(R.id.progress)
@@ -57,37 +52,34 @@ public class RiwayatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_riwayat, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_riwayat, container, false);
+        ButterKnife.bind(this, view);
         loadDataFirebase();
         initFirebase();
 
         return view;
     }
 
-    public void loadDataFirebase() {
+    private void loadDataFirebase() {
         showProgress();
-        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
-        listKey = new ArrayList<>();
+        List<String> listKey = new ArrayList<>();
         listData = new ArrayList<>();
-        listKantong = new ArrayList<>();
+        ArrayList<Kantong> listKantong = new ArrayList<>();
         final int[] index = {0};
-        liveData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    hideProgress();
-                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
-                        Transaksi transaksi = dataItem.getValue(Transaksi.class);
-                        listData.add(transaksi);
-                    }
-                    listRiwayatAdapter = new ListRiwayatAdapter(listData,getContext());
-                    recyclerViewData.setAdapter(listRiwayatAdapter);
+        liveData.observe(this, dataSnapshot -> {
+            if (dataSnapshot != null){
+                hideProgress();
+                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
+                    Transaksi transaksi = dataItem.getValue(Transaksi.class);
+                    listData.add(transaksi);
                 }
-
+                listRiwayatAdapter = new ListRiwayatAdapter(listData,getContext());
+                recyclerViewData.setAdapter(listRiwayatAdapter);
             }
+
         });
     }
 

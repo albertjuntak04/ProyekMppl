@@ -18,14 +18,6 @@
                >
            </include>
        </LinearLayout>
-<!--        <ProgressBar-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/progress"-->
-<!--            android:indeterminateDrawable="@drawable/custom_progressbar"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="90dp"></ProgressBar>-->
-
         <LinearLayout
             android:id="@+id/kantongawal1"
             android:layout_width="match_parent"
@@ -37,14 +29,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/metode"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:textStyle="bold"
                 android:layout_marginTop="6dp"/>
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_metode">
+                android:layout_height="wrap_content">
                 <com.google.android.material.bottomnavigation.BottomNavigationView
                     android:id="@+id/navigation"
                     android:layout_width="match_parent"

@@ -66,11 +66,7 @@ public class LoginRegister extends AppCompatActivity {
     }
 
     public boolean isLoggedIn() {
-        if (firebaseAuth.getCurrentUser() != null) {
-            //  user logged in
-            return true;
-        } else {
-            return false;
-        }
+        //  user logged in
+        return firebaseAuth.getCurrentUser() != null;
     }
 }

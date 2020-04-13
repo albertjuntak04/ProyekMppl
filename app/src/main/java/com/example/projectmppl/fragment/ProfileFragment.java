@@ -2,14 +2,10 @@ package com.example.projectmppl.fragment;
 
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -19,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,19 +25,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,15 +57,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.btn_simpan)
     Button simpan;
 
-    ProgressDialog pd;
-
-    private View view;
+    private ProgressDialog pd;
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
 
-    public static DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    public static DatabaseReference mChildReferenceForInputHistory = databaseReference.child("pengguna");
+    private static DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private static final DatabaseReference mChildReferenceForInputHistory = databaseReference.child("pengguna");
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -87,7 +74,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
 
         initFirebase();
@@ -95,26 +82,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         pd = new ProgressDialog(getActivity());
 
-        simpan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editNama.isInputMethodTarget()) {
-                    ClickEditNama("nama");
-                }
-                else if (editEmail.isInputMethodTarget()) {
-                    ClickEditEmail("email");
-                }
-                else if (editNoHp.isInputMethodTarget()) {
-                    ClickEditNoHP("noHP");
-                }
-                else if (editPassword.isInputMethodTarget()) {
-                    ClickEditPassword("password");
-                }
+        simpan.setOnClickListener(v -> {
+            if (editNama.isInputMethodTarget()) {
+                ClickEditNama("nama");
+            }
+            else if (editEmail.isInputMethodTarget()) {
+                ClickEditEmail("email");
+            }
+            else if (editNoHp.isInputMethodTarget()) {
+                ClickEditNoHP("noHP");
+            }
+            else if (editPassword.isInputMethodTarget()) {
+                ClickEditPassword("password");
             }
         });
 
 
-        keluar.setOnClickListener(this::onClick);
+        keluar.setOnClickListener(this);
         return view;
     }
     private void initFirebase() {
@@ -145,13 +129,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.keluar:
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                firebaseAuth.signOut();
-                Intent intent = new Intent(getActivity(), LoginRegister.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+        if (view.getId() == R.id.keluar) {
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            firebaseAuth.signOut();
+            Intent intent = new Intent(getActivity(), LoginRegister.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
     }
@@ -180,7 +163,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 //                });
 //    }
 
-    public void ClickEditNama(String key) {
+    private void ClickEditNama(String key) {
         String value = editNama.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
@@ -190,25 +173,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             firebaseDatabase.getReference()
                     .child("pengguna")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(aVoid -> pd.dismiss())
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show());
         }
         else {
             Toast.makeText(getActivity(), "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void ClickEditEmail(String key) {
+    private void ClickEditEmail(String key) {
         String value = editEmail.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
@@ -218,18 +191,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             firebaseDatabase.getReference()
                     .child("pengguna")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(aVoid -> pd.dismiss())
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show());
 
             firebaseAuth.getCurrentUser().updateEmail(value);
 
@@ -248,16 +211,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
-                                    mChildReferenceForInputHistory.child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).removeValue();
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
+                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(task -> {
+                            if (task.isComplete()) {
+                                // (3) Remove the existing node (username)
+                                mChildReferenceForInputHistory.child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).removeValue();
+                                Log.d("User Input History copy", "Success!");
+                            } else {
+                                Log.d("User Input History copy", "Copy failed!");
                             }
                         });
                     }
@@ -283,29 +243,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
+                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(task -> {
+                            if (task.isComplete()) {
+                                // (3) Remove the existing node (username)
 
-                                    FirebaseDatabase.getInstance().getReference().child("kantong").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                                appleSnapshot.getRef().removeValue();
-                                            }
+                                FirebaseDatabase.getInstance().getReference().child("kantong").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot12) {
+                                        for (DataSnapshot appleSnapshot: dataSnapshot12.getChildren()) {
+                                            appleSnapshot.getRef().removeValue();
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
+                                    }
+                                });
+                                Log.d("User Input History copy", "Success!");
+                            } else {
+                                Log.d("User Input History copy", "Copy failed!");
                             }
                         });
                     }
@@ -331,29 +288,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
+                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(task -> {
+                            if (task.isComplete()) {
+                                // (3) Remove the existing node (username)
 
-                                    FirebaseDatabase.getInstance().getReference().child("transaksipenukaransampah").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                                appleSnapshot.getRef().removeValue();
-                                            }
+                                FirebaseDatabase.getInstance().getReference().child("transaksipenukaransampah").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot1) {
+                                        for (DataSnapshot appleSnapshot: dataSnapshot1.getChildren()) {
+                                            appleSnapshot.getRef().removeValue();
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
+                                    }
+                                });
+                                Log.d("User Input History copy", "Success!");
+                            } else {
+                                Log.d("User Input History copy", "Copy failed!");
                             }
                         });
                     }
@@ -384,7 +338,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 //                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result);
 //    }
 
-    public void ClickEditNoHP(String key) {
+    private void ClickEditNoHP(String key) {
         String value = editNoHp.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
@@ -394,26 +348,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             firebaseDatabase.getReference()
                     .child("pengguna")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(aVoid -> pd.dismiss())
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show());
         }
         else {
             Toast.makeText(getActivity(), "No HP tidak boleh kosong", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void ClickEditPassword(String key) {
+    private void ClickEditPassword(String key) {
         final String value = editPassword.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
@@ -423,19 +366,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             firebaseDatabase.getReference()
                     .child("pengguna")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-                            Toast.makeText(getActivity(), "Profil berhasil di edit", Toast.LENGTH_SHORT).show();
-                        }
+                    .addOnSuccessListener(aVoid -> {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Profil berhasil di edit", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show());
 
             firebaseAuth.getCurrentUser().updatePassword(value);
         }

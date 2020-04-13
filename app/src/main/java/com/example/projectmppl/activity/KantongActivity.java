@@ -5,38 +5,28 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.fragment.KantongFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener, MetodeAntarFragment.MetodeAntarFragmentListener {
+@SuppressWarnings("UnusedAssignment")
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener {
 
     private KantongFragment kantongFragment;
-    private MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
-    private String receive = "remove";
+    private final MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
 
     private ArrayList<Kantong> inputKantong;
     private ArrayList<KantongNonOrganik>kantongNonOrganiks;
@@ -55,20 +45,17 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
         loadFragment(metodeAntarFragment);
-        receive = getIntent().getStringExtra("saveData");
+        String receive = getIntent().getStringExtra("saveData");
 
 
-        if (receive.equals("removeData")){
+        if (Objects.requireNonNull(receive).equals("removeData")){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Permintaan");
             alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
-            alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    Intent intent = new Intent(KantongActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
+            alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+                Intent intent = new Intent(KantongActivity.this, MainActivity.class);
+                startActivity(intent);
             });
             alertDialogBuilder.show();
         }
@@ -137,15 +124,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
             this.listKey  = listKey;
 
     }
-
-
-
-
-    @Override
-    public void onInputKantongFragmentSent(String removeData) {
-        kantongFragment.removeData();
-    }
-
 
 
 }
