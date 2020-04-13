@@ -86,11 +86,9 @@ public class KantongFragment extends Fragment {
     private LiveData liveData;
 
     public interface FragmentElektronikListener {
-        void onInputKantongFragmentSent (ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> listKey);
-//        void onInputNonOrganikFragmentSent (ArrayList<KantongNonOrganik> input, int totalPoint, ArrayList<String> listKey);
+        void onInputKantongFragmentSent(ArrayList<Kantong> input, ArrayList<KantongNonOrganik> kantongNonOrganiks, ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> listKey);
+
     }
-
-
 
 
     public KantongFragment() {
@@ -205,6 +203,7 @@ public class KantongFragment extends Fragment {
     private void putList(ArrayList<Kantong> list,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint,ArrayList<String> listKey) {
 
         listener.onInputKantongFragmentSent(list,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+
     }
 
 
@@ -228,14 +227,6 @@ public class KantongFragment extends Fragment {
     }
 
     public void removeData() {
-        listData.clear();
-        listDataNonOrganik.clear();
-        listPakaian.clear();
-        kantongAdapter = new ListKantongAdapter();
-        listNonOrganikAdapter = new ListNonOrganikAdapter();
-        listNonOrganikAdapter.notifyDataSetChanged();
-        kantongAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -277,7 +268,6 @@ public class KantongFragment extends Fragment {
 
     public void initView(){
         loadDataFirebase("showData");
-//        loadDataNonOrganik("showData");
     }
 }
 

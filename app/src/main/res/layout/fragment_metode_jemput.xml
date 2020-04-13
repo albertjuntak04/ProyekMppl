@@ -43,7 +43,7 @@
         android:layout_marginTop="4dp"/>
 
     <Button
-        android:id="@+id/btn_request"
+        android:id="@+id/btn_request_jemput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tambah_gambar"
@@ -54,4 +54,12 @@
         android:background="@color/colorbotton"
         android:text="Request"
         android:textColor="@color/colortext" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:indeterminateDrawable="@drawable/custom_progressbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ></ProgressBar>
 </RelativeLayout>

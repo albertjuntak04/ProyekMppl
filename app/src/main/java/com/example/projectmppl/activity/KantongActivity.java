@@ -5,10 +5,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListKantongAdapter;
@@ -26,31 +32,17 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener, MetodeAntarFragment.MetodeAntarFragmentListener{
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener, MetodeAntarFragment.MetodeAntarFragmentListener {
 
-
-    private static final String TAG = "KantongActivity";
-    public static String KEY_ACTIVITY = "DaftarSampah";
-
-    private final String SIMPLE_FRAGMENT_TAG = "myfragmenttag";
-//    @BindView(R.id.recycleview)
-//    RecyclerView recyclerViewData;
-
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseAuth firebaseAuth;
-    private List<Kantong> listData;
-    private ArrayList<String> listKey;
-    private ArrayList<String> idSampah;
-    private int totalPoint;
-//    @BindView(R.id.progress)
-//    ProgressBar progressBar;
-    private ListKantongAdapter kantongAdapter;
-    private MetodeJemputFragment metodeJemputFragment;
     private KantongFragment kantongFragment;
-    private MetodeAntarFragment metodeAntarFragment;
+    private MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
+    private String receive = "remove";
 
-
-//    private MySimpleFragment fragmentSimple;
+    private ArrayList<Kantong> inputKantong;
+    private ArrayList<KantongNonOrganik>kantongNonOrganiks;
+    private ArrayList<Kantong>inputPakaian;
+    private int totalPoint;
+    private ArrayList<String> listKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,28 +52,11 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        metodeAntarFragment = new MetodeAntarFragment();
-        metodeJemputFragment = new MetodeJemputFragment();
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
+        loadFragment(metodeAntarFragment);
+        receive = getIntent().getStringExtra("saveData");
 
-
-        if (!kantongFragment.isInLayout()){
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout_content_dashboard, kantongFragment, SIMPLE_FRAGMENT_TAG)
-                    .commit();
-        }
-
-
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame_layout_content_dashboard, metodeAntarFragment)
-                .commit();
-
-
-        String receive = getIntent().getStringExtra("saveData");
 
         if (receive.equals("removeData")){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -93,14 +68,14 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                     dialogInterface.dismiss();
                     Intent intent = new Intent(KantongActivity.this, MainActivity.class);
                     startActivity(intent);
-
                 }
             });
             alertDialogBuilder.show();
         }
+
     }
 
-//        loadFragment(new MetodeAntarFragment());
+
 
 
 
@@ -111,25 +86,25 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
+        Fragment fragmentAntar = new MetodeAntarFragment();
+        Fragment fragmentJemput= new MetodeJemputFragment();
         switch (item.getItemId()) {
             case R.id.action_antar:
-                fragment = new MetodeAntarFragment();
-                break;
+                fragmentAntar = new MetodeAntarFragment(inputKantong,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+                return loadFragment(fragmentAntar);
             case R.id.action_jemput:
-                fragment = new MetodeJemputFragment();
-                break;
+                fragmentJemput = new MetodeJemputFragment(inputKantong,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+                return loadFragment(fragmentJemput);
+
         }
 
-        return loadFragment(fragment);
+        return true;
+
     }
 
     // method untuk load fragment yang sesuai
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("removeData", "remove");
-            fragment.setArguments(bundle);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout_content_dashboard, fragment)
@@ -144,17 +119,25 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
             Bundle bundle = new Bundle();
             bundle.putString("removeData", "remove");
             fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_content_kantong, fragment)
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_content_kantong, fragment,"MY_FRAGMENT")
                     .commit();
         }
     }
 
 
 
+
     @Override
     public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> listKey) {
-        metodeAntarFragment.sendData(input,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+            metodeAntarFragment.sendData(input, kantongNonOrganiks, inputPakaian, totalPoint, listKey);
+            this.inputKantong = input;
+            this.kantongNonOrganiks = kantongNonOrganiks;
+            this.inputPakaian = inputPakaian;
+            this.totalPoint = totalPoint;
+            this.listKey  = listKey;
+
     }
+
 
 
 
@@ -163,11 +146,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         kantongFragment.removeData();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
 
 
 }
