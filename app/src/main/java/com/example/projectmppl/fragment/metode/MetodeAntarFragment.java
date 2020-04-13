@@ -171,8 +171,6 @@ public class MetodeAntarFragment extends Fragment {
 
     private void hideProgress() {
         progressBar.setVisibility(View.GONE);
-
-
     }
 
     private void showProgress() {
