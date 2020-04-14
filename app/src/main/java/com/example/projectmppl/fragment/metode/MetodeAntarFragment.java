@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 
 import com.example.projectmppl.R;
@@ -108,7 +107,6 @@ public class MetodeAntarFragment extends Fragment {
     private void removeData(Transaksi transaksi){
         DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
         databaseReference2.child(transaksi.getIdPenukar().replaceAll("\\.", "_")).removeValue();
-//        listener.onInputKantongFragmentSent("removeData");
         Intent intent = new Intent(getActivity(), KantongActivity.class);
         intent.putExtra("saveData","removeData");
         startActivity(intent);
@@ -163,10 +161,12 @@ public class MetodeAntarFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("Tag", "FragmentAntar.onPause() has been called.");
-        this.listKey.clear();
-        this.kantongNonOrganiks.clear();
-        this.inputPakaian.clear();
-        this.list.clear();
+        if (listKey != null && kantongNonOrganiks !=null && inputPakaian!= null && list != null) {
+            listKey.clear();
+            kantongNonOrganiks.clear();
+            inputPakaian.clear();
+            list.clear();
+        }
     }
 
     private void hideProgress() {
@@ -175,7 +175,5 @@ public class MetodeAntarFragment extends Fragment {
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
-
-
     }
 }
