@@ -26,9 +26,7 @@ import butterknife.ButterKnife;
 public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAdapter.ViewHolder> {
     private List<KantongNonOrganik> listKantong;
     private List<String> listKey;
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference();
-    OnRemovedNonOrganikListener mCallback;
+    private OnRemovedNonOrganikListener mCallback;
 
     public ListNonOrganikAdapter(){
 
@@ -57,6 +55,7 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
         holder.btnHapus.setOnClickListener(view -> {
             mCallback.RemoveNonOrganikClicked(listKey.get(position),position);
+
         });
     }
 
@@ -88,11 +87,10 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         this.mCallback = mCallback;
     }
 
-
-
     public void removeItem(int position) {
         listKantong.remove(position);
         notifyItemRemoved(position);
+        notifyDataSetChanged();
         notifyItemRangeChanged(position, listKantong.size());
     }
 

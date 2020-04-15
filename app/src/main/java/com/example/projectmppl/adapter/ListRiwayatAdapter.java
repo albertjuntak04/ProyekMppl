@@ -26,17 +26,16 @@ import butterknife.ButterKnife;
 
 public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.ViewHolder> {
     private List<Transaksi> listTransaksi;
-    private List<Kantong> listKantong;
-    private Kantong kantong = new Kantong();
-    private List<KantongNonOrganik> kantongNonOrganikList;
-
+    private OnRemovedListener mCallback;
+    private List<String> listKey;
 
     public ListRiwayatAdapter(){
 
     }
 
-    public ListRiwayatAdapter(List<Transaksi> listTransaksi,Context context){
+    public ListRiwayatAdapter(List<Transaksi> listTransaksi,List<String>listKey,Context context){
         this.listTransaksi = listTransaksi;
+        this.listKey  = listKey;
 
     }
 
@@ -109,6 +108,14 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
             holder.pakaian.setText(String.valueOf(daftarPakaian));
             holder.jumlahPakaian.setText(String.valueOf(jumlahPakaian));
         }
+
+        holder.btnHapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallback.RemoveClicked(listKey.get(position),position);
+                removeItem(position);
+            }
+        });
     }
 
     @Override
@@ -146,8 +153,19 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         }
     }
 
-    private void initFirebase() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    public void removeItem(int position) {
+        listTransaksi.remove(position);
+        notifyItemRemoved(position);
+        notifyDataSetChanged();
+        notifyItemRangeChanged(position,listTransaksi.size());
     }
+
+    public interface OnRemovedListener{
+        void RemoveClicked( String key,int position);
+    }
+
+    public void setOnShareClickedListener(OnRemovedListener mCallback) {
+        this.mCallback = mCallback;
+    }
+
 }

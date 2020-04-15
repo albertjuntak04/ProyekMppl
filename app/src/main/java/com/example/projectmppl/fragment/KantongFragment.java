@@ -59,14 +59,9 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
 
     private List<Kantong> listData;
     private List<KantongNonOrganik> listDataNonOrganik;
-    private ArrayList<String> listKey;
     private ArrayList<String> listKeyNonOrganik;
-    private ArrayList<Kantong> idSampah;
-    private ArrayList<KantongNonOrganik> idSampahNonOrganik;
-    private ArrayList<String>idSampahElektronik;
     private ArrayList<Kantong> listPakaian;
     private ArrayList<String> keyElektronik;
-    private int totalPoint;
     @BindView(R.id.progress)
     ProgressBar progressBar;
 
@@ -77,18 +72,6 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
     private ListKantongAdapter kantongAdapter;
     private ListKantongAdapter kantongAdapterPakaian;
     private ListNonOrganikAdapter listNonOrganikAdapter;
-    private MetodeJemputFragment metodeJemputFragment;
-
-    private FragmentElektronikListener listener;
-
-    private LiveData liveData;
-
-
-
-    public interface FragmentElektronikListener {
-        void onInputKantongFragmentSent(ArrayList<Kantong> input, ArrayList<KantongNonOrganik> kantongNonOrganiks, ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> listKey);
-
-    }
 
 
     public KantongFragment() {
@@ -103,7 +86,6 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
         View view = inflater.inflate(R.layout.fragment_kantong, container, false);
 
         ButterKnife.bind(this, view);
-
         initFirebase();
         initView();
         return view;
@@ -112,27 +94,18 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        loadDataNonOrganik();
     }
 
 
-    private void loadDataFirebase(String removeData) {
+    private void loadDataFirebaseElektronik() {
         showProgress();
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
 
-        listKey = new ArrayList<>();
         listData = new ArrayList<>();
-        idSampah = new ArrayList<>();
-        listPakaian = new ArrayList<>();
         keyElektronik = new ArrayList<>();
-        listKeyNonOrganik = new ArrayList<>();
-        totalPoint = 0;
-        listDataNonOrganik = new ArrayList<>();
-        idSampahNonOrganik = new ArrayList<>();
-        idSampahElektronik = new ArrayList<>();
-
         liveData.observe(this, dataSnapshot -> {
             if (dataSnapshot != null){
 
@@ -140,42 +113,72 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
                 for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
                     Kantong kantong = dataItem.getValue(Kantong.class);
                     listData.add(kantong);
-                    idSampah.add(kantong);
                     keyElektronik.add(dataItem.getKey());
-                    idSampahElektronik.add(kantong.getIdSampah());
-                    totalPoint = totalPoint+kantong.getJumlahPoint();
                 }
+                kantongAdapter = new ListKantongAdapter(listData,keyElektronik,getActivity());
+                kantongAdapter.setOnShareClickedListener(this);
+                recyclerViewData.setAdapter(kantongAdapter);
+                recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerViewData.setHasFixedSize(true);
+                kantongAdapter.notifyDataSetChanged();
+                kondisiKantong.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
+    private void loadDataNonOrganik() {
+//        showProgress();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+
+
+        listKeyNonOrganik = new ArrayList<>();
+        listDataNonOrganik = new ArrayList<>();
+        liveData.observe(this, dataSnapshot -> {
+            if (dataSnapshot != null){
+
+//                hideProgress();
 
                 for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
                     KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
                     listDataNonOrganik.add(kantongNonOrganik);
-                    idSampahNonOrganik.add(kantongNonOrganik);
                     listKeyNonOrganik.add(dataItem.getKey());
-                    totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
                 }
                 listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik,listKeyNonOrganik);
                 recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
+                recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
                 listNonOrganikAdapter.setDeleteNonOrganikClickedListener(this);
+                kondisiKantong.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
+    private void loadDataFirebasePakaian() {
+        showProgress();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+
+        listPakaian = new ArrayList<>();
+
+        liveData.observe(this, dataSnapshot -> {
+            if (dataSnapshot != null){
+
+                hideProgress();
 
                 for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
                     Kantong kantongPakaian = dataItem.getValue(Kantong.class);
                     listPakaian.add(kantongPakaian);
-                    totalPoint = totalPoint+kantongPakaian.getJumlahPoint();
+
                 }
 
+                kantongAdapterPakaian = new ListKantongAdapter(listPakaian,keyElektronik,getActivity());
+                kantongAdapter.setOnShareClickedListener(this);
+                recyclerViewPakaian.setAdapter(kantongAdapterPakaian);
 
-
-
-
-//
-//                kantongAdapter = new ListKantongAdapter(listData,keyElektronik,getActivity());
-//
-//                kantongAdapterPakaian = new ListKantongAdapter(listPakaian,keyElektronik,getActivity());
-//                kantongAdapter.setOnShareClickedListener(this);
-//
-//                recyclerViewData.setAdapter(kantongAdapter);
-//                recyclerViewPakaian.setAdapter(kantongAdapterPakaian);
-//
                 kondisiKantong.setVisibility(View.INVISIBLE);
             }
         });
@@ -184,15 +187,12 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
 
 
 
-
     private void initFirebase() {
-        recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext()));
-//        recyclerViewData.setHasFixedSize(true);
 
-        recyclerViewPakaian.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewPakaian.setHasFixedSize(true);
-        recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewNonOrganik.setHasFixedSize(true);
+//        recyclerViewPakaian.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerViewPakaian.setHasFixedSize(true);
+//        recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerViewNonOrganik.setHasFixedSize(true);
     }
 
     private void hideProgress() {
@@ -203,30 +203,11 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void putList(ArrayList<Kantong> list,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint,ArrayList<String> listKey) {
-
-        listener.onInputKantongFragmentSent(list,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
-
-    }
-
-
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof FragmentElektronikListener){
-            listener = (FragmentElektronikListener) context;
-        }else {
-            throw new RuntimeException(context.toString()
-            + " must implement FragmentListener");
-        }
-    }
-
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+
     }
 
     @Override
@@ -254,7 +235,9 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
     }
 
     private void initView(){
-        loadDataFirebase("showData");
+        loadDataFirebaseElektronik();
+        loadDataFirebasePakaian();
+//        loadDataNonOrganik();
     }
 
     @Override
@@ -269,9 +252,8 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            kantongAdapter.removeItem(position);
-                            kantongAdapter.notifyDataSetChanged();
-
+//                            kantongAdapter.removeItem(position);
+//                            kantongAdapter.notifyDataSetChanged();
                         }
                     });
 
@@ -292,7 +274,8 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
                     public void onComplete(@NonNull Task<Void> task) {
                         listNonOrganikAdapter.notifyDataSetChanged();
                         listNonOrganikAdapter.removeItem(position);
-                        putList(idSampah,idSampahNonOrganik,listPakaian,totalPoint,listKey);
+                        listDataNonOrganik.clear();
+//                        putList(idSampah,idSampahNonOrganik,listPakaian,totalPoint,listKey);
                     }
                 });
 

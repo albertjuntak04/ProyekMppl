@@ -10,12 +10,19 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.projectmppl.R;
+import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 import com.example.projectmppl.fragment.KantongFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,16 +30,14 @@ import java.util.Objects;
 import butterknife.ButterKnife;
 
 @SuppressWarnings("UnusedAssignment")
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener {
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, ListNonOrganikAdapter.OnRemovedNonOrganikListener {
 
     private KantongFragment kantongFragment;
     private final MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
+    private ListNonOrganikAdapter listNonOrganikAdapter;
 
-    private ArrayList<Kantong> inputKantong;
-    private ArrayList<KantongNonOrganik>kantongNonOrganiks;
-    private ArrayList<Kantong>inputPakaian;
-    private int totalPoint;
-    private ArrayList<String> listKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +50,45 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
         loadFragment(metodeAntarFragment);
+        listNonOrganikAdapter = new ListNonOrganikAdapter();
+        listNonOrganikAdapter.setDeleteNonOrganikClickedListener(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         String receive = getIntent().getStringExtra("saveData");
-
-
         if (Objects.requireNonNull(receive).equals("removeData")){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Permintaan");
             alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
             alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
+                removeData();
                 Intent intent = new Intent(KantongActivity.this, MainActivity.class);
                 startActivity(intent);
             });
             alertDialogBuilder.show();
         }
+    }
 
+    private void removeData(){
+        firebaseDatabase
+                .getReference()
+                .child("kantong")
+                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+//                        Intent intent = new Intent(this KantongActivity.class);
+//                        intent.putExtra("saveData","removeData");
+//                        startActivity(intent);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
 
@@ -77,10 +106,10 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         Fragment fragmentJemput= new MetodeJemputFragment();
         switch (item.getItemId()) {
             case R.id.action_antar:
-                fragmentAntar = new MetodeAntarFragment(inputKantong,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+                fragmentAntar = new MetodeAntarFragment();
                 return loadFragment(fragmentAntar);
             case R.id.action_jemput:
-                fragmentJemput = new MetodeJemputFragment(inputKantong,kantongNonOrganiks,inputPakaian,totalPoint,listKey);
+                fragmentJemput = new MetodeJemputFragment();
                 return loadFragment(fragmentJemput);
 
         }
@@ -112,18 +141,22 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
     }
 
 
-
-
     @Override
-    public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> listKey) {
-            metodeAntarFragment.sendData(input, kantongNonOrganiks, inputPakaian, totalPoint, listKey);
-            this.inputKantong = input;
-            this.kantongNonOrganiks = kantongNonOrganiks;
-            this.inputPakaian = inputPakaian;
-            this.totalPoint = totalPoint;
-            this.listKey  = listKey;
-
+    public void RemoveNonOrganikClicked(String key, int position) {
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+        databaseReference2.child(currentUser)
+                .child("data")
+                .child("nonOrganik")
+                .child(key)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+//                        listNonOrganikAdapter.notifyDataSetChanged();
+                        listNonOrganikAdapter.removeItem(position);
+//                        putList(idSampah,idSampahNonOrganik,listPakaian,totalPoint,listKey);
+                    }
+                });
     }
-
-
 }

@@ -80,10 +80,9 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
             @Override
             public void onClick(View view) {
                 mCallback.RemoveClicked(keySampah.get(position),position);
+                removeItem(position);
             }
         });
-
-
     }
 
     @Override
@@ -110,8 +109,5 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         listKantong.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,listKantong.size());
-
     }
-
-
 }

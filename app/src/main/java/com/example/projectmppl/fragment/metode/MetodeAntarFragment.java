@@ -6,7 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,11 +24,18 @@ import android.widget.Spinner;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
+import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
+import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
+import com.example.projectmppl.ui.ViewModelFirebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,7 +50,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MetodeAntarFragment extends Fragment {
+public class MetodeAntarFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
@@ -60,17 +72,11 @@ public class MetodeAntarFragment extends Fragment {
 
 
 
+
     public MetodeAntarFragment() {
         // Required empty public constructor
     }
 
-    public MetodeAntarFragment(ArrayList<Kantong>kantongs,ArrayList<KantongNonOrganik>kantongNonOrganiks,ArrayList<Kantong>inputPakaian,int totalPoint,ArrayList<String> listKey) {
-        this.listKey = kantongs;
-        this.kantongNonOrganiks = kantongNonOrganiks;
-        this.inputPakaian = inputPakaian;
-        this.totalPoint = totalPoint;
-        this.list = listKey;
-    }
 
 
     @Override
@@ -81,74 +87,108 @@ public class MetodeAntarFragment extends Fragment {
         ButterKnife.bind(this,view);
 
         hideProgress();
-
-        sendDataConstructor(listKey,  kantongNonOrganiks,inputPakaian, totalPoint, list);
         initFirebase();
+
+        btnRequest.setOnClickListener(this::onClick);
         return view;
 
     }
 
 
+
     private void addTransaksi(Transaksi transaksi){
         hideProgress();
-        databaseReference
+        firebaseDatabase
+                .getReference()
+                .child("transaksipenukaransampah")
                 .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
                 .push()
-                .setValue(transaksi);
-        removeData(transaksi);
+                .setValue(transaksi)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getActivity(), KantongActivity.class);
+                        intent.putExtra("saveData","removeData");
+                        startActivity(intent);
+                    }
+                });
 
     }
 
     private void initFirebase() {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+        firebaseDatabase = FirebaseDatabase.getInstance();
     }
 
-    private void removeData(Transaksi transaksi){
-        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
-        databaseReference2.child(transaksi.getIdPenukar().replaceAll("\\.", "_")).removeValue();
-        Intent intent = new Intent(getActivity(), KantongActivity.class);
-        intent.putExtra("saveData","removeData");
-        startActivity(intent);
-    }
+//    private void removeData(){
+//        firebaseDatabase
+//                .getReference()
+//                .child("kantong")
+//                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
+//                .removeValue()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        Intent intent = new Intent(getActivity(), KantongActivity.class);
+//                        intent.putExtra("saveData","removeData");
+//                        startActivity(intent);
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                     @Override
+//                     public void onFailure(@NonNull Exception e) {
+//
+//                     }
+//                });
+//    }
 
-    private void sendDataConstructor(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks, ArrayList<Kantong> inputPakaian, int totalPoint, ArrayList<String> list){
+    private void loadDataFirebase() {
         initFirebase();
         String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
         String username = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
         String metode = "Antar";
         String status = "Diproses";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        if (totalPoint != 0){
-            btnRequest.setOnClickListener(view -> {
-                showProgress();
-                Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
-                addTransaksi(transaksi);
-            });
-        }
+        showProgress();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+
+        kantongNonOrganiks = new ArrayList<>();
+        listKey = new ArrayList<>();
+        inputPakaian = new ArrayList<>();
+        totalPoint = 0;
+
+        liveData.observe(this, dataSnapshot -> {
+            if (dataSnapshot != null){
+
+                hideProgress();
+                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
+                    Kantong kantong = dataItem.getValue(Kantong.class);
+                    listKey.add(kantong);
+                    totalPoint = totalPoint+kantong.getJumlahPoint();
+                }
+
+                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
+                    KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
+                    kantongNonOrganiks.add(kantongNonOrganik);
+                    totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
+                }
+                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
+                    Kantong kantongPakaian = dataItem.getValue(Kantong.class);
+                    inputPakaian.add(kantongPakaian);
+                    totalPoint = totalPoint+kantongPakaian.getJumlahPoint();
+                }
+
+                if (totalPoint != 0){
+                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
+                    addTransaksi(transaksi);
+                }
+            }
+        });
+
     }
 
-    public void sendData(ArrayList<Kantong> listKey, ArrayList<KantongNonOrganik> kantongNonOrganiks,ArrayList<Kantong>inputPakaian, int totalPoint, ArrayList<String> list){
-        this.listKey = listKey;
-        this.kantongNonOrganiks = kantongNonOrganiks;
-        this.inputPakaian = inputPakaian;
-        this.totalPoint = totalPoint;
-        this.list =list;
-
-        initFirebase();
-        String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
-        String username = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
-        String metode = "Antar";
-        String status = "Diproses";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        if (totalPoint != 0){
-            btnRequest.setOnClickListener(view -> {
-                showProgress();
-                Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
-                addTransaksi(transaksi);
-            });
-        }
-    }
 
 
     @Override
@@ -175,5 +215,13 @@ public class MetodeAntarFragment extends Fragment {
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btnRequest){
+            loadDataFirebase();
+        }
+
     }
 }
