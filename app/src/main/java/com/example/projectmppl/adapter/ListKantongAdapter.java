@@ -108,8 +108,10 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
 
     public void removeItem(int position) {
         listKantong.remove(position);
-
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,listKantong.size());
+
     }
+
+
 }

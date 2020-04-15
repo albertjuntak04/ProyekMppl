@@ -28,6 +28,7 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
     private List<String> listKey;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
+    OnRemovedNonOrganikListener mCallback;
 
     public ListNonOrganikAdapter(){
 
@@ -55,18 +56,7 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
         holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
         holder.btnHapus.setOnClickListener(view -> {
-            DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
-            databaseReference2.child(currentUser)
-                    .child("data")
-                    .child("nonOrganik")
-                    .child(listKey.get(position))
-                    .removeValue()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-//                            removeItem(position);
-                        }
-                    });
+            mCallback.RemoveNonOrganikClicked(listKey.get(position),position);
         });
     }
 
@@ -90,12 +80,20 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         }
     }
 
+    public interface OnRemovedNonOrganikListener{
+        void RemoveNonOrganikClicked(String key, int position);
+    }
+
+    public void setDeleteNonOrganikClickedListener(OnRemovedNonOrganikListener mCallback) {
+        this.mCallback = mCallback;
+    }
 
 
-//    public void removeItem(int position) {
-//        listKantong.remove(position);
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position, listKantong.size());
-//    }
+
+    public void removeItem(int position) {
+        listKantong.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, listKantong.size());
+    }
 
 }
