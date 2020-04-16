@@ -24,7 +24,7 @@ public class RemoveActivity extends AppCompatActivity implements ListNonOrganikA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remove);
         listNonOrganikAdapter  = new ListNonOrganikAdapter();
-        listNonOrganikAdapter.setDeleteNonOrganikClickedListener(this);
+//        listNonOrganikAdapter.setDeleteNonOrganikClickedListener(this);
     }
 
     @Override

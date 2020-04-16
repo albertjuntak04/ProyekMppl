@@ -97,11 +97,12 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
 
     private void addTransaksi(Transaksi transaksi){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         hideProgress();
         firebaseDatabase
                 .getReference()
                 .child("transaksipenukaransampah")
-                .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
+                .child(currentUser)
                 .push()
                 .setValue(transaksi)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -109,6 +110,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                     public void onComplete(@NonNull Task<Void> task) {
                         Intent intent = new Intent(getActivity(), KantongActivity.class);
                         intent.putExtra("saveData","removeData");
+                        intent.putExtra("removeData","remove");
                         startActivity(intent);
                     }
                 });
@@ -121,31 +123,10 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         firebaseDatabase = FirebaseDatabase.getInstance();
     }
 
-//    private void removeData(){
-//        firebaseDatabase
-//                .getReference()
-//                .child("kantong")
-//                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
-//                .removeValue()
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        Intent intent = new Intent(getActivity(), KantongActivity.class);
-//                        intent.putExtra("saveData","removeData");
-//                        startActivity(intent);
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                     @Override
-//                     public void onFailure(@NonNull Exception e) {
-//
-//                     }
-//                });
-//    }
 
     private void loadDataFirebase() {
         initFirebase();
         String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
-        String username = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
         String metode = "Antar";
         String status = "Diproses";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -181,7 +162,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                 }
 
                 if (totalPoint != 0){
-                    Transaksi transaksi = new Transaksi("url", listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
+                    Transaksi transaksi = new Transaksi("url", listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
                     addTransaksi(transaksi);
                 }
             }

@@ -16,11 +16,20 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.fragment.ProfileFragment;
 import com.example.projectmppl.fragment.RiwayatFragment;
 import com.example.projectmppl.fragment.TentangFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+
+    private String key = "empty";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +40,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
+        key = getIntent().getStringExtra("keyTransaksi");
+        if (key != null){
+            removeRiwayat(key);
+        }
+
         ProfileFragment myFragment = new ProfileFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout_content_dashboard, new HomeFragment(), HomeFragment.class.getSimpleName())
                 .commit();
 
+    }
+
+    private void removeRiwayat(String key){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+        databaseReference2.child(currentUser)
+                .child(key)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
     }
 
 

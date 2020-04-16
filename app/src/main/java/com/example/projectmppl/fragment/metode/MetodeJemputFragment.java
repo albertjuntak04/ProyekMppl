@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -30,6 +31,8 @@ import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -69,6 +72,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUri;
     private StorageReference mStorageRef;
@@ -114,20 +118,34 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     }
 
     private void addTransaksi(Transaksi transaksi) {
-        databaseReference
-                .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        hideProgress();
+        firebaseDatabase
+                .getReference()
+                .child("transaksipenukaransampah")
+                .child(currentUser)
                 .push()
-                .setValue(transaksi);
-
-        removeData(transaksi);
+                .setValue(transaksi)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getActivity(), KantongActivity.class);
+                        intent.putExtra("saveData","removeData");
+                        intent.putExtra("removeData","remove");
+                        startActivity(intent);
+                    }
+                });
 
     }
+
 
     private void initFirebase() {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+        firebaseDatabase = FirebaseDatabase.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference("upload");
     }
+
 
 
     private void openFileChooser() {
@@ -192,15 +210,6 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    private void removeData(Transaksi transaksi) {
-        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
-        databaseReference2.child(transaksi.getIdPenukar().replaceAll("\\.", "_")).removeValue();
-        Intent intent = new Intent(getActivity(), KantongActivity.class);
-        intent.putExtra("saveData", "removeData");
-        startActivity(intent);
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -260,7 +269,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
                 }
 
                 if (totalPoint != 0) {
-                    Transaksi transaksi = new Transaksi(url, listKey, username, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
+                    Transaksi transaksi = new Transaksi(url, listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
                     addTransaksi(transaksi);
                 }
             }

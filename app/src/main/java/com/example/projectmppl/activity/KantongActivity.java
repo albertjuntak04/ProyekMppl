@@ -56,6 +56,10 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         String receive = getIntent().getStringExtra("saveData");
+        String batal = getIntent().getStringExtra("removeData");
+        String key = getIntent().getStringExtra("key");
+        String jenis = getIntent().getStringExtra("jenis");
+
         if (Objects.requireNonNull(receive).equals("removeData")){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Permintaan");
@@ -63,10 +67,13 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
             alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
                 removeData();
-                Intent intent = new Intent(KantongActivity.this, MainActivity.class);
-                startActivity(intent);
+
             });
             alertDialogBuilder.show();
+        }
+
+        if (batal.equals("removeData")){
+            batalData(key,jenis);
         }
     }
 
@@ -79,9 +86,8 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-//                        Intent intent = new Intent(this KantongActivity.class);
-//                        intent.putExtra("saveData","removeData");
-//                        startActivity(intent);
+                        Intent intent = new Intent(KantongActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -89,6 +95,23 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
             }
         });
+    }
+
+    private void batalData(String key,String jenis){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+        databaseReference2.child(currentUser)
+                .child("data")
+                .child(jenis)
+                .child(key)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+
     }
 
 

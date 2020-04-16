@@ -32,9 +32,10 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
 
     }
 
-    public ListNonOrganikAdapter(List<KantongNonOrganik> listKantong, List<String> listKey){
+    public ListNonOrganikAdapter(List<KantongNonOrganik> listKantong, List<String> listKey, OnRemovedNonOrganikListener mCallback){
         this.listKantong = listKantong;
         this.listKey = listKey;
+        this.mCallback = mCallback;
     }
 
 
@@ -55,7 +56,6 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
         holder.btnHapus.setOnClickListener(view -> {
             mCallback.RemoveNonOrganikClicked(listKey.get(position),position);
-
         });
     }
 

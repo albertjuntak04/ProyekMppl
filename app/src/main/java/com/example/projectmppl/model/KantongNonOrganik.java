@@ -3,7 +3,7 @@ package com.example.projectmppl.model;
 import java.util.ArrayList;
 
 public class KantongNonOrganik {
-    private String idPenukar;
+
     private ArrayList<String> idSampah;
     private String jenisSampah;
     private int jumlah;
@@ -13,21 +13,14 @@ public class KantongNonOrganik {
 
     }
 
-    public KantongNonOrganik(String idPenukar, ArrayList<String> idSampah, String jenisSampah, int jumlah, int jumlahPoint) {
-        this.idPenukar = idPenukar;
+    public KantongNonOrganik(ArrayList<String> idSampah, String jenisSampah, int jumlah, int jumlahPoint) {
+
         this.idSampah = idSampah;
         this.jenisSampah = jenisSampah;
         this.jumlah = jumlah;
         this.jumlahPoint = jumlahPoint;
     }
 
-    public String getIdPenukar() {
-        return idPenukar;
-    }
-
-    public void setIdPenukar(String idPenukar) {
-        this.idPenukar = idPenukar;
-    }
 
     public ArrayList<String> getIdSampah() {
         return idSampah;

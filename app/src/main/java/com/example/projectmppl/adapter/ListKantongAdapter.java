@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.ViewHolder> {
     private List<Kantong> listKantong;
     OnRemovedListener mCallback;
+    private String jenis;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
@@ -45,10 +46,11 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
 
     }
 
-    public ListKantongAdapter(List<Kantong> listKantong,List<String>keySampah, Context context){
+    public ListKantongAdapter(List<Kantong> listKantong,List<String>keySampah, Context context,String jenis){
         this.listKantong = listKantong;
         this.context = context;
         this.keySampah = keySampah;
+        this.jenis = jenis;
     }
 
 
@@ -61,7 +63,7 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
     }
 
     public interface OnRemovedListener{
-        void RemoveClicked(String key, int position);
+        void RemoveClicked(String key, int position, String jenis);
     }
 
     public void setOnShareClickedListener(OnRemovedListener mCallback) {
@@ -79,7 +81,7 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallback.RemoveClicked(keySampah.get(position),position);
+                mCallback.RemoveClicked(keySampah.get(position),position,jenis);
                 removeItem(position);
             }
         });

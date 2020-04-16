@@ -15,18 +15,21 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.ViewHolder> {
     private List<Transaksi> listTransaksi;
-    private OnRemovedListener mCallback;
     private List<String> listKey;
 
     public ListRiwayatAdapter(){
@@ -112,8 +115,17 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallback.RemoveClicked(listKey.get(position),position);
-                removeItem(position);
+                String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+                databaseReference2.child(currentUser)
+                .child(listKey.get(position))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        removeItem(position);
+                    }
+                });
             }
         });
     }
@@ -160,12 +172,5 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         notifyItemRangeChanged(position,listTransaksi.size());
     }
 
-    public interface OnRemovedListener{
-        void RemoveClicked( String key,int position);
-    }
-
-    public void setOnShareClickedListener(OnRemovedListener mCallback) {
-        this.mCallback = mCallback;
-    }
 
 }

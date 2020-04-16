@@ -113,6 +113,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
             case R.id.dashboard_iv_kantong:
                 Intent kantong = new Intent(getActivity(), KantongActivity.class);
                 kantong.putExtra("saveData","remove");
+                kantong.putExtra("removeData","remove");
+                kantong.putExtra("key","keyProduct");
+                kantong.putExtra("position",-1);
+                kantong.putExtra("jenis","sampah");
                 startActivity(kantong);
         }
 
