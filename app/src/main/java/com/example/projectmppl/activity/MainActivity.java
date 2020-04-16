@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.projectmppl.fragment.HomeFragment;
 import com.example.projectmppl.R;
+import com.example.projectmppl.fragment.ProfileFragment;
 import com.example.projectmppl.fragment.RiwayatFragment;
 import com.example.projectmppl.fragment.TentangFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
