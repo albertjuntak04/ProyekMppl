@@ -30,7 +30,7 @@ import java.util.Objects;
 import butterknife.ButterKnife;
 
 @SuppressWarnings("UnusedAssignment")
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, ListNonOrganikAdapter.OnRemovedNonOrganikListener {
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private KantongFragment kantongFragment;
     private final MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
@@ -51,7 +51,6 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         loadKantongFragment(new KantongFragment());
         loadFragment(metodeAntarFragment);
         listNonOrganikAdapter = new ListNonOrganikAdapter();
-        listNonOrganikAdapter.setDeleteNonOrganikClickedListener(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -163,23 +162,4 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         }
     }
 
-
-    @Override
-    public void RemoveNonOrganikClicked(String key, int position) {
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
-        databaseReference2.child(currentUser)
-                .child("data")
-                .child("nonOrganik")
-                .child(key)
-                .removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-//                        listNonOrganikAdapter.notifyDataSetChanged();
-                        listNonOrganikAdapter.removeItem(position);
-//                        putList(idSampah,idSampahNonOrganik,listPakaian,totalPoint,listKey);
-                    }
-                });
-    }
 }

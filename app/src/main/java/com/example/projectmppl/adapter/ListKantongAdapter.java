@@ -74,6 +74,7 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         Kantong kantong = listKantong.get(position);
         holder.jumlah.setText(String.valueOf(kantong.getJumlah()));
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
@@ -81,8 +82,19 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallback.RemoveClicked(keySampah.get(position),position,jenis);
-                removeItem(position);
+                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+                databaseReference2
+                        .child(currentUser)
+                        .child("data")
+                        .child(jenis)
+                        .child(keySampah.get(position))
+                        .removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                removeItem(position);
+                            }
+                        });
             }
         });
     }
@@ -111,5 +123,6 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         listKantong.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,listKantong.size());
+        notifyDataSetChanged();
     }
 }

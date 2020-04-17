@@ -79,8 +79,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
             String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
             tvName.setText(name);
             totalPoin.setText(poin);
-
-
         });
 
         return view;

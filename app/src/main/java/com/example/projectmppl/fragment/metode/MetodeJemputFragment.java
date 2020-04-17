@@ -1,18 +1,25 @@
 package com.example.projectmppl.fragment.metode;
 
 
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +91,21 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     private int totalPoint;
     private ArrayList<String> list;
 
+
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+    private static final int IMAGE_PICK_GALLERY_CODE = 300;
+    private static final int IMAGE_PICK_CAMERA_CODE = 400;
+
+    private String cameraPermissions[];
+    private String storagePermissions[];
+
+
+
+
+    //for checking profile photo
+    String profilePhoto;
+
     public MetodeJemputFragment() {
 
     }
@@ -96,6 +118,10 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
         ButterKnife.bind(this, view);
         btnRequest.setOnClickListener(this);
         btnTambahGambar.setOnClickListener(this);
+        // Init arrays of permissions
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
         sendData();
         hideProgress();
         return view;
@@ -111,10 +137,8 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tambah_gambar) {
-            openFileChooser();
+            showImagePict();
         }
-
-
     }
 
     private void addTransaksi(Transaksi transaksi) {
@@ -147,58 +171,10 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     }
 
 
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Complete action using"), 1);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            mImageUri = data.getData();
-            if (mImageUri != null) {
-                Picasso.get().load(mImageUri).into(imageSampah);
-            }
-
-        }
-//        this.listKey.clear();
-//        this.kantongNonOrganiks.clear();
-//        this.inputPakaian.clear();
-//        this.list.clear();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
     private void sendData() {
         initFirebase();
             btnRequest.setOnClickListener(view -> {
-                if (mImageUri != null) {
-                    StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                            + "." + getFileExtension(mImageUri));
-                    fileReference.putFile(mImageUri)
-                            .addOnSuccessListener(taskSnapshot -> {
-                                Handler handler = new Handler();
-                                handler.postDelayed(() -> {
-//                                                mProgressBar.setProgress(0);
-                                }, 500);
-
-                                loadDataFirebase(fileReference.getDownloadUrl().toString());
-                            }).addOnFailureListener(e -> {
-
-                    }).addOnProgressListener(taskSnapshot -> {
-                        showProgress();
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressBar.setProgress((int) progress);
-
-                    });
-
-                } else {
-                    Toast.makeText(getContext(), "Tidak ada foto yang dipilih", Toast.LENGTH_SHORT).show();
-                }
+                loadDataFirebase();
 
             });
 
@@ -229,51 +205,184 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+        btnTambahGambar.setEnabled(false);
+        lokasiPenjemputan.setEnabled(false);
+        btnRequest.setEnabled(false);
     }
 
-    private void loadDataFirebase(String url) {
-        initFirebase();
-        String lokasi = "";
-        String username = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
-        String metode = "Antar";
-        String status = "Diproses";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        showProgress();
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+    private void loadDataFirebase() {
+            initFirebase();
+            showProgress();
+            String lokasi = lokasiPenjemputan.getText().toString();
+            String metode = "Jemput";
+            String status = "Diproses";
+            String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+            ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+            LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
 
-        kantongNonOrganiks = new ArrayList<>();
-        listKey = new ArrayList<>();
-        inputPakaian = new ArrayList<>();
-        totalPoint = 0;
+            kantongNonOrganiks = new ArrayList<>();
+            listKey = new ArrayList<>();
+            inputPakaian = new ArrayList<>();
+            totalPoint = 0;
 
-        liveData.observe(this, dataSnapshot -> {
-            if (dataSnapshot != null) {
-                hideProgress();
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
-                    Kantong kantong = dataItem.getValue(Kantong.class);
-                    listKey.add(kantong);
-                    totalPoint = totalPoint + kantong.getJumlahPoint();
+            liveData.observe(this, dataSnapshot -> {
+                if (dataSnapshot != null) {
+
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
+                        Kantong kantong = dataItem.getValue(Kantong.class);
+                        listKey.add(kantong);
+                        totalPoint = totalPoint + kantong.getJumlahPoint();
+                    }
+
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
+                        KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
+                        kantongNonOrganiks.add(kantongNonOrganik);
+                        totalPoint = totalPoint + kantongNonOrganik.getJumlahPoint();
+                    }
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
+                        Kantong kantongPakaian = dataItem.getValue(Kantong.class);
+                        inputPakaian.add(kantongPakaian);
+                        totalPoint = totalPoint + kantongPakaian.getJumlahPoint();
+                    }
+                    if (totalPoint != 0) {
+                        if (TextUtils.isEmpty(lokasiPenjemputan.getText().toString())){
+                            Toast.makeText(getContext(),"Silahkan masukkan lokasi",Toast.LENGTH_SHORT).show();
+                        }
+                        else if (mImageUri != null) {
+
+                            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+                                    + "." + getFileExtension(mImageUri));
+
+                            fileReference.putFile(mImageUri)
+                                    .addOnSuccessListener(taskSnapshot -> {
+                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                        while (!uriTask.isSuccessful());
+                                        Uri downloadUri = uriTask.getResult();
+
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(() -> {
+                                        }, 500);
+                                        Transaksi transaksi = new Transaksi(downloadUri.toString(), listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
+                                        addTransaksi(transaksi);
+
+                                    }).addOnFailureListener(e -> {
+
+                            }).addOnProgressListener(taskSnapshot -> {
+                                showProgress();
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                progressBar.setProgress((int) progress);
+
+                            });
+
+                        } else {
+                            Toast.makeText(getContext(), "Tidak ada foto yang dipilih", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
+            });
+    }
 
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
-                    KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
-                    kantongNonOrganiks.add(kantongNonOrganik);
-                    totalPoint = totalPoint + kantongNonOrganik.getJumlahPoint();
-                }
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
-                    Kantong kantongPakaian = dataItem.getValue(Kantong.class);
-                    inputPakaian.add(kantongPakaian);
-                    totalPoint = totalPoint + kantongPakaian.getJumlahPoint();
-                }
+    private void pickFromCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Temp Pic");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description");
+        //put image uri
+        mImageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-                if (totalPoint != 0) {
-                    Transaksi transaksi = new Transaksi(url, listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks, inputPakaian);
-                    addTransaksi(transaksi);
+        //intent to start camera
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
+    }
+
+    private void pickFromGallery() {
+        //pick from gallery
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+    }
+
+    private boolean checkStoragePermission(){
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+
+    private void requestStoragePermission() {
+        requestPermissions(storagePermissions, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkCameraPermission(){
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+
+    private void requestCameraPermission() {
+        requestPermissions(cameraPermissions, CAMERA_REQUEST_CODE);
+    }
+
+    private void showImagePict(){
+        if (!checkCameraPermission()) {
+            requestCameraPermission();
+        }
+        else {
+            pickFromCamera();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE: {
+                if (grantResults.length >0) {
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraAccepted && writeStorageAccepted) {
+                        pickFromCamera();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Enable Kamera dan Storage Permission", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        });
-
+            break;
+            case STORAGE_REQUEST_CODE:{
+                if (grantResults.length >0) {
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (writeStorageAccepted) {
+                        pickFromGallery();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Enable Storage Permission", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            break;
+        }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
+                // image is picked from gallery, get uri of image
+                btnTambahGambar.setVisibility(View.VISIBLE);
+                Picasso.get().load(mImageUri).into(imageSampah);
+            }
+            if (requestCode == IMAGE_PICK_CAMERA_CODE) {
+                // image is picked from camera, get uri of image
+                btnTambahGambar.setVisibility(View.VISIBLE);
+                Picasso.get().load(mImageUri).into(imageSampah);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

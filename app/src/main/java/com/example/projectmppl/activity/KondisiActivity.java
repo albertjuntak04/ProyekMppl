@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    int jumlahBagus, jumlahRingan, jumlahBerat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,14 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         showSampah();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        if (TextUtils.isEmpty(editBagus.getText())){
+            editBagus.setText("0");
+        }else if (TextUtils.isEmpty(editRingan.getText())){
+            jumlahRingan = 0;
+        }else if (TextUtils.isEmpty(editBerat.getText())){
+            jumlahBerat = 0;
+        }
 
 
 
@@ -96,10 +106,17 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
             LiveData<DataSnapshot> liveData = viewModel.getdataKondisi();
             // Mengambil data yang diberikan oleh pengguna
             String username = firebaseAuth.getCurrentUser().getEmail();
-            int jumlahBagus = Integer.parseInt(String.valueOf(editBagus.getText()));
-            int jumlahRingan = Integer.parseInt(String.valueOf(editRingan.getText()));
-            int jumlahBerat = Integer.parseInt(String.valueOf(editBerat.getText()));
-
+            if (TextUtils.isEmpty(editBagus.getText())){
+                editBagus.setText("0");
+            }else if (TextUtils.isEmpty(editRingan.getText())){
+                editRingan.setText("0");
+            }else if (TextUtils.isEmpty(editBerat.getText())){
+                editBerat.setText("0");
+            }else {
+                jumlahBagus = Integer.parseInt(String.valueOf(editBagus.getText()));
+                jumlahRingan = Integer.parseInt(String.valueOf(editRingan.getText()));
+                jumlahBerat = Integer.parseInt(String.valueOf(editBerat.getText()));
+            }
             liveData.observe(this, new Observer<DataSnapshot>() {
                 @Override
                 public void onChanged(DataSnapshot dataSnapshot) {

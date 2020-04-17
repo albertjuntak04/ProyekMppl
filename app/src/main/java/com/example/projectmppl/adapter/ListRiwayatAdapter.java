@@ -66,6 +66,7 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
 
         if (String.valueOf(transaksi.getStatus()).equals("Diproses")){
             holder.status.setTextColor(Color.GREEN);
+//            holder.btnHapus.setEnabled(false);
         }else {
             holder.status.setTextColor(Color.RED);
         }

@@ -26,16 +26,15 @@ import butterknife.ButterKnife;
 public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAdapter.ViewHolder> {
     private List<KantongNonOrganik> listKantong;
     private List<String> listKey;
-    private OnRemovedNonOrganikListener mCallback;
 
     public ListNonOrganikAdapter(){
 
     }
 
-    public ListNonOrganikAdapter(List<KantongNonOrganik> listKantong, List<String> listKey, OnRemovedNonOrganikListener mCallback){
+    public ListNonOrganikAdapter(List<KantongNonOrganik> listKantong, List<String> listKey){
         this.listKantong = listKantong;
         this.listKey = listKey;
-        this.mCallback = mCallback;
+
     }
 
 
@@ -55,7 +54,19 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
         holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
         holder.btnHapus.setOnClickListener(view -> {
-            mCallback.RemoveNonOrganikClicked(listKey.get(position),position);
+            DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+            databaseReference2
+                    .child(currentUser)
+                    .child("data")
+                    .child("nonOrganik")
+                    .child(listKey.get(position))
+                    .removeValue()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            removeItem(position);
+                        }
+                    });
         });
     }
 
@@ -77,14 +88,6 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    public interface OnRemovedNonOrganikListener{
-        void RemoveNonOrganikClicked(String key, int position);
-    }
-
-    public void setDeleteNonOrganikClickedListener(OnRemovedNonOrganikListener mCallback) {
-        this.mCallback = mCallback;
     }
 
     public void removeItem(int position) {
