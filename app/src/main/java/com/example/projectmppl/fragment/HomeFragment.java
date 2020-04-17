@@ -24,6 +24,7 @@ import com.example.projectmppl.activity.jenissampah.PakaianActivity;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -55,7 +56,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
     @BindView(R.id.total_poin)
     TextView totalPoin;
     @BindView(R.id.dashboard_iv_profile)
-    ImageView profileImage;
+    CircularImageView fotoProfil;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -75,18 +77,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
 
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataUser();
-        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         liveData.observe(this, dataSnapshot -> {
             // Untuk menampilkan dataUser
-            if (dataSnapshot!=null){
-                String name = dataSnapshot.child(currentUser).child("nama").getValue().toString();
-                String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
-                String image = dataSnapshot.child(currentUser).child("image").getValue().toString();
-                tvName.setText(name);
-                totalPoin.setText(poin);
-                if (!image.equals("")) {
-                    Picasso.get().load(image).into(profileImage);
-                }
+            String image = dataSnapshot.child(currentUser).child("image").getValue().toString();
+            String name = dataSnapshot.child(currentUser).child("nama").getValue().toString();
+            String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
+            tvName.setText(name);
+            totalPoin.setText(poin);
+
+            try {
+                Picasso.get().load(image).into(fotoProfil);
+            }
+            catch (Exception e){
+                Picasso.get().load(R.drawable.icon_upload).into(fotoProfil);
             }
         });
 

@@ -34,11 +34,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="7dp"
                 android:src="@drawable/icon_upload"
-                app:civ_border_color="@color/colorAccent"
-                app:civ_border_width="6dp"
-                app:civ_shadow="true"
-                app:civ_shadow_color="#8BC34A"
-                app:civ_shadow_radius="10dp"
                 android:id="@+id/img_profile"/>
 
             <LinearLayout
@@ -151,7 +146,9 @@
                     android:ems="10"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:enabled='false'
+                    android:textColor="@color/text"/>
 
                 <ImageButton
                     android:id="@+id/btn_edit_nama"
@@ -179,10 +176,13 @@
                     android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:inputType="textEmailAddress"
                     android:ems="10"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:enabled='false'
+                    android:textColor="@color/text"/>
                 <ImageButton
                     android:id="@+id/btn_edit_email"
                     android:layout_width="wrap_content"
@@ -209,9 +209,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:ems="10"
+                    android:inputType="phone"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:enabled='false'
+                    android:textColor="@color/text"/>
                 <ImageButton
                     android:id="@+id/btn_edit_noHp"
                     android:layout_width="wrap_content"
@@ -228,19 +231,25 @@
                 android:text="Pekerjaan :"
                 android:ems="10"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Spinner
                     android:id="@+id/pekerjaan"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:ems="10"
-                    tools:layout_editor_absoluteX="24dp"
-                    tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints"></Spinner>
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:spinnerMode="dropdown" />
+
                 <ImageButton
                     android:id="@+id/btn_edit_pekerjaan"
                     android:layout_width="wrap_content"
@@ -251,7 +260,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/judljeniskelamin"
+                android:id="@+id/judlJenisKelamin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jenis Kelamin :"
@@ -269,15 +278,15 @@
                     android:ems="10"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
+                    android:textSize="20sp"
                     tools:ignore="MissingConstraints"></TextView>
             </RelativeLayout>
-
 
             <TextView
                 android:id="@+id/judlPw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kata Sandi :"
+                android:text="Password :"
                 android:ems="10"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -293,7 +302,9 @@
                     android:ems="10"
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:enabled='false'
+                    android:textColor="@color/text"/>
                 <ImageButton
                     android:id="@+id/btn_edit_sandi"
                     android:layout_width="wrap_content"
@@ -303,7 +314,6 @@
                     android:layout_alignParentEnd="true"/>
             </RelativeLayout>
         </LinearLayout>
-
         <Button
             android:id="@+id/btn_simpan"
             android:layout_width="237dp"
