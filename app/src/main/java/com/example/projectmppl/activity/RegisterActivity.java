@@ -142,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 alertDialogBuilder.setMessage("Akun Anda berhasil di daftar. Silahkan masuk menggunakan akun Anda");
 
                                 // Save new User
-                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password,0));
+                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password,"",0));
                                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {

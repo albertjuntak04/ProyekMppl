@@ -30,15 +30,15 @@
             <ImageView
                 android:id="@+id/img_sampah"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                app:srcCompat="@drawable/printer" />
+                android:layout_height="140dp"
+                app:srcCompat="@drawable/icon_sampah" />
 
             <TextView
                 android:id="@+id/namabarang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/printer"
+                android:text="@string/nama_barang"
                 android:textColor="@color/text"
                 android:textSize="24sp" />
         </LinearLayout>
