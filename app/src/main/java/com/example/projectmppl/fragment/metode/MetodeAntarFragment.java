@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 import com.example.projectmppl.R;
@@ -127,46 +128,52 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     private void loadDataFirebase() {
         initFirebase();
         String lokasi = lokasiSpinner.getSelectedItem().toString().trim();
-        String metode = "Antar";
-        String status = "Diproses";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        showProgress();
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
+        if (lokasi.equals("Lokasi")){
+            Toast.makeText(getContext(),"Silahkan Masukkan Lokasi",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            String metode = "Antar";
+            String status = "Diproses";
+            String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            showProgress();
+            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+            ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+            LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
 
-        kantongNonOrganiks = new ArrayList<>();
-        listKey = new ArrayList<>();
-        inputPakaian = new ArrayList<>();
-        totalPoint = 0;
+            kantongNonOrganiks = new ArrayList<>();
+            listKey = new ArrayList<>();
+            inputPakaian = new ArrayList<>();
+            totalPoint = 0;
 
-        liveData.observe(this, dataSnapshot -> {
-            if (dataSnapshot != null){
+            liveData.observe(this, dataSnapshot -> {
+                if (dataSnapshot != null){
 
-                hideProgress();
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
-                    Kantong kantong = dataItem.getValue(Kantong.class);
-                    listKey.add(kantong);
-                    totalPoint = totalPoint+kantong.getJumlahPoint();
+                    hideProgress();
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
+                        Kantong kantong = dataItem.getValue(Kantong.class);
+                        listKey.add(kantong);
+                        totalPoint = totalPoint+kantong.getJumlahPoint();
+                    }
+
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
+                        KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
+                        kantongNonOrganiks.add(kantongNonOrganik);
+                        totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
+                    }
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
+                        Kantong kantongPakaian = dataItem.getValue(Kantong.class);
+                        inputPakaian.add(kantongPakaian);
+                        totalPoint = totalPoint+kantongPakaian.getJumlahPoint();
+                    }
+
+                    if (totalPoint != 0){
+                        Transaksi transaksi = new Transaksi("url", listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
+                        addTransaksi(transaksi);
+                    }
                 }
+            });
+        }
 
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
-                    KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
-                    kantongNonOrganiks.add(kantongNonOrganik);
-                    totalPoint = totalPoint+kantongNonOrganik.getJumlahPoint();
-                }
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
-                    Kantong kantongPakaian = dataItem.getValue(Kantong.class);
-                    inputPakaian.add(kantongPakaian);
-                    totalPoint = totalPoint+kantongPakaian.getJumlahPoint();
-                }
-
-                if (totalPoint != 0){
-                    Transaksi transaksi = new Transaksi("url", listKey, metode, status, datetime, totalPoint, lokasi, kantongNonOrganiks,inputPakaian);
-                    addTransaksi(transaksi);
-                }
-            }
-        });
 
     }
 
@@ -182,12 +189,6 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     public void onPause() {
         super.onPause();
         Log.d("Tag", "FragmentAntar.onPause() has been called.");
-        if (listKey != null && kantongNonOrganiks !=null && inputPakaian!= null && list != null) {
-            listKey.clear();
-            kantongNonOrganiks.clear();
-            inputPakaian.clear();
-            list.clear();
-        }
     }
 
     private void hideProgress() {
@@ -196,6 +197,8 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     private void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+        lokasiSpinner.setEnabled(false);
+        btnRequest.setEnabled(false);
     }
 
     @Override

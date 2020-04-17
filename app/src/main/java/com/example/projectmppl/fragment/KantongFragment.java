@@ -29,9 +29,11 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.adapter.ListNonOrganikAdapter;
+import com.example.projectmppl.adapter.ListRiwayatAdapter;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
+import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +54,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class KantongFragment extends Fragment implements ListKantongAdapter.OnRemovedListener,ListNonOrganikAdapter.OnRemovedNonOrganikListener {
+public class KantongFragment extends Fragment {
     private static final String TAG = "KantongActivity";
     public static String KEY_ACTIVITY = "DaftarSampah";
     @BindView(R.id.recycleview)
@@ -67,6 +69,7 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
     private ArrayList<String> listKeyNonOrganik;
     private ArrayList<Kantong> listPakaian;
     private ArrayList<String> keyElektronik;
+    private ArrayList<String> keyPakaian;
     @BindView(R.id.progress)
     ProgressBar progressBar;
 
@@ -99,97 +102,128 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
         return view;
     }
 
-    private void loadDataFirebaseElektronik() {
-        showProgress();
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-
+    private void loadDataFirebaseElektronik(){
         listData = new ArrayList<>();
         keyElektronik = new ArrayList<>();
-        liveData.observe(this, dataSnapshot -> {
-            if (dataSnapshot != null){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("kantong")
+                .child(currentUser)
+                .child("data")
+                .child("elektronik")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null){
 
-                hideProgress();
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("elektronik").getChildren()) {
-                    Kantong kantong = dataItem.getValue(Kantong.class);
-                    listData.add(kantong);
-                    keyElektronik.add(dataItem.getKey());
-                }
-                kantongAdapter = new ListKantongAdapter(listData,keyElektronik,getActivity(),"elektronik");
-                kantongAdapter.setOnShareClickedListener(this);
-                recyclerViewData.setAdapter(kantongAdapter);
-                kondisiKantong.setVisibility(View.INVISIBLE);
-            }
-        });
+                            hideProgress();
+                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                                Kantong kantong = dataItem.getValue(Kantong.class);
+                                listData.add(kantong);
+                                keyElektronik.add(dataItem.getKey());
+                            }
+                            kantongAdapter = new ListKantongAdapter(listData,keyElektronik,getActivity(),"elektronik");
+                            recyclerViewData.setAdapter(kantongAdapter);
+                            kondisiKantong.setVisibility(View.INVISIBLE);
+                        }
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
-    private void loadDataNonOrganik() {
-        showProgress();
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
 
-
+    private void loadDataNonOrganik(){
         listKeyNonOrganik = new ArrayList<>();
         listDataNonOrganik = new ArrayList<>();
-        liveData.observe(this, dataSnapshot -> {
-            if (dataSnapshot != null){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("kantong")
+                .child(currentUser)
+                .child("data")
+                .child("nonOrganik")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null){
 
-                hideProgress();
+                            hideProgress();
 
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("nonOrganik").getChildren()) {
-                    KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
-                    listDataNonOrganik.add(kantongNonOrganik);
-                    listKeyNonOrganik.add(dataItem.getKey());
-                }
-                listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik,listKeyNonOrganik,this);
-                recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
-                recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
-                kondisiKantong.setVisibility(View.INVISIBLE);
-            }
-        });
+                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                                KantongNonOrganik kantongNonOrganik = dataItem.getValue(KantongNonOrganik.class);
+                                listDataNonOrganik.add(kantongNonOrganik);
+                                listKeyNonOrganik.add(dataItem.getKey());
+                            }
+                            listNonOrganikAdapter = new ListNonOrganikAdapter(listDataNonOrganik,listKeyNonOrganik);
+                            recyclerViewNonOrganik.setAdapter(listNonOrganikAdapter);
+                            recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
+                            kondisiKantong.setVisibility(View.INVISIBLE);
+                        }
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 
-    private void loadDataFirebasePakaian() {
+
+    private void loadDataFirebasePakaian(){
         showProgress();
-        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
-        LiveData<DataSnapshot> liveData = viewModel.getdataSnapshotLiveData();
-
         listPakaian = new ArrayList<>();
+        keyPakaian = new ArrayList<>();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("kantong")
+                .child(currentUser)
+                .child("data")
+                .child("pakaian")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null){
 
-        liveData.observe(this, dataSnapshot -> {
-            if (dataSnapshot != null){
+                            hideProgress();
 
-                hideProgress();
+                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                                Kantong kantongPakaian = dataItem.getValue(Kantong.class);
+                                listPakaian.add(kantongPakaian);
+                                keyPakaian.add(dataItem.getKey());
+                            }
+                            kantongAdapterPakaian = new ListKantongAdapter(listPakaian,keyPakaian,getActivity(),"pakaian");
+                            recyclerViewPakaian.setAdapter(kantongAdapterPakaian);
+                        }
 
-                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).child("data").child("pakaian").getChildren()) {
-                    Kantong kantongPakaian = dataItem.getValue(Kantong.class);
-                    listPakaian.add(kantongPakaian);
+                    }
 
-                }
-                kantongAdapterPakaian = new ListKantongAdapter(listPakaian,keyElektronik,getActivity(),"pakaian");
-                kantongAdapterPakaian.setOnShareClickedListener(this);
-                recyclerViewPakaian.setAdapter(kantongAdapterPakaian);
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
     }
 
 
 
     private void initFirebase() {
-
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewData.setHasFixedSize(true);
         recyclerViewPakaian.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewPakaian.setHasFixedSize(true);
         recyclerViewNonOrganik.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewNonOrganik.setHasFixedSize(true);
+
     }
 
     private void hideProgress() {
@@ -222,7 +256,7 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("Tag", "FragmentA.onPause() has been called.");
+        Log.d("Tag", "FragmentKantong.onPause() has been called.");
         if (listData != null && listDataNonOrganik !=null && listPakaian != null) {
             listData.clear();
             listDataNonOrganik.clear();
@@ -236,27 +270,5 @@ public class KantongFragment extends Fragment implements ListKantongAdapter.OnRe
         loadDataFirebasePakaian();
         loadDataNonOrganik();
     }
-
-    @Override
-    public void RemoveClicked(String key,int position,String jenis) {
-        Intent intent = new Intent(getActivity(), KantongActivity.class);
-        intent.putExtra("removeData","removeData");
-        intent.putExtra("saveData","remove");
-        intent.putExtra("key",key);
-        intent.putExtra("jenis",jenis);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public void RemoveNonOrganikClicked(String key, int position) {
-        Intent intent = new Intent(getActivity(), KantongActivity.class);
-        intent.putExtra("removeData","removeData");
-        intent.putExtra("saveData","remove");
-        intent.putExtra("key",key);
-        intent.putExtra("jenis","nonOrganik");
-        startActivity(intent);
-    }
-
 }
 

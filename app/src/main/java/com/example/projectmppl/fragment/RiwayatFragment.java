@@ -81,7 +81,6 @@ public class RiwayatFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
         firebaseDatabase = FirebaseDatabase.getInstance();
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        recyclerViewData.setHasFixedSize(true);
     }
 
     private void loadDataFirebase(){
