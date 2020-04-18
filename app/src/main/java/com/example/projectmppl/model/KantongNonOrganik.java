@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class KantongNonOrganik {
 
-    private ArrayList<String> idSampah;
+    private String idSampah;
     private String jenisSampah;
     private int jumlah;
     private int jumlahPoint;
@@ -13,7 +13,7 @@ public class KantongNonOrganik {
 
     }
 
-    public KantongNonOrganik(ArrayList<String> idSampah, String jenisSampah, int jumlah, int jumlahPoint) {
+    public KantongNonOrganik(String idSampah, String jenisSampah, int jumlah, int jumlahPoint) {
 
         this.idSampah = idSampah;
         this.jenisSampah = jenisSampah;
@@ -22,11 +22,11 @@ public class KantongNonOrganik {
     }
 
 
-    public ArrayList<String> getIdSampah() {
+    public String getIdSampah() {
         return idSampah;
     }
 
-    public void setIdSampah(ArrayList<String> idSampah) {
+    public void setIdSampah(String idSampah) {
         this.idSampah = idSampah;
     }
 

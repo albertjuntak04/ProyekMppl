@@ -70,7 +70,7 @@ public class NonOrganikActivity extends AppCompatActivity {
             int totalSampah = Integer.parseInt(total);
             int jumlahPoint = totalSampah * 100;
             String currentUser = Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail()).replaceAll("\\.", "_");
-            KantongNonOrganik kantongNonOrganik = new KantongNonOrganik( list, "NonOrganik", totalSampah, jumlahPoint);
+            KantongNonOrganik kantongNonOrganik = new KantongNonOrganik( String.valueOf(list), "NonOrganik", totalSampah, jumlahPoint);
             getReference
                     .child(currentUser)
                     .child("data")
