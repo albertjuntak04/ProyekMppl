@@ -195,7 +195,6 @@ public class KantongFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot != null){
-
                             hideProgress();
 
                             for (DataSnapshot dataItem : dataSnapshot.getChildren()) {

@@ -3,8 +3,8 @@
     package="com.example.projectmppl">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,10 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.RiwayatActivity"
+            android:label="Riwayat Transaksi Kupon"
+            android:parentActivityName=".activity.MainActivity"></activity>
         <activity
             android:name=".activity.jenissampah.NonOrganikActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.KantongActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -58,10 +61,11 @@
         <activity
             android:name=".activity.PenukaranKupon"
             android:label="Kupon"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".activity.DaftarKupon"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DaftarKupon"
+            android:label="Kupon"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
         <activity

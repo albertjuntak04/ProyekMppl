@@ -1,173 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent">
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="351dp"
-        android:layout_height="95dp"
-        android:layout_marginTop="22dp"
-        android:background="#b4e0a6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/poinku"
-            android:layout_width="347dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="Poin ku"
-            android:textSize="20dp"
-            android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="351dp"
+            android:layout_height="95dp"
+            android:layout_marginTop="22dp"
+            android:background="#b4e0a6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/img_poinku"
-            android:layout_width="61dp"
-            android:layout_height="39dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/savemoney"
-            app:layout_constraintEnd_toStartOf="@+id/total_poinku"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/poinku" />
+            <TextView
+                android:id="@+id/poinku"
+                android:layout_width="347dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="Poin ku"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_poinku"
+                android:layout_width="61dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/savemoney"
+                app:layout_constraintEnd_toStartOf="@+id/poin_user"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/poinku" />
+
+
+            <TextView
+                android:id="@+id/poin_user"
+                android:layout_width="51dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="213dp"
+                android:text="9999"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/img_poinku"
+                app:layout_constraintTop_toBottomOf="@+id/poinku" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/total_poinku"
-            android:layout_width="51dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="213dp"
-            android:text="9999"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:id="@+id/textView3"
+            android:layout_width="160dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="223dp"
+            android:text="Kupon saya"
+            android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_poinku"
-            app:layout_constraintTop_toBottomOf="@+id/poinku" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_kupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_kupon"></androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="16dp"
+            android:text="Tukar Poin ke Kupon Indomaret"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_kupon" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_indomaret"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_kupon">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="11dp"
+            android:text="Tukar Poin ke Kupon Koperasi"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_indomaret" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_koperasi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_kupon"></androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="11dp"
+            android:text="Tukar Poin ke Kupon Akademik/Keasramaan"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_koperasi" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_keasramaan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView2"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_kupon">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable="@drawable/custom_progressbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></ProgressBar>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="160dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="223dp"
-        android:text="Kupon saya"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="161dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="222dp"
-        android:src="@drawable/kupon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="257dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="126dp"
-        android:text="Gunakan Kupon Indomaret"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="126dp"
-        android:layout_height="85dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginEnd="239dp"
-        android:src="@drawable/kupon1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="154dp"
-        android:text="Gunakan Kupon Koperasi"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="21dp"
-        android:text="Gunakan Kupon Akademik/Keasramaan"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="102dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="154dp"
-        android:src="@drawable/coup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="102dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginEnd="7dp"
-        android:src="@drawable/voucher"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <ImageView
-        android:layout_width="102dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="263dp"
-        android:src="@drawable/giftcard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

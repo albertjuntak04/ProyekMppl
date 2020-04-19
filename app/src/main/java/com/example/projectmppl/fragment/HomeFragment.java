@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.DaftarKupon;
 import com.example.projectmppl.activity.KantongActivity;
+import com.example.projectmppl.activity.RiwayatActivity;
 import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
 import com.example.projectmppl.ui.ViewModelFirebase;
@@ -105,10 +106,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.kupon:
-            case R.id.poin:
                 Intent intent = new Intent(getActivity(), DaftarKupon.class);
                 startActivity(intent);
                 break;
+
+            case R.id.poin:
+                Intent intentRiwayat = new Intent(getActivity(), RiwayatActivity.class);
+                startActivity(intentRiwayat);
+                break;
+
             case R.id.img_nonorganik:
                 Intent nonOrganik = new Intent(getActivity(), NonOrganikActivity.class);
                 startActivity(nonOrganik);
