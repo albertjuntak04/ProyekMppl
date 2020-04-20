@@ -256,11 +256,11 @@ public class KantongFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("Tag", "FragmentKantong.onPause() has been called.");
-        if (listData != null && listDataNonOrganik !=null && listPakaian != null) {
-            listData.clear();
-            listDataNonOrganik.clear();
-            listPakaian.clear();
-        }
+//        if (listData != null && listDataNonOrganik !=null && listPakaian != null) {
+//            listData.clear();
+//            listDataNonOrganik.clear();
+//            listPakaian.clear();
+//        }
 
     }
 
