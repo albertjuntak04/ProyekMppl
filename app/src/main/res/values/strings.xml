@@ -117,7 +117,8 @@
         <item>GD 9</item>
         <item>GD 5</item>
         <item>GD 7</item>
-        <item>POST 1</item>
+        <item>Post Satpam</item>
+        <item>Kantin Lama</item>
     </string-array>
     <string name="tentang_info">Trashy adalah platform yang bertujuan untuk sebagai sarana dalam pengumpulan sampah dilingkungan kampus Institut Teknolodi Del.
         Aplikasi ini menghubungkan penukar sampah (mahasiswa, dosen/staff) dengan kolektor agen sampah yang ada dilingkungan kampus agar lebih mudah
@@ -152,7 +153,7 @@
     <string name="pcs">pcs</string>
     <string name="poin">Poin</string>
     <string name="total_berat">Total berat</string>
-    <string name="total_poin">Total Poin</string>
+    <string name="total_poin">Poin</string>
     <string name="request">Request</string>
     <string name="nama_barang">Nama Barang</string>
     <string name="image_kupon">image Kupon</string>

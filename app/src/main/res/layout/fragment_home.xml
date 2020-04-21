@@ -32,7 +32,7 @@
             android:layout_margin="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
+            app:srcCompat="@drawable/kantong" />
 
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -142,7 +142,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/kuponku" />
-
                         <TextView
                             android:id="@+id/total_kupon"
                             android:layout_width="wrap_content"

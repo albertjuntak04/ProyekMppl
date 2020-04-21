@@ -19,7 +19,8 @@
         <activity
             android:name=".activity.jenissampah.NonOrganikActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="NonOrganik"/>
         <activity
             android:name=".activity.KantongActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

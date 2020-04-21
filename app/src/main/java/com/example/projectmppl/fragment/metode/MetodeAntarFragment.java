@@ -134,7 +134,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         else {
             String metode = "Antar";
             String status = "Diproses";
-            String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String datetime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             showProgress();
             String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
             ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);

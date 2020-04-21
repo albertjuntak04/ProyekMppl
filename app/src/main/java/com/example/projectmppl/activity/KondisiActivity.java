@@ -221,6 +221,7 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void showSampah(){
+        ActionBar actionBar = getSupportActionBar();
         showProgress();
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataKondisi();
@@ -238,9 +239,9 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                     .child(getIntent().getStringExtra("NamaSampah"))
                     .child("jenis")
                     .getValue().toString();
-
-
-            ActionBar actionBar = getSupportActionBar();
+            if (title.equals("komputer")){
+                actionBar.setTitle(title.replace("\\ k","K"));
+            }
             actionBar.setTitle(title);
             Picasso.get().load(imageUrl).into(imageSampah);
             hideProgress();

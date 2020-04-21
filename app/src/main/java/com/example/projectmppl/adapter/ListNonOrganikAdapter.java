@@ -52,7 +52,8 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         holder.jumlah.setText(String.valueOf(kantong.getJumlah()));
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
-        holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
+        holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()).replaceAll("\\[", "").replaceAll("" +
+                "]",""));
         holder.btnHapus.setOnClickListener(view -> {
             DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
             databaseReference2

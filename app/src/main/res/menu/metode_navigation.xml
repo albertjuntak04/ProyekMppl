@@ -7,7 +7,7 @@
         />
     <item
         android:id="@+id/action_jemput"
-        android:icon="@drawable/jemput"
+        android:icon="@drawable/home"
         android:title="@string/jemput"
         />
 </menu>

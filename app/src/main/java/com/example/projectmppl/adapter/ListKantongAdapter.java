@@ -58,7 +58,7 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sampah, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sampah_elektronik, null);
         return new ViewHolder(view);
     }
 
@@ -78,7 +78,8 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         Kantong kantong = listKantong.get(position);
         holder.jumlah.setText(String.valueOf(kantong.getJumlah()));
         holder.total.setText(String.valueOf(kantong.getJumlahPoint()));
-        holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()));
+        holder.jenisSampah.setText(String.valueOf(kantong.getIdSampah()).replaceAll("\\[", "").replaceAll("" +
+                "]",""));
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +98,9 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
                         });
             }
         });
+        holder.kondisiBagus.setText(String.valueOf(kantong.getBagus()));
+        holder.kondisiBerat.setText(String.valueOf(kantong.getBerat()));
+        holder.kondisiRingan.setText(String.valueOf(kantong.getSedang()));
     }
 
     @Override
@@ -113,6 +117,13 @@ public class ListKantongAdapter extends RecyclerView.Adapter<ListKantongAdapter.
         TextView jenisSampah;
         @BindView(R.id.btn_hapus)
         Button btnHapus;
+        @BindView(R.id.kondisi_bagus)
+        TextView kondisiBagus;
+        @BindView(R.id.kondisi_ringan)
+        TextView kondisiRingan;
+        @BindView(R.id.kondisi_berat)
+        TextView kondisiBerat;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

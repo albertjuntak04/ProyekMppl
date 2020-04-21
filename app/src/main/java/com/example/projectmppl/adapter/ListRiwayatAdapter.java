@@ -80,7 +80,8 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
                 daftarElektronik.add(String.valueOf(kantong1.getIdSampah()));
                 jumlahElektronik = jumlahElektronik + kantong1.getJumlah();
             }
-            holder.elektronik.setText(String.valueOf(daftarElektronik));
+            holder.elektronik.setText(String.valueOf(daftarElektronik).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
             holder.jumlahElektronik.setText(String.valueOf(jumlahElektronik));
         }
 
@@ -95,7 +96,8 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
             totalBerat = totalBerat + kantongNonOrganik.getJumlah();
         }
 
-            holder.nonOrganik.setText(String.valueOf(daftarNonOrganik));
+            holder.nonOrganik.setText(String.valueOf(daftarNonOrganik).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
             holder.jumlahOrganik.setText(String.valueOf(totalBerat));
         }
 
@@ -109,7 +111,8 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
                 jumlahPakaian = jumlahPakaian + kantongPakaian.getJumlah();
             }
 
-            holder.pakaian.setText(String.valueOf(daftarPakaian));
+            holder.pakaian.setText(String.valueOf(daftarPakaian).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
             holder.jumlahPakaian.setText(String.valueOf(jumlahPakaian));
         }
 
