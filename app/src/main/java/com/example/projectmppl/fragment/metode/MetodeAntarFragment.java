@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +21,13 @@ import android.widget.TextView;
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
+import com.example.projectmppl.adapter.ListRiwayatAdapter;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
+import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,6 +45,7 @@ public class MetodeAntarFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReference2;
+    private DatabaseReference databaseReferenceRiwayat;
     private FirebaseDatabase firebaseDatabase;
     private ListKantongAdapter listKantongAdapter = new ListKantongAdapter();
 
@@ -72,6 +79,7 @@ public class MetodeAntarFragment extends Fragment {
                 .child(transaksi.getIdPenukar().replaceAll("\\.", "_"))
                 .push()
                 .setValue(transaksi);
+        saveRiwayat();
         removeData(transaksi);
 
     }
@@ -79,6 +87,7 @@ public class MetodeAntarFragment extends Fragment {
     private void initFirebase() {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+        databaseReferenceRiwayat  = FirebaseDatabase.getInstance().getReference("riwayat");
     }
 
     private void removeData(Transaksi transaksi){
@@ -126,6 +135,26 @@ public class MetodeAntarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+
+    public void saveRiwayat() {
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
+                        databaseReferenceRiwayat
+                                .child(currentUser)
+                                .setValue(dataItem.getKey());
+                    }
+                }
+
+            }
+        });
     }
 
 }
