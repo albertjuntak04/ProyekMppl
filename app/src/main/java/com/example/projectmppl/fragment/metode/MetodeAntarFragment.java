@@ -27,25 +27,26 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
-<<<<<<< HEAD
+
 import com.example.projectmppl.adapter.ListRiwayatAdapter;
-=======
+
 import com.example.projectmppl.adapter.ListNonOrganikAdapter;
->>>>>>> kupon
+
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
-<<<<<<< HEAD
-=======
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
->>>>>>> kupon
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,11 +63,8 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-<<<<<<< HEAD
     private DatabaseReference databaseReference2;
     private DatabaseReference databaseReferenceRiwayat;
-=======
->>>>>>> kupon
     private FirebaseDatabase firebaseDatabase;
     private ListKantongAdapter listKantongAdapter = new ListKantongAdapter();
 
@@ -74,7 +72,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     private ArrayList<KantongNonOrganik>kantongNonOrganiks;
     private ArrayList<Kantong>inputPakaian;
     private int totalPoint;
-    private ArrayList<String> list;
+    private ArrayList<String> listKeyRiwayat;
 
     @BindView(R.id.progress)
     ProgressBar progressBar;
@@ -112,14 +110,12 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     private void addTransaksi(Transaksi transaksi){
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         hideProgress();
+        saveRiwayat();
         firebaseDatabase
                 .getReference()
                 .child("transaksipenukaransampah")
                 .child(currentUser)
                 .push()
-                .setValue(transaksi);
-        saveRiwayat();
-        removeData(transaksi);
                 .setValue(transaksi)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -209,6 +205,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
 
     public void saveRiwayat() {
+        listKeyRiwayat = new ArrayList<>();
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
@@ -217,10 +214,11 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
                     for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
-                        databaseReferenceRiwayat
-                                .child(currentUser)
-                                .setValue(dataItem.getKey());
+                        listKeyRiwayat.add(dataItem.getKey());
                     }
+                    databaseReferenceRiwayat
+                            .child(currentUser)
+                            .setValue(listKeyRiwayat);
                 }
 
             }
