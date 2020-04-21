@@ -32,7 +32,7 @@
             android:layout_margin="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
+            app:srcCompat="@drawable/kantong" />
 
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/gambar"
+            app:srcCompat="@drawable/user"
             />
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Nama"
+            android:text="@string/nama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dashboard_iv_profile" />
@@ -95,13 +95,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Poinku" />
+                            android:text="@string/poinku" />
 
                         <TextView
                             android:id="@+id/total_poin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0" />
+                            android:text="@string/_0" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -141,13 +141,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Kuponku" />
-
+                            android:text="@string/kuponku" />
                         <TextView
                             android:id="@+id/total_kupon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0" />
+                            android:text="@string/_0" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -160,7 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Tukar Sampah"
+        android:text="@string/tukar_sampah"
         android:textSize="24dp"
         android:layout_gravity="center_horizontal"/>
 
@@ -178,7 +177,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Non Organik">
+                android:text="@string/non_organik">
             </TextView>
             <ImageView
                 android:id="@+id/img_nonorganik"
@@ -195,7 +194,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Elektronik">
+                android:text="@string/elektronik">
             </TextView>
             <ImageView
                 android:id="@+id/img_elektronik"
@@ -213,7 +212,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pakaian">
+                android:text="@string/pakaian">
             </TextView>
             <ImageView
                 android:id="@+id/img_pakaian"

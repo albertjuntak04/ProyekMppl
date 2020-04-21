@@ -5,7 +5,7 @@ import com.example.projectmppl.model.Sampah;
 import java.util.ArrayList;
 
 public class HandphoneData {
-    private static String[] sampahNames= {
+    private static final String[] sampahNames= {
             "TeleponSeluler",
             "Charger",
             "Casing",
@@ -15,9 +15,9 @@ public class HandphoneData {
 
     public static ArrayList<Sampah> getListData() {
         ArrayList<Sampah> list = new ArrayList<>();
-        for (int position = 0; position < sampahNames.length; position++) {
+        for (String sampahName : sampahNames) {
             Sampah handphone = new Sampah();
-            handphone.setName(sampahNames[position]);
+            handphone.setName(sampahName);
             list.add(handphone);
         }
         return list;

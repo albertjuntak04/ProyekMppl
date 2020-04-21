@@ -12,8 +12,8 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Jenis Sampah"
-        android:textSize="35dp"
+        android:text="@string/jenis_sampah"
+        android:textSize="35sp"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"/>
@@ -29,7 +29,7 @@
                 android:id="@+id/plastik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Plastik"
+                android:text="@string/plastik"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="123dp"
                 />
@@ -38,7 +38,7 @@
                 android:id="@+id/kertas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kertas"
+                android:text="@string/kertas"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="163dp" />
 
@@ -46,7 +46,7 @@
                 android:id="@+id/botol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Botol"
+                android:text="@string/botol"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="199dp" />
 
@@ -54,7 +54,7 @@
                 android:id="@+id/besi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Besi"
+                android:text="@string/besi"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="233dp" />
 
@@ -62,7 +62,7 @@
                 android:id="@+id/aluminium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aluminium"
+                android:text="@string/aluminium"
                 tools:layout_editor_absoluteX="57dp"
                 tools:layout_editor_absoluteY="268dp" />
     </LinearLayout>
@@ -77,14 +77,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Berat Sampah"
-            android:textSize="20dp"
-            android:layout_marginTop="18dp"
-            />
+            android:textSize="20sp"
+            android:layout_marginTop="1dp"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="52dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
+            android:layout_marginStart="35dp"
             style="@style/TextInputLayoutHint">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -98,8 +98,8 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kg"
-            android:layout_marginTop="15dp"/>
+            android:text="@string/kg"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
 
     <Button
@@ -108,9 +108,9 @@
         android:layout_height="50dp"
         android:layout_gravity="right"
         android:background="@color/colorbotton"
-        android:text="Kantong"
+        android:text="@string/kantong"
         android:textColor="@color/colortext"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginEnd="10dp"/>
 
 
 </LinearLayout>

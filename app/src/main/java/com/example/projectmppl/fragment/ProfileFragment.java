@@ -1,52 +1,65 @@
 package com.example.projectmppl.fragment;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.LoginRegister;
-import com.example.projectmppl.model.User;
+import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
+import static com.google.firebase.storage.FirebaseStorage.getInstance;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,16 +70,30 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.edit_nama)
     EditText editNama;
+    @BindView(R.id.btn_edit_nama)
+    ImageButton btnNama;
     @BindView(R.id.edit_email)
     EditText editEmail;
+    @BindView(R.id.btn_edit_email)
+    ImageButton btnEmail;
     @BindView(R.id.edit_noHp)
     EditText editNoHp;
+    @BindView(R.id.btn_edit_noHp)
+    ImageButton btnNoHp;
     @BindView(R.id.pekerjaan)
-    TextView pekerjaan;
+    Spinner pekerjaann;
+    @BindView(R.id.btn_edit_pekerjaan)
+    ImageButton btnPekerjaan;
+    @BindView(R.id.jenis_kelamin)
+    TextView jenisKelamin;
     @BindView(R.id.edit_password)
     EditText editPassword;
+    @BindView(R.id.btn_edit_sandi)
+    ImageButton btnSandi;
     @BindView(R.id.btn_simpan)
     Button simpan;
+    @BindView(R.id.img_profile)
+    CircularImageView fotoProfil;
 
     ProgressDialog pd;
 
@@ -74,14 +101,32 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
+    FirebaseUser user;
 
     public static DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     public static DatabaseReference mChildReferenceForInputHistory = databaseReference.child("pengguna");
 
+    StorageReference storageReference;
+    //path where images of user profile will be stored
+    String storagePath = "Users_Profile_Imgs/";
+
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+    private static final int IMAGE_PICK_GALLERY_CODE = 300;
+    private static final int IMAGE_PICK_CAMERA_CODE = 400;
+
+    String cameraPermissions[];
+    String storagePermissions[];
+
+    //uri of picked image
+    Uri image_uri;
+
+    //for checking profile photo
+    String profilePhoto;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,26 +135,96 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
 
+        storageReference = getInstance().getReference();
+
+        // Init arrays of permissions
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
         initFirebase();
         loadDataFirebase();
 
         pd = new ProgressDialog(getActivity());
 
+        btnNama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editNama.setEnabled(true);
+            }
+        });
+
+        btnEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editEmail.setEnabled(true);
+            }
+        });
+
+        btnNoHp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editNoHp.setEnabled(true);
+            }
+        });
+
+        pekerjaann.setEnabled(false);
+        btnPekerjaan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pekerjaann.setEnabled(true);
+
+                String[] pekerjaannn = new String[]{
+                        "Staff",
+                        "Mahasiswa"
+                };
+
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_spinner_item, pekerjaannn);
+
+                pekerjaann.setAdapter(adapter);
+
+
+            }
+        });
+
+        btnSandi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editPassword.setEnabled(true);
+            }
+        });
+
         simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editNama.isInputMethodTarget()) {
+                editNama.setEnabled(false);
+                editEmail.setEnabled(false);
+                editNoHp.setEnabled(false);
+                pekerjaann.setEnabled(false);
+                editPassword.setEnabled(false);
+
+                if (editNama.isInputMethodTarget() || pekerjaann.isEnabled() || editNoHp.isInputMethodTarget() || editPassword.isInputMethodTarget()) {
                     ClickEditNama("nama");
-                }
-                else if (editEmail.isInputMethodTarget()) {
-                    ClickEditEmail("email");
-                }
-                else if (editNoHp.isInputMethodTarget()) {
+                    ClickEditPekerjaan("pekerjaan");
                     ClickEditNoHP("noHP");
-                }
-                else if (editPassword.isInputMethodTarget()) {
                     ClickEditPassword("password");
                 }
+                else {
+                    ClickEditNama("nama");
+                    ClickEditPekerjaan("pekerjaan");
+                    ClickEditNoHP("noHP");
+                    ClickEditPassword("password");
+                    ClickEditEmail("email");
+                }
+            }
+        });
+
+        fotoProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profilePhoto = "image";
+                showImagePictDialog();
             }
         });
 
@@ -123,24 +238,48 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loadDataFirebase() {
-        firebaseDatabase.getReference()
-                .child("pengguna")
-                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User userr = dataSnapshot.getValue(User.class);
-                        editNama.setText(userr.getNama());
-                        editEmail.setText(userr.getEmail());
-                        editNoHp.setText(userr.getNoHP());
-                        pekerjaan.setText(userr.getPekerjaan());
-                        editPassword.setText(userr.getPassword());
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                // Untuk menampilkan dataUser
+                String namaa = dataSnapshot.child(currentUser).child("nama").getValue().toString();
+                String email = dataSnapshot.child(currentUser).child("email").getValue().toString();
+                String noHp = dataSnapshot.child(currentUser).child("noHP").getValue().toString();
+                String pkrjaan = dataSnapshot.child(currentUser).child("pekerjaan").getValue().toString();
+                String jenisKelaminn = dataSnapshot.child(currentUser).child("jenisKelamin").getValue().toString();
+                String pw = dataSnapshot.child(currentUser).child("password").getValue().toString();
+                String image = dataSnapshot.child(currentUser).child("image").getValue().toString();
+
+                editNama.setText(namaa);
+                editEmail.setText(email);
+                editNoHp.setText(noHp);
+                jenisKelamin.setText(jenisKelaminn);
+                editPassword.setText(pw);
+
+                try {
+                    Picasso.get().load(image).into(fotoProfil);
+                }
+                catch (Exception e){
+                    Picasso.get().load(R.drawable.icon_upload).into(fotoProfil);
+                }
+
+                final List<String> areas = new ArrayList<String>();
+
+                for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
+                    areas.add(pkrjaan);
+
+
+                }
+
+                ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, areas);
+                areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                pekerjaann.setAdapter(areasAdapter);
+            }
+        });
     }
 
     @Override
@@ -155,30 +294,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
     }
-
-//    public void updateProfile () {
-//        String DISPLAY_NAME = editNama.getText().toString();
-//
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-//                .setDisplayName(DISPLAY_NAME)
-//                .build();
-//
-//        firebaseUser.updateProfile(request)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(getActivity(), "Edit Berhasil", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 
     public void ClickEditNama(String key) {
         String value = editNama.getText().toString().trim();
@@ -209,6 +324,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     public void ClickEditEmail(String key) {
+
         String value = editEmail.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
@@ -231,12 +347,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-            firebaseAuth.getCurrentUser().updateEmail(value);
+            FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
+            auth.updateEmail(editEmail.getText().toString());
 
             databaseReference = FirebaseDatabase.getInstance().getReference();
 
             String valuee = editEmail.getText().toString().trim();
-
             if (valuee != null && !valuee.equals("")) {
 
                 // (1) Creatw a new child node (temporaryUsername)
@@ -287,7 +403,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
+
 
                                     FirebaseDatabase.getInstance().getReference().child("kantong").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
@@ -302,6 +418,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                                         }
                                     });
+
                                     Log.d("User Input History copy", "Success!");
                                 } else {
                                     Log.d("User Input History copy", "Copy failed!");
@@ -365,9 +482,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 usersInputHistorySourceNodeee.addListenerForSingleValueEvent(valueEventListenerForUsersInputHistory);
 
             }
-
-
-
         }
         else {
             Toast.makeText(getActivity(), "Email tidak boleh kosong", Toast.LENGTH_SHORT).show();
@@ -375,17 +489,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
 
-//    public void updateEmail(String key){
-//        String emaill = editEmail.getText().toString().trim();
-//        HashMap<String, Object> result = new HashMap<>();
-//        result.put(key, emaill);
-//        firebaseDatabase.getReference()
-//                .child("pengguna")
-//                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result);
-//    }
-
     public void ClickEditNoHP(String key) {
         String value = editNoHp.getText().toString().trim();
+        if (!TextUtils.isEmpty(value)){
+            pd.show();
+            HashMap<String, Object> result = new HashMap<>();
+            result.put(key, value);
+
+            firebaseDatabase.getReference()
+                    .child("pengguna")
+                    .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            pd.dismiss();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            Toast.makeText(getActivity(), "No HP tidak boleh kosong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void ClickEditPekerjaan(String key) {
+        String value = pekerjaann.getSelectedItem().toString().trim();
         if (!TextUtils.isEmpty(value)){
             pd.show();
             HashMap<String, Object> result = new HashMap<>();
@@ -444,6 +578,177 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private boolean checkStoragePermission(){
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
 
+    private void requestStoragePermission() {
+        requestPermissions(storagePermissions, STORAGE_REQUEST_CODE);
+    }
 
+    private boolean checkCameraPermission(){
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+
+    private void requestCameraPermission() {
+        requestPermissions(cameraPermissions, CAMERA_REQUEST_CODE);
+    }
+
+    private void showImagePictDialog() {
+        String options[] = {"Kamera", "Galeri"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Pilih foto profil melalui :");
+        builder.setItems(options, ((dialog, which) -> {
+            if (which == 0) {
+                // Camera clicked
+                if (!checkCameraPermission()) {
+                    requestCameraPermission();
+                }
+                else {
+                    pickFromCamera();
+                }
+            }
+            else if (which == 1) {
+                // Gallery clicked
+                if (!checkStoragePermission()) {
+                    requestStoragePermission();
+                }
+                else {
+                    pickFromGallery();
+                }
+
+            }
+        }));
+        builder.create().show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE: {
+                if (grantResults.length >0) {
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraAccepted && writeStorageAccepted) {
+                        pickFromCamera();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Enable Kamera dan Storage Permission", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            break;
+            case STORAGE_REQUEST_CODE:{
+                if (grantResults.length >0) {
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (writeStorageAccepted) {
+                        pickFromGallery();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Enable Storage Permission", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
+                // image is picked from gallery, get uri of image
+                image_uri = data.getData();
+                uploadProfilePhoto(image_uri);
+            }
+            if (requestCode == IMAGE_PICK_CAMERA_CODE) {
+                // image is picked from camera, get uri of image
+                uploadProfilePhoto(image_uri);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadProfilePhoto(Uri uri) {
+        pd.show();
+        String filePathAndName = storagePath+ "" + profilePhoto + "_" + firebaseDatabase.getReference()
+                .child("pengguna")
+                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"));
+
+        StorageReference storageReference2nd = storageReference.child(filePathAndName);
+        storageReference2nd.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
+                        Uri downloadUri = uriTask.getResult();
+
+                        //check if image is uploaded or not
+                        if (uriTask.isSuccessful()) {
+                            //image uploaded
+                            HashMap<String, Object> results = new HashMap<>();
+                            results.put(profilePhoto, downloadUri.toString());
+
+                            firebaseDatabase.getReference()
+                                    .child("pengguna")
+                                    .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(results)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            pd.dismiss();
+                                            Toast.makeText(getActivity(), "Gambar berhasil diperbaharui...", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            pd.dismiss();
+                                            Toast.makeText(getActivity(), "Error diperbaharui...", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                        else {
+                            //error
+                            pd.dismiss();
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();;
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void pickFromCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Temp Pic");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description");
+        //put image uri
+        image_uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        //intent to start camera
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
+    }
+
+    private void pickFromGallery() {
+        //pick from gallery
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+    }
 }

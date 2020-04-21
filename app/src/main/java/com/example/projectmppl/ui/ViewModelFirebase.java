@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.projectmppl.data.FirebaseQueryLiveData;
-import com.example.projectmppl.model.Kantong;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,6 +28,10 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
             .getReference()
             .child("transaksipenukaransampah");
 
+    private static final DatabaseReference daftarKupon = FirebaseDatabase.getInstance()
+            .getReference()
+            .child("kupon");
+
 
 
     private final FirebaseQueryLiveData liveDataKantong = new FirebaseQueryLiveData(mDatabase);
@@ -37,6 +39,7 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     private final FirebaseQueryLiveData liveDataDataUser = new FirebaseQueryLiveData(databaseUser);
 
     private final FirebaseQueryLiveData liveDataTransaksi = new FirebaseQueryLiveData(dataTransaksi);
+    private final FirebaseQueryLiveData liveDataKupon = new FirebaseQueryLiveData(daftarKupon);
 
     @NonNull
     public LiveData<DataSnapshot> getdataSnapshotLiveData(){
@@ -56,5 +59,10 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
     @NonNull
     public LiveData<DataSnapshot> getdataTransaksi(){
         return liveDataTransaksi;
+    }
+
+    @NonNull
+    public LiveData<DataSnapshot> getDaftarKupon(){
+        return liveDataKupon;
     }
 }

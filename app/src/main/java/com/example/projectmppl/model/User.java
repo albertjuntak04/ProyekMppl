@@ -12,20 +12,22 @@ public class User {
     private String pekerjaan;
     private String jenisKelamin;
     private String password;
+    private String image;
     private int poin;
 
-    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, int poin) {
+    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, String image, int poin) {
         this.nama = nama;
         this.email = email;
         this.noHP = noHP;
         this.pekerjaan = pekerjaan;
         this.jenisKelamin = jenisKelamin;
         this.password = password;
+        this.image = image;
         this.poin = poin;
     }
 
     public User(){
-        
+
 
     }
 
@@ -75,6 +77,14 @@ public class User {
 
     public void setJenisKelamin(String jenisKelamin) {
         this.jenisKelamin = jenisKelamin;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getPassword() {

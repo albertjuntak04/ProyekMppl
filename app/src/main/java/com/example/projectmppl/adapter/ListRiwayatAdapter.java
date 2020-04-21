@@ -7,54 +7,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
-import com.example.projectmppl.ui.ViewModelFirebase;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.ViewHolder> {
     private List<Transaksi> listTransaksi;
-    private List<Kantong> listKantong;
-    private Kantong kantong = new Kantong();
-    private ArrayList<String> daftarElektronik;
-    private ArrayList<String> daftarNonOrganik;
-    private int jumlahElektronik = 0;
-    private int totalBerat = 0;
-    private List<KantongNonOrganik> kantongNonOrganikList;
-    private Context context;
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseAuth firebaseAuth;
-
+    private List<String> listKey;
 
     public ListRiwayatAdapter(){
 
     }
 
-    public ListRiwayatAdapter(List<Transaksi> listTransaksi,Context context){
+    public ListRiwayatAdapter(List<Transaksi> listTransaksi,List<String>listKey,Context context){
         this.listTransaksi = listTransaksi;
-        this.context = context;
+        this.listKey  = listKey;
 
     }
 
@@ -68,10 +52,12 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaksi transaksi = listTransaksi.get(position);
-        daftarElektronik = new ArrayList<>();
-        daftarNonOrganik = new ArrayList<>();
-        jumlahElektronik = 0;
-        totalBerat = 0;
+        ArrayList<String> daftarElektronik = new ArrayList<>();
+        ArrayList<String> daftarNonOrganik = new ArrayList<>();
+        ArrayList<String> daftarPakaian = new ArrayList<>();
+        int jumlahElektronik = 0;
+        int totalBerat = 0;
+        int jumlahPakaian = 0;
         holder.tanggalPemesanan.setText(String.valueOf(transaksi.getTaggalRequest()));
         holder.metode.setText(String.valueOf(transaksi.getMetode()));
         holder.elektronik.setText(String.valueOf(transaksi.getKantongElektronik()));
@@ -80,12 +66,13 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
 
         if (String.valueOf(transaksi.getStatus()).equals("Diproses")){
             holder.status.setTextColor(Color.GREEN);
+//            holder.btnHapus.setEnabled(false);
         }else {
             holder.status.setTextColor(Color.RED);
         }
 
         if (transaksi.getKantongElektronik() == null){
-            holder.elektronik.setText(String.valueOf("-"));
+            holder.elektronik.setText("-");
             holder.jumlahElektronik.setText(String.valueOf(0));
         }else{
             for (int index = 0;index<transaksi.getKantongElektronik().size();index++ ){
@@ -93,13 +80,14 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
                 daftarElektronik.add(String.valueOf(kantong1.getIdSampah()));
                 jumlahElektronik = jumlahElektronik + kantong1.getJumlah();
             }
-            holder.elektronik.setText(String.valueOf(daftarElektronik));
+            holder.elektronik.setText(String.valueOf(daftarElektronik).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
             holder.jumlahElektronik.setText(String.valueOf(jumlahElektronik));
         }
 
 
         if (transaksi.getKantongNonOrganiks() == null){
-            holder.nonOrganik.setText(String.valueOf("-"));
+            holder.nonOrganik.setText("-");
             holder.jumlahOrganik.setText(String.valueOf(0));
         }else {
             for (int index = 0;index<transaksi.getKantongNonOrganiks().size();index++ ){
@@ -108,12 +96,42 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
             totalBerat = totalBerat + kantongNonOrganik.getJumlah();
         }
 
-            holder.nonOrganik.setText(String.valueOf(daftarNonOrganik));
+            holder.nonOrganik.setText(String.valueOf(daftarNonOrganik).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
             holder.jumlahOrganik.setText(String.valueOf(totalBerat));
         }
 
+        if (transaksi.getKantongPakaian() == null){
+            holder.pakaian.setText("-");
+            holder.jumlahPakaian.setText(String.valueOf(0));
+        }else {
+            for (int index = 0;index<transaksi.getKantongPakaian().size();index++ ){
+                Kantong kantongPakaian = transaksi.getKantongPakaian().get(index);
+                daftarPakaian.add(String.valueOf(kantongPakaian.getIdSampah()));
+                jumlahPakaian = jumlahPakaian + kantongPakaian.getJumlah();
+            }
 
+            holder.pakaian.setText(String.valueOf(daftarPakaian).replaceAll("\\[", "").replaceAll("" +
+                    "]",""));
+            holder.jumlahPakaian.setText(String.valueOf(jumlahPakaian));
+        }
 
+        holder.btnHapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+                databaseReference2.child(currentUser)
+                .child(listKey.get(position))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        removeItem(position);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -132,6 +150,10 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         TextView elektronik;
         @BindView(R.id.jumlah_elektronik)
         TextView jumlahElektronik;
+        @BindView(R.id.list_pakaian)
+        TextView pakaian;
+        @BindView(R.id.jumlah_pakaian)
+        TextView jumlahPakaian;
         @BindView(R.id.metode)
         TextView metode;
         @BindView(R.id.total_poin)
@@ -141,14 +163,18 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         @BindView(R.id.status)
         TextView status;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
     }
 
-    private void initFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
+    public void removeItem(int position) {
+        listTransaksi.remove(position);
+        notifyItemRemoved(position);
+        notifyDataSetChanged();
+        notifyItemRangeChanged(position,listTransaksi.size());
     }
+
+
 }

@@ -27,7 +27,7 @@
             android:id="@+id/tgl_pemesanan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20 Januari 2020"
+            android:text="@string/tanggal"
             android:layout_marginLeft="3dp"/>
 
         <LinearLayout
@@ -39,7 +39,7 @@
                 android:id="@+id/jenis_nonorganik"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Non-Organik" />
+                android:text="@string/non_organik" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,12 +57,12 @@
                 android:id="@+id/jumlah_organik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0"
                 android:layout_marginStart="12dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="kg" />
+                android:text="@string/kg" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:id="@+id/jenis_elektronik"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Elektronik"/>
+                android:text="@string/elektronik"/>
 
             <TextView
 
@@ -92,12 +92,12 @@
                 android:id="@+id/jumlah_elektronik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0"
                 android:layout_marginStart="12dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="pcs" />
+                android:text="@string/pcs" />
 
         </LinearLayout>
 
@@ -110,7 +110,7 @@
                 android:id="@+id/jenis_pakaian"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Pakaian"/>
+                android:text="@string/pakaian"/>
 
             <TextView
 
@@ -129,12 +129,12 @@
                 android:id="@+id/jumlah_pakaian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0"
                 android:layout_marginStart="12dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="pcs" />
+                android:text="@string/pcs" />
 
         </LinearLayout>
 
@@ -147,7 +147,7 @@
                 android:id="@+id/txt_metode"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Metode" />
+                android:text="@string/metode" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                 android:id="@+id/poin"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Poin"/>
+                android:text="@string/poin"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                 android:id="@+id/total_poin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0"
                 android:paddingStart="10dp"/>
         </LinearLayout>
 

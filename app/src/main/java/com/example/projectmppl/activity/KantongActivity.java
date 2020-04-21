@@ -5,52 +5,39 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.adapter.ListKantongAdapter;
+import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 import com.example.projectmppl.fragment.KantongFragment;
 import com.example.projectmppl.fragment.metode.MetodeAntarFragment;
 import com.example.projectmppl.fragment.metode.MetodeJemputFragment;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, KantongFragment.FragmentElektronikListener, MetodeAntarFragment.MetodeAntarFragmentListener{
+@SuppressWarnings("UnusedAssignment")
+public class KantongActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-
-    private static final String TAG = "KantongActivity";
-    public static String KEY_ACTIVITY = "DaftarSampah";
-
-    private final String SIMPLE_FRAGMENT_TAG = "myfragmenttag";
-//    @BindView(R.id.recycleview)
-//    RecyclerView recyclerViewData;
-
+    private KantongFragment kantongFragment;
+    private final MetodeAntarFragment metodeAntarFragment = new MetodeAntarFragment();
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
-    private List<Kantong> listData;
-    private ArrayList<String> listKey;
-    private ArrayList<String> idSampah;
-    private int totalPoint;
-//    @BindView(R.id.progress)
-//    ProgressBar progressBar;
-    private ListKantongAdapter kantongAdapter;
-    private MetodeJemputFragment metodeJemputFragment;
-    private KantongFragment kantongFragment;
-    private MetodeAntarFragment metodeAntarFragment;
+    private ListNonOrganikAdapter listNonOrganikAdapter;
 
-
-//    private MySimpleFragment fragmentSimple;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,47 +47,73 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        metodeAntarFragment = new MetodeAntarFragment();
-        metodeJemputFragment = new MetodeJemputFragment();
         kantongFragment = new KantongFragment();
         loadKantongFragment(new KantongFragment());
+        loadFragment(metodeAntarFragment);
+        listNonOrganikAdapter = new ListNonOrganikAdapter();
 
-
-        if (!kantongFragment.isInLayout()){
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout_content_dashboard, kantongFragment, SIMPLE_FRAGMENT_TAG)
-                    .commit();
-        }
-
-
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame_layout_content_dashboard, metodeAntarFragment)
-                .commit();
-
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         String receive = getIntent().getStringExtra("saveData");
+        String batal = getIntent().getStringExtra("removeData");
+        String key = getIntent().getStringExtra("key");
+        String jenis = getIntent().getStringExtra("jenis");
 
-        if (receive.equals("removeData")){
+        if (Objects.requireNonNull(receive).equals("removeData")){
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Permintaan");
             alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
-            alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    Intent intent = new Intent(KantongActivity.this, MainActivity.class);
-                    startActivity(intent);
+            alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+                removeData();
 
-                }
             });
             alertDialogBuilder.show();
         }
+
+        if (batal.equals("removeData")){
+            batalData(key,jenis);
+        }
     }
 
-//        loadFragment(new MetodeAntarFragment());
+    private void removeData(){
+        firebaseDatabase
+                .getReference()
+                .child("kantong")
+                .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(KantongActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void batalData(String key,String jenis){
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("kantong");
+        databaseReference2.child(currentUser)
+                .child("data")
+                .child(jenis)
+                .child(key)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+
+    }
+
+
 
 
 
@@ -111,25 +124,25 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
+        Fragment fragmentAntar = new MetodeAntarFragment();
+        Fragment fragmentJemput= new MetodeJemputFragment();
         switch (item.getItemId()) {
             case R.id.action_antar:
-                fragment = new MetodeAntarFragment();
-                break;
+                fragmentAntar = new MetodeAntarFragment();
+                return loadFragment(fragmentAntar);
             case R.id.action_jemput:
-                fragment = new MetodeJemputFragment();
-                break;
+                fragmentJemput = new MetodeJemputFragment();
+                return loadFragment(fragmentJemput);
+
         }
 
-        return loadFragment(fragment);
+        return true;
+
     }
 
     // method untuk load fragment yang sesuai
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("removeData", "remove");
-            fragment.setArguments(bundle);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout_content_dashboard, fragment)
@@ -144,30 +157,9 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
             Bundle bundle = new Bundle();
             bundle.putString("removeData", "remove");
             fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_content_kantong, fragment)
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_content_kantong, fragment,"MY_FRAGMENT")
                     .commit();
         }
     }
-
-
-
-    @Override
-    public void onInputKantongFragmentSent(ArrayList<Kantong> input,ArrayList<KantongNonOrganik>kantongNonOrganiks, int totalPoint, ArrayList<String> listKey) {
-        metodeAntarFragment.sendData(input,kantongNonOrganiks,totalPoint,listKey);
-    }
-
-
-
-    @Override
-    public void onInputKantongFragmentSent(String removeData) {
-        kantongFragment.removeData();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
 
 }

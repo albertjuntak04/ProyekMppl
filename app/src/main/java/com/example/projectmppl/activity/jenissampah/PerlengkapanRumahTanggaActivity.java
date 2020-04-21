@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class PerlengkapanRumahTanggaActivity extends AppCompatActivity {
     private RecyclerView rvRumahTangga;
-    private ArrayList<Sampah> list = new ArrayList<>();
+    private final ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class PerlengkapanRumahTanggaActivity extends AppCompatActivity {
 
     private void showRecycleView(){
         rvRumahTangga.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"PRT");
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"PRT","elektronik");
         rvRumahTangga.setAdapter(listSampahAdapter);
     }
 

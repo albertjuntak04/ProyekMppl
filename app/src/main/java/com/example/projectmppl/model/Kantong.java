@@ -1,9 +1,6 @@
 package com.example.projectmppl.model;
 
-import java.util.ArrayList;
-
 public class Kantong  {
-    private String idPenukar;
     private String idSampah;
     private String jenisSampah;
     private int jumlah;
@@ -16,8 +13,7 @@ public class Kantong  {
 
     }
 
-    public Kantong(String idPenukar, String idSampah, int jumlah, int jumlahPoint, String jenisSampah, int bagus, int ringan, int berat ) {
-        this.idPenukar = idPenukar;
+    public Kantong( String idSampah, int jumlah, int jumlahPoint, String jenisSampah, int bagus, int ringan, int berat ) {
         this.idSampah = idSampah;
         this.jumlah = jumlah;
         this.jumlahPoint = jumlahPoint;
@@ -60,13 +56,6 @@ public class Kantong  {
         this.jenisSampah = jenisSampah;
     }
 
-    public String getIdPenukar() {
-        return idPenukar;
-    }
-
-    public void setIdPenukar(String idPenukar) {
-        this.idPenukar = idPenukar;
-    }
 
     public String getIdSampah() {
         return idSampah;

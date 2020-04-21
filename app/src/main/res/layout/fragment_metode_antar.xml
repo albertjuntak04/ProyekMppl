@@ -11,7 +11,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Antar"
+        android:text="@string/antar"
         tools:ignore="MissingConstraints" />
 
     <Spinner
@@ -24,15 +24,24 @@
 
     <Button
         android:id="@+id/btn_request"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="40dp"
-        android:background="@color/colorbotton"
-        android:text="Request"
+        android:background="@drawable/btn_login"
+        android:text="@string/request"
         android:textColor="@color/colortext"
         android:layout_below="@+id/spinner"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"/>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:indeterminateDrawable="@drawable/custom_progressbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ></ProgressBar>
 
 
 </RelativeLayout>
