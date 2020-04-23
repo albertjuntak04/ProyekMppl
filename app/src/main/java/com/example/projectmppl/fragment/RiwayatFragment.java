@@ -1,15 +1,11 @@
 package com.example.projectmppl.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.activity.KantongActivity;
-import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListRiwayatAdapter;
-import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.Transaksi;
-import com.example.projectmppl.ui.ViewModelFirebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,8 +37,8 @@ import butterknife.ButterKnife;
 public class RiwayatFragment extends Fragment {
 
 
-    private List<Transaksi> listData;
-    private List<String>keyTransaksi;
+    private List<Transaksi> listData = new ArrayList<>();
+    private List<String>keyTransaksi = new ArrayList<>();
     @BindView(R.id.rv_riwayat)
     RecyclerView recyclerViewData;
     @BindView(R.id.progress)
@@ -58,6 +48,8 @@ public class RiwayatFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
 
     private ListRiwayatAdapter listRiwayatAdapter;
+    private ArrayList<String>listKeyTransaksi;
+    private ArrayList<String> listKeyRiwayat;
 
     public RiwayatFragment() {
         // Required empty public constructor
@@ -70,7 +62,7 @@ public class RiwayatFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_riwayat, container, false);
         ButterKnife.bind(this, view);
-        loadDataFirebase();
+        getIdTransaksi();
         initFirebase();
         return view;
     }
@@ -83,30 +75,31 @@ public class RiwayatFragment extends Fragment {
         recyclerViewData.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
     }
 
-    private void loadDataFirebase(){
+    private void getIdTransaksi(){
         showProgress();
-        listData = new ArrayList<>();
-        keyTransaksi = new ArrayList<>();
+        listKeyTransaksi = new ArrayList<>();
+        listKeyRiwayat = new ArrayList<>();
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("transaksipenukaransampah")
+                .child("riwayatsampah")
                 .child(currentUser)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot != null){
+                        if (dataSnapshot!=null){
                             hideProgress();
                             for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-                                Transaksi transaksi = dataItem.getValue(Transaksi.class);
-                                listData.add(transaksi);
-                                keyTransaksi.add(dataItem.getKey());
+                                String transaksi = dataItem.getValue().toString();
+                                listKeyTransaksi.add(transaksi);
+                                listKeyRiwayat.add(dataItem.getKey());
                             }
-                            listRiwayatAdapter = new ListRiwayatAdapter(listData,keyTransaksi,getContext());
-                            recyclerViewData.setAdapter(listRiwayatAdapter);
-                        }
 
+                            loadDataFirebase(listKeyTransaksi,listKeyRiwayat);
+                        }else {
+                            hideProgress();
+                        }
                     }
 
                     @Override
@@ -114,6 +107,41 @@ public class RiwayatFragment extends Fragment {
 
                     }
                 });
+    }
+
+    private void loadDataFirebase(ArrayList<String>riwayatSampahs,ArrayList<String>listKeyRiwayat){
+
+        for (int i=0 ; i < riwayatSampahs.size();i++){
+            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference()
+                    .child("transaksipenukaransampah")
+                    .child(currentUser)
+                    .child(riwayatSampahs.get(i))
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null){
+                                hideProgress();
+                                Transaksi transaksi = dataSnapshot.getValue(Transaksi.class);
+                                listData.add(transaksi);
+                                keyTransaksi.add(dataSnapshot.getKey());
+                            }
+//                            Toast.makeText(getActivity(),listData.toString(),Toast.LENGTH_SHORT).show();
+                            listRiwayatAdapter = new ListRiwayatAdapter(listData,keyTransaksi,getContext(),listKeyRiwayat);
+                            recyclerViewData.setAdapter(listRiwayatAdapter);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+
+
 
     }
 
@@ -132,7 +160,7 @@ public class RiwayatFragment extends Fragment {
         super.onPause();
         listData.clear();
         keyTransaksi.clear();
-        listRiwayatAdapter = new ListRiwayatAdapter(listData,keyTransaksi,getActivity());
+        listRiwayatAdapter = new ListRiwayatAdapter(listData,keyTransaksi,getActivity(),listKeyRiwayat);
         recyclerViewData.setAdapter(listRiwayatAdapter);
     }
 

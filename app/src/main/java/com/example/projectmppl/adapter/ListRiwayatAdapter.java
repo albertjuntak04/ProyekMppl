@@ -31,14 +31,16 @@ import butterknife.ButterKnife;
 public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.ViewHolder> {
     private List<Transaksi> listTransaksi;
     private List<String> listKey;
+    private List<String>listKeyRiwayat;
 
     public ListRiwayatAdapter(){
 
     }
 
-    public ListRiwayatAdapter(List<Transaksi> listTransaksi,List<String>listKey,Context context){
+    public ListRiwayatAdapter(List<Transaksi> listTransaksi,List<String>listKey,Context context,List<String>listKeyRiwayat){
         this.listTransaksi = listTransaksi;
         this.listKey  = listKey;
+        this.listKeyRiwayat = listKeyRiwayat;
 
     }
 
@@ -120,9 +122,9 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
             @Override
             public void onClick(View view) {
                 String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("transaksipenukaransampah");
+                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("riwayatsampah");
                 databaseReference2.child(currentUser)
-                .child(listKey.get(position))
+                .child(listKeyRiwayat.get(position))
                 .removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

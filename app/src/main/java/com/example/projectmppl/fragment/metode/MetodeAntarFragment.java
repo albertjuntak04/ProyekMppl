@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import com.example.projectmppl.ui.ViewModelFirebase;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +53,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -73,6 +76,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
     private ArrayList<Kantong>inputPakaian;
     private int totalPoint;
     private ArrayList<String> listKeyRiwayat;
+    private String keyRiwayat;
 
     @BindView(R.id.progress)
     ProgressBar progressBar;
@@ -120,6 +124,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+
                         Intent intent = new Intent(getActivity(), KantongActivity.class);
                         intent.putExtra("saveData","removeData");
                         intent.putExtra("removeData","remove");
@@ -206,6 +211,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     public void saveRiwayat() {
         listKeyRiwayat = new ArrayList<>();
+        keyRiwayat = "";
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
@@ -214,13 +220,10 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
                     for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
-                        listKeyRiwayat.add(dataItem.getKey());
+                        keyRiwayat = dataItem.getKey();
                     }
-                    databaseReferenceRiwayat
-                            .child(currentUser)
-                            .setValue(listKeyRiwayat);
+                    saveIdTransaksi(currentUser,keyRiwayat);
                 }
-
             }
         });
     }
@@ -243,4 +246,26 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     }
 
+    private void saveIdTransaksi(String currentUser, String listKeyRiwayat){
+            HashMap<String, Object> result = new HashMap<>();
+            result.put(currentUser,listKeyRiwayat);
+
+            firebaseDatabase.getReference()
+                    .child("riwayatsampah")
+                    .child(currentUser)
+                    .push()
+                    .setValue(listKeyRiwayat)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
 }

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Handler;
@@ -39,6 +40,8 @@ import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -52,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -100,6 +104,9 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     private String cameraPermissions[];
     private String storagePermissions[];
 
+    private ArrayList<String> listKeyRiwayat;
+    private String keyRiwayat;
+
 
 
 
@@ -144,6 +151,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
     private void addTransaksi(Transaksi transaksi) {
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         hideProgress();
+        saveRiwayat();
         firebaseDatabase
                 .getReference()
                 .child("transaksipenukaransampah")
@@ -153,6 +161,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+
                         Intent intent = new Intent(getActivity(), KantongActivity.class);
                         intent.putExtra("saveData","removeData");
                         intent.putExtra("removeData","remove");
@@ -383,6 +392,48 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void saveRiwayat() {
+        listKeyRiwayat = new ArrayList<>();
+        keyRiwayat = "";
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataTransaksi();
+        liveData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
+                        keyRiwayat = dataItem.getKey();
+                    }
+                    saveIdTransaksi(currentUser,keyRiwayat);
+                }
+            }
+        });
+    }
+
+    private void saveIdTransaksi(String currentUser, String listKeyRiwayat){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(currentUser,listKeyRiwayat);
+
+        firebaseDatabase.getReference()
+                .child("riwayatsampah")
+                .child(currentUser)
+                .push()
+                .setValue(listKeyRiwayat)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 }
