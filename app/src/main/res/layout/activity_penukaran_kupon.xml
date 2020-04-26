@@ -156,7 +156,7 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:background="@drawable/btn_login"
+        android:background="@drawable/btn_register"
         android:padding="10dp"
         android:textStyle="bold"
         android:textColor="#fff"

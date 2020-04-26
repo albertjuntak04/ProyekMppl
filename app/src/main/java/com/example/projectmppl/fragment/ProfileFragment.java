@@ -4,6 +4,8 @@ package com.example.projectmppl.fragment;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,10 +22,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +43,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +60,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +80,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.btn_edit_nama)
     ImageButton btnNama;
     @BindView(R.id.edit_email)
-    EditText editEmail;
-    @BindView(R.id.btn_edit_email)
-    ImageButton btnEmail;
+    TextView editEmail;
     @BindView(R.id.edit_noHp)
     EditText editNoHp;
     @BindView(R.id.btn_edit_noHp)
@@ -94,6 +99,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     Button simpan;
     @BindView(R.id.img_profile)
     CircularImageView fotoProfil;
+    @BindView(R.id.my_poin)
+    TextView myPoin;
+    @BindView(R.id.my_kupon)
+    TextView myKupon;
+
 
     ProgressDialog pd;
 
@@ -114,6 +124,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private static final int STORAGE_REQUEST_CODE = 200;
     private static final int IMAGE_PICK_GALLERY_CODE = 300;
     private static final int IMAGE_PICK_CAMERA_CODE = 400;
+    private int jumlahKupon;
 
     String cameraPermissions[];
     String storagePermissions[];
@@ -144,6 +155,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         initFirebase();
         loadDataFirebase();
+        loadKuponUser();
+        loadPoinUser();
 
         pd = new ProgressDialog(getActivity());
 
@@ -151,13 +164,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 editNama.setEnabled(true);
-            }
-        });
-
-        btnEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editEmail.setEnabled(true);
+                editNama.requestFocus();
+                editNama.setFocusableInTouchMode(true);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editNama, InputMethodManager.SHOW_FORCED);
             }
         });
 
@@ -165,6 +175,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 editNoHp.setEnabled(true);
+                editNoHp.requestFocus();
+                editNoHp.setFocusableInTouchMode(true);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editNoHp, InputMethodManager.SHOW_FORCED);
             }
         });
 
@@ -179,10 +193,25 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         "Mahasiswa"
                 };
 
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_spinner_item, pekerjaannn);
+                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, pekerjaannn) {
+                    @Override
+                    public View getDropDownView(int position, View convertView,
+                                                ViewGroup parent) {
+                        convertView = super.getDropDownView(position, convertView,
+                                parent);
+
+                        convertView.setVisibility(View.VISIBLE);
+                        ViewGroup.LayoutParams p = convertView.getLayoutParams();
+                        p.height = 100; // set the height
+                        convertView.setLayoutParams(p);
+
+                        return convertView;
+                    }
+                };
 
                 pekerjaann.setAdapter(adapter);
+                pekerjaann.performClick();
 
 
             }
@@ -192,6 +221,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 editPassword.setEnabled(true);
+                editPassword.requestFocus();
+                editPassword.setFocusableInTouchMode(true);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editPassword, InputMethodManager.SHOW_FORCED);
             }
         });
 
@@ -199,24 +232,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 editNama.setEnabled(false);
-                editEmail.setEnabled(false);
                 editNoHp.setEnabled(false);
                 pekerjaann.setEnabled(false);
                 editPassword.setEnabled(false);
 
-                if (editNama.isInputMethodTarget() || pekerjaann.isEnabled() || editNoHp.isInputMethodTarget() || editPassword.isInputMethodTarget()) {
-                    ClickEditNama("nama");
-                    ClickEditPekerjaan("pekerjaan");
-                    ClickEditNoHP("noHP");
-                    ClickEditPassword("password");
-                }
-                else {
-                    ClickEditNama("nama");
-                    ClickEditPekerjaan("pekerjaan");
-                    ClickEditNoHP("noHP");
-                    ClickEditPassword("password");
-                    ClickEditEmail("email");
-                }
+                ClickEditNama("nama");
+                ClickEditPekerjaan("pekerjaan");
+                ClickEditNoHP("noHP");
+                ClickEditPassword("password");
             }
         });
 
@@ -232,6 +255,38 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         keluar.setOnClickListener(this::onClick);
         return view;
     }
+
+    private void loadKuponUser(){
+        jumlahKupon = 0;
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        liveData.observe(this, dataSnapshot -> {
+            String kupon = dataSnapshot.child(currentUser).child("kupon").getValue().toString();
+            try {
+                jumlahKupon = Integer.parseInt(kupon);
+                myKupon.setText(kupon);
+            }
+            catch (Exception e){
+
+            }
+        });
+    }
+
+    private void loadPoinUser(){
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        liveData.observe(this, dataSnapshot -> {
+            // Untuk menampilkan dataUser
+            String poin = dataSnapshot.child(currentUser).child("poin").getValue().toString();
+
+            myPoin.setText(poin);
+
+        });
+    }
+
+
     private void initFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -286,11 +341,40 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.keluar:
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                firebaseAuth.signOut();
-                Intent intent = new Intent(getActivity(), LoginRegister.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getString(R.string.ClearCookies))
+                        .setMessage(
+                                getResources().getString(R.string.ClearCookieQuestion))
+                        .setIcon(
+                                getResources().getDrawable(
+                                        android.R.drawable.ic_dialog_alert))
+                        .setPositiveButton(
+                                getResources().getString(R.string.PostiveYesButton),
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        //Do Something Here
+                                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                                        firebaseAuth.signOut();
+                                        Intent intent = new Intent(getActivity(), LoginRegister.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+
+                                    }
+                                })
+                        .setNegativeButton(
+                                getResources().getText(R.string.NegativeNoButton),
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        //Do Something Here
+                                    }
+                                }).show();
+
         }
 
     }
@@ -322,172 +406,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void ClickEditEmail(String key) {
-
-        String value = editEmail.getText().toString().trim();
-        if (!TextUtils.isEmpty(value)){
-            pd.show();
-            HashMap<String, Object> result = new HashMap<>();
-            result.put(key, value);
-
-            firebaseDatabase.getReference()
-                    .child("pengguna")
-                    .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
-            auth.updateEmail(editEmail.getText().toString());
-
-            databaseReference = FirebaseDatabase.getInstance().getReference();
-
-            String valuee = editEmail.getText().toString().trim();
-            if (valuee != null && !valuee.equals("")) {
-
-                // (1) Creatw a new child node (temporaryUsername)
-                databaseReference.child("pengguna").child(valuee.replaceAll("\\.", "_")).push().setValue("");
-
-                // (2) Copy the values from the exisiting node (username) to the new node (temporaryUsername)
-                DatabaseReference usersInputHistorySourceNode = FirebaseDatabase.getInstance().getReference().child("pengguna").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"));
-                final DatabaseReference usersInputHistoryTargetNode = FirebaseDatabase.getInstance().getReference().child("pengguna").child(valuee.replaceAll("\\.", "_"));
-                ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
-                                    mChildReferenceForInputHistory.child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).removeValue();
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                };
-                usersInputHistorySourceNode.addListenerForSingleValueEvent(valueEventListenerForUsersInputHistory);
-
-            }
-
-            DatabaseReference usersInputHistorySourceNodee = FirebaseDatabase.getInstance().getReference().child("kantong").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).child("data");
-
-            if (usersInputHistorySourceNodee != null && !usersInputHistorySourceNodee.equals("")) {
-
-                // (1) Creatw a new child node (temporaryUsername)
-                databaseReference.child("kantong").child(valuee.replaceAll("\\.", "_")).child("data").push().setValue("");
-
-                // (2) Copy the values from the exisiting node (username) to the new node (temporaryUsername)
-
-                final DatabaseReference usersInputHistoryTargetNode = FirebaseDatabase.getInstance().getReference().child("kantong").child(valuee.replaceAll("\\.", "_")).child("data");
-                ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-
-
-                                    FirebaseDatabase.getInstance().getReference().child("kantong").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                                appleSnapshot.getRef().removeValue();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                };
-                usersInputHistorySourceNodee.addListenerForSingleValueEvent(valueEventListenerForUsersInputHistory);
-
-            }
-
-            DatabaseReference usersInputHistorySourceNodeee = FirebaseDatabase.getInstance().getReference().child("transaksipenukaransampah").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"));
-
-            if (usersInputHistorySourceNodeee != null && !usersInputHistorySourceNodeee.equals("")) {
-
-                // (1) Creatw a new child node (temporaryUsername)
-                databaseReference.child("transaksipenukaransampah").child(valuee.replaceAll("\\.", "_")).push().setValue("");
-
-                // (2) Copy the values from the exisiting node (username) to the new node (temporaryUsername)
-
-                final DatabaseReference usersInputHistoryTargetNode = FirebaseDatabase.getInstance().getReference().child("transaksipenukaransampah").child(valuee.replaceAll("\\.", "_"));
-                ValueEventListener valueEventListenerForUsersInputHistory = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        usersInputHistoryTargetNode.setValue(dataSnapshot.getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isComplete()) {
-                                    // (3) Remove the existing node (username)
-
-                                    FirebaseDatabase.getInstance().getReference().child("transaksipenukaransampah").child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                                appleSnapshot.getRef().removeValue();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    Log.d("User Input History copy", "Success!");
-                                } else {
-                                    Log.d("User Input History copy", "Copy failed!");
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                };
-                usersInputHistorySourceNodeee.addListenerForSingleValueEvent(valueEventListenerForUsersInputHistory);
-
-            }
-        }
-        else {
-            Toast.makeText(getActivity(), "Email tidak boleh kosong", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     public void ClickEditNoHP(String key) {
         String value = editNoHp.getText().toString().trim();

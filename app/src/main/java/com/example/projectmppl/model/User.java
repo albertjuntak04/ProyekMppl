@@ -14,8 +14,9 @@ public class User {
     private String password;
     private String image;
     private int poin;
+    private int kupon;
 
-    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, String image, int poin) {
+    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, String image, int poin, int kupon) {
         this.nama = nama;
         this.email = email;
         this.noHP = noHP;
@@ -24,6 +25,7 @@ public class User {
         this.password = password;
         this.image = image;
         this.poin = poin;
+        this.kupon = kupon;
     }
 
     public User(){
@@ -96,6 +98,11 @@ public class User {
     }
 
 
+    public int getKupon() {
+        return kupon;
+    }
 
-
+    public void setKupon(int kupon) {
+        this.kupon = kupon;
+    }
 }

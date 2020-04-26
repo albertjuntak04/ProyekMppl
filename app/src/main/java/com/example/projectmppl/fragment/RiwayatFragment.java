@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListRiwayatAdapter;
+import com.example.projectmppl.model.RiwayatSampah;
 import com.example.projectmppl.model.Transaksi;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,7 +50,7 @@ public class RiwayatFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
 
     private ListRiwayatAdapter listRiwayatAdapter;
-    private ArrayList<String>listKeyTransaksi;
+    private ArrayList<RiwayatSampah>listKeyTransaksi;
     private ArrayList<String> listKeyRiwayat;
 
     public RiwayatFragment() {
@@ -91,7 +93,7 @@ public class RiwayatFragment extends Fragment {
                         if (dataSnapshot!=null){
                             hideProgress();
                             for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-                                String transaksi = dataItem.getValue().toString();
+                                RiwayatSampah transaksi = dataItem.getValue(RiwayatSampah.class);
                                 listKeyTransaksi.add(transaksi);
                                 listKeyRiwayat.add(dataItem.getKey());
                             }
@@ -109,7 +111,7 @@ public class RiwayatFragment extends Fragment {
                 });
     }
 
-    private void loadDataFirebase(ArrayList<String>riwayatSampahs,ArrayList<String>listKeyRiwayat){
+    private void loadDataFirebase(ArrayList<RiwayatSampah>riwayatSampahs,ArrayList<String>listKeyRiwayat){
 
         for (int i=0 ; i < riwayatSampahs.size();i++){
             String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
@@ -118,7 +120,7 @@ public class RiwayatFragment extends Fragment {
                     .getReference()
                     .child("transaksipenukaransampah")
                     .child(currentUser)
-                    .child(riwayatSampahs.get(i))
+                    .child(riwayatSampahs.get(i).getIdTransaksi())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -128,7 +130,6 @@ public class RiwayatFragment extends Fragment {
                                 listData.add(transaksi);
                                 keyTransaksi.add(dataSnapshot.getKey());
                             }
-//                            Toast.makeText(getActivity(),listData.toString(),Toast.LENGTH_SHORT).show();
                             listRiwayatAdapter = new ListRiwayatAdapter(listData,keyTransaksi,getContext(),listKeyRiwayat);
                             recyclerViewData.setAdapter(listRiwayatAdapter);
                         }

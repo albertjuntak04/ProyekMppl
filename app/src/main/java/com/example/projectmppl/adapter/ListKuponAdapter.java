@@ -28,11 +28,13 @@ import butterknife.ButterKnife;
 public class ListKuponAdapter extends RecyclerView.Adapter<ListKuponAdapter.ViewHolder>{
    private ArrayList<Kupon> kupons;
    private Context context;
+   private Boolean kuponSaya;
 
-   public ListKuponAdapter(ArrayList<Kupon> kupons, Context context)
+   public ListKuponAdapter(ArrayList<Kupon> kupons, Context context,Boolean kuponSaya)
    {
        this.kupons = kupons;
        this.context = context;
+       this.kuponSaya = kuponSaya;
    }
 
     @NonNull
@@ -46,14 +48,21 @@ public class ListKuponAdapter extends RecyclerView.Adapter<ListKuponAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Picasso.get().load(kupons.get(position).getUrl()).fit().into(holder.imgKupon);
         holder.namaKupon.setText(kupons.get(position).getNamakupon());
-        holder.imgKupon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, PenukaranKupon.class);
-                intent.putExtra(PenukaranKupon.KUPON_CLASS,(Parcelable)kupons.get(position));
-                view.getContext().startActivity(intent);
-            }
-        });
+
+        if (kuponSaya){
+            holder.imgKupon.setEnabled(false);
+        }else{
+            holder.imgKupon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, PenukaranKupon.class);
+                    intent.putExtra(PenukaranKupon.KUPON_CLASS,(Parcelable)kupons.get(position));
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+        }
     }
 
     @Override
@@ -71,4 +80,8 @@ public class ListKuponAdapter extends RecyclerView.Adapter<ListKuponAdapter.View
             ButterKnife.bind(this,itemView);
         }
     }
+
+
+
+
 }

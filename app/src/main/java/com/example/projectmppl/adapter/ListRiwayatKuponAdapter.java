@@ -6,13 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.model.RiwayatKupon;
+import com.example.projectmppl.activity.RiwayatActivity;
+import com.example.projectmppl.model.TransaksiKupon;
+import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,20 +29,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKuponAdapter.ViewHolder> {
-    private ArrayList<RiwayatKupon> riwayatKupons;
+    private ArrayList<TransaksiKupon> transaksiKupons;
     private ArrayList<String> listKey;
     private Context context;
-
-    public ListRiwayatKuponAdapter(ArrayList<RiwayatKupon>riwayatKupons, Context context, ArrayList<String>listKey){
-        this.riwayatKupons = riwayatKupons;
+    private ArrayList<String> listKeyRiwayat;
+    private int currentKupon;
+    private int updateKupon;
+    public ListRiwayatKuponAdapter(ArrayList<TransaksiKupon> transaksiKupons, Context context, ArrayList<String>listKey, ArrayList<String>listKeyRiwayat){
+        this.transaksiKupons = transaksiKupons;
         this.context = context;
         this.listKey = listKey;
+        this.listKeyRiwayat = listKeyRiwayat;
     }
     @NonNull
     @Override
@@ -46,15 +57,16 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-       holder.status.setText(riwayatKupons.get(position).getStatus());
-       holder.tglPenukaran.setText(riwayatKupons.get(position).getTglPemesanan());
-       holder.tglPemakaian.setText(riwayatKupons.get(position).getTglPemakaian());
+
+       holder.status.setText(transaksiKupons.get(position).getStatus());
+       holder.tglPenukaran.setText(transaksiKupons.get(position).getTglPemesanan());
+       holder.tglPemakaian.setText(transaksiKupons.get(position).getTglPemakaian());
        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
        FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .child("kupon")
-                .child(riwayatKupons.get(position).getIdKupon())
+                .child(transaksiKupons.get(position).getIdKupon())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                    @Override
                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -82,26 +94,30 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
        holder.btnHapus.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("transaksikupon");
+               DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("riwayatkupon");
                databaseReference2
                        .child(currentUser)
-                       .child(listKey.get(position))
+                       .child(listKeyRiwayat.get(position))
                        .removeValue()
                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                            @Override
                            public void onComplete(@NonNull Task<Void> task) {
                                itemRemove(position);
+                               updateJumlahKuponUser("kupon", updateKupon);
+
                            }
                        });
            }
        });
+
+        updateKuponUser();
 
 
     }
 
     @Override
     public int getItemCount() {
-        return riwayatKupons.size();
+        return transaksiKupons.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -126,10 +142,67 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
     }
 
     private void itemRemove(int position){
-        riwayatKupons.remove(position);
+        transaksiKupons.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position,riwayatKupons.size());
+        notifyItemRangeChanged(position, transaksiKupons.size());
         notifyDataSetChanged();
 
     }
+
+
+    private void updateJumlahKuponUser(String key,int value){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(key, value);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("pengguna")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+//                        pd.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void updateKuponUser(){
+        updateKupon = 0;
+        currentKupon = 0;
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("pengguna")
+                .child(currentUser)
+                .child("kupon")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String kupon = dataSnapshot.getValue().toString();
+                        try {
+                            currentKupon = Integer.parseInt(kupon);
+                            updateKupon = currentKupon - 1;
+
+                        }
+                        catch (Exception e){
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+
 }

@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fff"
-    android:layout_marginBottom="60dp">
+    android:layout_marginBottom="53dp">
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                             android:layout_height="28dp"
                             app:srcCompat="@drawable/coupon" />
                         <TextView
-                            android:id="@+id/my_coupon"
+                            android:id="@+id/my_kupon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -173,7 +173,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText
+                <TextView
                     android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -182,15 +182,8 @@
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
                     tools:ignore="MissingConstraints"
-                    android:enabled='false'
-                    android:textColor="@color/text"/>
-                <ImageButton
-                    android:id="@+id/btn_edit_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colortext"
-                    app:srcCompat="@drawable/ic_mode_edit_black_24dp"
-                    android:layout_alignParentEnd="true"/>
+                    android:textColor="@color/text"
+                    android:textSize="20sp"/>
             </RelativeLayout>
 
             <TextView
@@ -243,13 +236,15 @@
                     android:id="@+id/pekerjaan"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:dropDownWidth="1000dp"
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/text"/>
 
                 <ImageButton
                     android:id="@+id/btn_edit_pekerjaan"
@@ -280,6 +275,7 @@
                     tools:layout_editor_absoluteX="24dp"
                     tools:layout_editor_absoluteY="163dp"
                     android:textSize="20sp"
+                    android:textColor="@color/text"
                     tools:ignore="MissingConstraints"></TextView>
             </RelativeLayout>
 
@@ -287,7 +283,7 @@
                 android:id="@+id/judlPw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password :"
+                android:text="Kata Sandi :"
                 android:ems="10"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
@@ -320,7 +316,7 @@
             android:layout_width="237dp"
             android:layout_height="40dp"
             android:text="Simpan"
-            android:background="@drawable/btn_login"
+            android:background="@drawable/btn_register"
             android:textColor="@color/colortext"
             android:layout_below="@+id/edit_profile"
             android:layout_centerHorizontal="true"

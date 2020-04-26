@@ -1,17 +1,17 @@
 package com.example.projectmppl.model;
 
-public class RiwayatKupon {
+public class TransaksiKupon {
     private String idKupon;
     private String status;
     private String tglPemesanan;
     private String tglPemakaian;
 
-    public RiwayatKupon(){
+    public TransaksiKupon(){
 
     }
 
 
-    public RiwayatKupon(String idKupon, String status, String tglPemesanan, String tglPemakaian) {
+    public TransaksiKupon(String idKupon, String status, String tglPemesanan, String tglPemakaian) {
         this.idKupon = idKupon;
         this.status = status;
         this.tglPemesanan = tglPemesanan;

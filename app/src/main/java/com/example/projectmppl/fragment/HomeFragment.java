@@ -22,6 +22,7 @@ import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.activity.RiwayatActivity;
 import com.example.projectmppl.activity.jenissampah.NonOrganikActivity;
 import com.example.projectmppl.activity.jenissampah.PakaianActivity;
+import com.example.projectmppl.model.RiwayatKupon;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -58,6 +59,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
     TextView totalPoin;
     @BindView(R.id.dashboard_iv_profile)
     CircularImageView fotoProfil;
+    @BindView(R.id.total_kupon)
+    TextView totalKupon;
+
+    private int jumlahKupon = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -91,12 +96,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
                 Picasso.get().load(image).into(fotoProfil);
             }
             catch (Exception e){
-                Picasso.get().load(R.drawable.icon_upload).into(fotoProfil);
+                Picasso.get().load(R.drawable.user).into(fotoProfil);
             }
         });
+        loadKuponUser();
 
         return view;
 
+    }
+
+    private void loadKuponUser(){
+        jumlahKupon = 0;
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getdataUser();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        liveData.observe(this, dataSnapshot -> {
+            String kupon = dataSnapshot.child(currentUser).child("kupon").getValue().toString();
+            try {
+                jumlahKupon = Integer.parseInt(kupon);
+                totalKupon.setText(kupon);
+            }
+            catch (Exception e){
+
+            }
+        });
     }
 
 
@@ -109,10 +132,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener  {
                 Intent intent = new Intent(getActivity(), DaftarKupon.class);
                 startActivity(intent);
                 break;
-
             case R.id.poin:
-                Intent intentRiwayat = new Intent(getActivity(), RiwayatActivity.class);
-                startActivity(intentRiwayat);
+                Intent intentPoin = new Intent(getActivity(), RiwayatActivity.class);
+                startActivity(intentPoin);
                 break;
 
             case R.id.img_nonorganik:

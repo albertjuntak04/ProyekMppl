@@ -157,6 +157,10 @@
     <string name="request">Request</string>
     <string name="nama_barang">Nama Barang</string>
     <string name="image_kupon">image Kupon</string>
+    <string name="PostiveYesButton">Ya</string>
+    <string name="NegativeNoButton">Tidak</string>
+    <string name="ClearCookies">Konfirmasi</string>
+    <string name="ClearCookieQuestion">Apakah anda ingin keluar?</string>
 
 
 </resources>

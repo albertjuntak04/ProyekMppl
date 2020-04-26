@@ -35,6 +35,7 @@ import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
+import com.example.projectmppl.model.RiwayatSampah;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 
@@ -113,7 +114,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     private void addTransaksi(Transaksi transaksi){
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        hideProgress();
+        showProgress();
         saveRiwayat();
         firebaseDatabase
                 .getReference()
@@ -124,7 +125,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-
+                        hideProgress();
                         Intent intent = new Intent(getActivity(), KantongActivity.class);
                         intent.putExtra("saveData","removeData");
                         intent.putExtra("removeData","remove");
@@ -222,7 +223,8 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                     for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
                         keyRiwayat = dataItem.getKey();
                     }
-                    saveIdTransaksi(currentUser,keyRiwayat);
+                    RiwayatSampah riwayatSampah = new RiwayatSampah(keyRiwayat);
+                    saveIdTransaksi(currentUser,riwayatSampah);
                 }
             }
         });
@@ -246,15 +248,15 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void saveIdTransaksi(String currentUser, String listKeyRiwayat){
+    private void saveIdTransaksi(String currentUser, RiwayatSampah riwayatSampah){
             HashMap<String, Object> result = new HashMap<>();
-            result.put(currentUser,listKeyRiwayat);
+            result.put(currentUser,riwayatSampah);
 
             firebaseDatabase.getReference()
                     .child("riwayatsampah")
                     .child(currentUser)
                     .push()
-                    .setValue(listKeyRiwayat)
+                    .setValue(riwayatSampah)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

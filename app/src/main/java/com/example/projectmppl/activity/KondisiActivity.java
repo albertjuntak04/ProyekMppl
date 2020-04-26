@@ -240,9 +240,11 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                     .child("jenis")
                     .getValue().toString();
             if (title.equals("komputer")){
-                actionBar.setTitle(title.replace("\\ k","K"));
+                actionBar.setTitle(title.replace("k","K"));
+            }else {
+                actionBar.setTitle(title);
             }
-            actionBar.setTitle(title);
+
             Picasso.get().load(imageUrl).into(imageSampah);
             hideProgress();
         });

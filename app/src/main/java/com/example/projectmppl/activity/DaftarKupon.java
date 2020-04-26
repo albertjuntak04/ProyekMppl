@@ -1,5 +1,6 @@
 package com.example.projectmppl.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -8,19 +9,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.adapter.ListKuponAdapter;
+import com.example.projectmppl.adapter.ListRiwayatKuponAdapter;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.Kupon;
+import com.example.projectmppl.model.RiwayatKupon;
+import com.example.projectmppl.model.TransaksiKupon;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DaftarKupon extends AppCompatActivity {
-    @BindView(R.id.rv_kupon)
-    RecyclerView rvKupon;
+    @BindView(R.id.rv_kuponsaya)
+    RecyclerView rvKuponSaya;
     @BindView(R.id.rv_indomaret)
     RecyclerView rvIndomaret;
     @BindView(R.id.rv_koperasi)
@@ -45,9 +54,13 @@ public class DaftarKupon extends AppCompatActivity {
     ListKuponAdapter listKuponAdapter;
     ListKuponAdapter listKuponKoperasi;
     ListKuponAdapter listKuponKemahasiswaan;
-    ArrayList<Kupon> kuponKu;
+    ListKuponAdapter listKuponSaya;
+    ArrayList<Kupon> indomaret;
     ArrayList<Kupon> koperasi;
     ArrayList<Kupon> kemahasiswaan;
+    ArrayList<Kupon> kuponSaya;
+    private ArrayList<RiwayatKupon>listKeyTransaksi;
+    private ArrayList<String> idKupon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,7 @@ public class DaftarKupon extends AppCompatActivity {
         loadDataKeasramaan();
         loadDataKoperasi();
         loadPoinUser();
+        getDataRiwayat();
     }
 
     public void initRecycleView(){
@@ -67,7 +81,7 @@ public class DaftarKupon extends AppCompatActivity {
         LinearLayoutManager linearLayoutKoperasi = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         LinearLayoutManager linearLayoutKeasramaan = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
 
-        rvKupon.setLayoutManager(linearLayoutManager);
+        rvKuponSaya.setLayoutManager(linearLayoutManager);
         rvIndomaret.setLayoutManager(linearLayoutIndomaret);
         rvKoperasi.setLayoutManager(linearLayoutKoperasi);
         rvKeasramaan.setLayoutManager(linearLayoutKeasramaan);
@@ -77,7 +91,7 @@ public class DaftarKupon extends AppCompatActivity {
         showProgress();
         ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
         LiveData<DataSnapshot> liveData = viewModel.getDaftarKupon();
-        kuponKu = new ArrayList<>();
+        indomaret = new ArrayList<>();
         liveData.observe(this, dataSnapshot -> {
             if (dataSnapshot!=null){
                 hideProgress();
@@ -85,13 +99,13 @@ public class DaftarKupon extends AppCompatActivity {
                     try {
                         Kupon kupon = dataItem.getValue(Kupon.class);
                         if (kupon.getJeniskupon().equals("Indomaret")){
-                            kuponKu.add(kupon);
+                            indomaret.add(kupon);
                         }
                     }catch (Exception e){
 
                     }
                 }
-                listKuponAdapter = new ListKuponAdapter(kuponKu,this);
+                listKuponAdapter = new ListKuponAdapter(indomaret,this,false);
                 rvIndomaret.setAdapter(listKuponAdapter);
             }
         });
@@ -115,7 +129,7 @@ public class DaftarKupon extends AppCompatActivity {
 
                     }
                 }
-                listKuponKoperasi = new ListKuponAdapter(koperasi,this);
+                listKuponKoperasi = new ListKuponAdapter(koperasi,this,false);
                 rvKoperasi.setAdapter(listKuponKoperasi);
             }
         });
@@ -140,7 +154,7 @@ public class DaftarKupon extends AppCompatActivity {
 
                     }
                 }
-                listKuponKemahasiswaan = new ListKuponAdapter(kemahasiswaan,this);
+                listKuponKemahasiswaan = new ListKuponAdapter(kemahasiswaan,this,false);
                 rvKeasramaan.setAdapter(listKuponKemahasiswaan);
             }
 
@@ -167,12 +181,123 @@ public class DaftarKupon extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            kuponKu.clear();
+            indomaret.clear();
             kemahasiswaan.clear();
             koperasi.clear();
+            kuponSaya.clear();
+            listKeyTransaksi.clear();
+            idKupon.clear();
         }catch (Exception e){
 
         }
+    }
+
+    private void getDataRiwayat(){
+        showProgress();
+        listKeyTransaksi = new ArrayList<>();
+        String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+        ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+        LiveData<DataSnapshot> liveData = viewModel.getRiwayatKupon();
+        liveData.observe(this, dataSnapshot -> {
+            if (dataSnapshot!=null){
+                hideProgress();
+                for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
+                    RiwayatKupon transaksi = dataItem.getValue(RiwayatKupon.class);
+                    listKeyTransaksi.add(transaksi);
+                }
+                loadDataTransaksi(listKeyTransaksi);
+            }else {
+                hideProgress();
+            }
+        });
+    }
+
+
+
+    private void loadDataTransaksi(ArrayList<RiwayatKupon>riwayatKupon){
+        idKupon = new ArrayList<>();
+        for (int i  = 0; i<riwayatKupon.size(); i++){
+            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference()
+                    .child("transaksikupon")
+                    .child(currentUser)
+                    .child(riwayatKupon.get(i).getIdTransaksi())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null) {
+                                hideProgress();
+                                TransaksiKupon transaksiKupon = dataSnapshot.getValue(TransaksiKupon.class);
+                                idKupon.add(transaksiKupon.getIdKupon());
+                            }
+                            hideProgress();
+                            loadKupon(idKupon);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+
+    }
+//    private void loadKupon(ArrayList<String>transaksiKupons){
+//        kuponSaya = new ArrayList<>();
+//        for (int i  = 0; i<transaksiKupons.size(); i++){
+//            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+//            FirebaseDatabase
+//                    .getInstance()
+//                    .getReference()
+//                    .child("kupon")
+//                    .child(transaksiKupons.get(i))
+//                    .addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            if (dataSnapshot!=null){
+//                                hideProgress();
+//                                Kupon kupon = dataSnapshot.getValue(Kupon.class);
+//                                kuponSaya.add(kupon);
+//                            }
+//                            listKuponSaya = new ListKuponAdapter(kuponSaya,DaftarKupon.this);
+//                            rvKuponSaya.setAdapter(listKuponSaya);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//        }
+//
+//    }
+
+    private void loadKupon(ArrayList<String>transaksiKupons){
+        kuponSaya = new ArrayList<>();
+        for (int i  = 0; i<transaksiKupons.size(); i++){
+            showProgress();
+            ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);
+            LiveData<DataSnapshot> liveData = viewModel.getDaftarKupon();
+            int finalI = i;
+            liveData.observe(this, dataSnapshot -> {
+                try {
+                    if (dataSnapshot!=null){
+                        hideProgress();
+                        Kupon kupon = dataSnapshot.child(transaksiKupons.get(finalI)).getValue(Kupon.class);
+                        kuponSaya.add(kupon);
+                    }
+                    listKuponSaya = new ListKuponAdapter(kuponSaya,DaftarKupon.this,true);
+                    rvKuponSaya.setAdapter(listKuponSaya);
+                }catch (Exception e){
+
+                }
+            });
+        }
+
+
     }
 
     public void showProgress(){
@@ -182,4 +307,6 @@ public class DaftarKupon extends AppCompatActivity {
     public void hideProgress(){
         progressBar.setVisibility(View.GONE);
     }
+
+
 }

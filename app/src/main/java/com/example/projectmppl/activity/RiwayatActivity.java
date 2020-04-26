@@ -11,13 +11,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.projectmppl.R;
-import com.example.projectmppl.adapter.ListRiwayatAdapter;
 import com.example.projectmppl.adapter.ListRiwayatKuponAdapter;
 import com.example.projectmppl.model.RiwayatKupon;
-import com.example.projectmppl.model.Transaksi;
+import com.example.projectmppl.model.TransaksiKupon;
 import com.example.projectmppl.ui.ViewModelFirebase;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -40,9 +43,13 @@ public class RiwayatActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
-    private ListRiwayatKuponAdapter listRiwayatAdapter;
-    private ArrayList<RiwayatKupon>riwayatKupons;
-    private ArrayList<String> listKey;
+    private ListRiwayatKuponAdapter listRiwayatAdapter ;
+    private ArrayList<TransaksiKupon> transaksiKupons = new ArrayList<>();
+    private ArrayList<String> listKey  = new ArrayList<>();
+    private ArrayList<RiwayatKupon>listKeyTransaksi;
+    private ArrayList<String> listKeyRiwayat;
+    private int updateKupon = 0;
+    private int currentKupon = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,40 +58,84 @@ public class RiwayatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initRecycleView();
         initFirebase();
-        loadDataRiwayat();
+        getDataRiwayatTransaksi();
         loadPoinUser();
+
+
     }
 
-    private void loadDataRiwayat(){
+
+
+    private void getDataRiwayatTransaksi(){
         showProgress();
-        riwayatKupons = new ArrayList<>();
-        listKey = new ArrayList<>();
+        listKeyTransaksi = new ArrayList<>();
+        listKeyRiwayat = new ArrayList<>();
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("transaksikupon")
+                .child("riwayatkupon")
                 .child(currentUser)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot != null){
-                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
-                                RiwayatKupon riwayatKupon = dataItem.getValue(RiwayatKupon.class);
-                                riwayatKupons.add(riwayatKupon);
-                                listKey.add(dataItem.getKey());
-                            }
+                        if (dataSnapshot!=null){
                             hideProgress();
-                            listRiwayatAdapter = new ListRiwayatKuponAdapter(riwayatKupons,RiwayatActivity.this,listKey);
-                            rvRiwayat.setAdapter(listRiwayatAdapter);
+                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                                RiwayatKupon transaksi = dataItem.getValue(RiwayatKupon.class);
+                                listKeyTransaksi.add(transaksi);
+                                listKeyRiwayat.add(dataItem.getKey());
+                            }
+                            loadDataRiwayat(listKeyTransaksi,listKeyRiwayat);
+                        }else {
+                            hideProgress();
                         }
                     }
+
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
+    }
+
+    private void loadDataRiwayat(ArrayList<RiwayatKupon>riwayatKupon,ArrayList<String>listKeyRiwayat){
+        for (int i  = 0; i<riwayatKupon.size(); i++){
+            String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference()
+                    .child("transaksikupon")
+                    .child(currentUser)
+                    .child(riwayatKupon.get(i).getIdTransaksi())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null) {
+                                hideProgress();
+                                TransaksiKupon transaksiKupon = dataSnapshot.getValue(TransaksiKupon.class);
+                                transaksiKupons.add(transaksiKupon);
+                                listKey.add(dataSnapshot.getKey());
+                            }
+                                hideProgress();
+                                listRiwayatAdapter = new ListRiwayatKuponAdapter(transaksiKupons,RiwayatActivity.this,listKey,listKeyRiwayat);
+                                rvRiwayat.setAdapter(listRiwayatAdapter);
+//                                listRiwayatAdapter.setOnShareClickedListener(this);
+
+                        }
+
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+
+
 
     }
 
@@ -120,4 +171,12 @@ public class RiwayatActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
 }

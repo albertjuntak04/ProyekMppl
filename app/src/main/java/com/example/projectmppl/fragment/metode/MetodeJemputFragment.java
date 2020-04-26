@@ -37,6 +37,7 @@ import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
 import com.example.projectmppl.model.Kantong;
 import com.example.projectmppl.model.KantongNonOrganik;
+import com.example.projectmppl.model.RiwayatSampah;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -150,7 +151,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
 
     private void addTransaksi(Transaksi transaksi) {
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-        hideProgress();
+        showProgress();
         saveRiwayat();
         firebaseDatabase
                 .getReference()
@@ -161,7 +162,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-
+                        hideProgress();
                         Intent intent = new Intent(getActivity(), KantongActivity.class);
                         intent.putExtra("saveData","removeData");
                         intent.putExtra("removeData","remove");
@@ -386,7 +387,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 // image is picked from camera, get uri of image
-                btnTambahGambar.setVisibility(View.VISIBLE);
+                btnTambahGambar.setVisibility(View.GONE);
                 Picasso.get().load(mImageUri).into(imageSampah);
             }
         }
@@ -407,13 +408,14 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
                     for (DataSnapshot dataItem : dataSnapshot.child(currentUser).getChildren()) {
                         keyRiwayat = dataItem.getKey();
                     }
-                    saveIdTransaksi(currentUser,keyRiwayat);
+                    RiwayatSampah riwayatSampah = new RiwayatSampah(keyRiwayat);
+                    saveIdTransaksi(currentUser,riwayatSampah);
                 }
             }
         });
     }
 
-    private void saveIdTransaksi(String currentUser, String listKeyRiwayat){
+    private void saveIdTransaksi(String currentUser, RiwayatSampah riwayatSampah){
         HashMap<String, Object> result = new HashMap<>();
         result.put(currentUser,listKeyRiwayat);
 
@@ -421,7 +423,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
                 .child("riwayatsampah")
                 .child(currentUser)
                 .push()
-                .setValue(listKeyRiwayat)
+                .setValue(riwayatSampah)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

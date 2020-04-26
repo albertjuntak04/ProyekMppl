@@ -60,12 +60,13 @@ public class KantongActivity extends AppCompatActivity implements BottomNavigati
         String jenis = getIntent().getStringExtra("jenis");
 
         if (Objects.requireNonNull(receive).equals("removeData")){
+            removeData();
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Permintaan");
             alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
             alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
-                removeData();
+
 
             });
             alertDialogBuilder.show();

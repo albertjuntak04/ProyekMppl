@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        
+        finishAffinity();
     }
 }
 
