@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
@@ -59,6 +60,7 @@ public class PenukaranKupon extends AppCompatActivity{
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     private String keyRiwayat = " ";
+    private ArrayList<RiwayatKupon> riwayatKupons;
 
     int jumlahPoin = 0;
     int updatePoin = 0;
@@ -67,7 +69,6 @@ public class PenukaranKupon extends AppCompatActivity{
 
     Kupon kupon;
     public static String KUPON_CLASS = "kupon";
-
 
 
     @Override
@@ -84,7 +85,6 @@ public class PenukaranKupon extends AppCompatActivity{
         loadInitView(kupon);
         loadPoinUser();
         updateKuponUser();
-
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         btnTukarkan.setOnClickListener(view -> {
             showProgress();
@@ -154,7 +154,7 @@ public class PenukaranKupon extends AppCompatActivity{
         result.put(key, value);
 
         firebaseDatabase.getReference()
-                .child("pengguna")
+                .child("penukarSampah")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -175,7 +175,7 @@ public class PenukaranKupon extends AppCompatActivity{
         result.put(key, value);
 
         firebaseDatabase.getReference()
-                .child("pengguna")
+                .child("penukarSampah")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -210,12 +210,14 @@ public class PenukaranKupon extends AppCompatActivity{
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+
                         hideProgress();
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PenukaranKupon.this);
                         alertDialogBuilder.setTitle("Pemberitahuan");
                         alertDialogBuilder.setMessage("Selamat Anda dapat menggunakan kupon Anda");
                         alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
                             dialogInterface.dismiss();
+
                             Intent intent = new Intent(PenukaranKupon.this, RiwayatActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -290,6 +292,8 @@ public class PenukaranKupon extends AppCompatActivity{
                     }
                 });
     }
+
+
 
     @Override
     protected void onRestart() {

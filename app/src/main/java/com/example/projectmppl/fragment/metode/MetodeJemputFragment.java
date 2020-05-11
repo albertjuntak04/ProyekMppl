@@ -225,7 +225,7 @@ public class MetodeJemputFragment extends Fragment implements View.OnClickListen
             showProgress();
             String lokasi = lokasiPenjemputan.getText().toString();
             String metode = "Jemput";
-            String status = "Diproses";
+            String status = "Menunggu";
             String datetime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
             ViewModelFirebase viewModel = ViewModelProviders.of(this).get(ViewModelFirebase.class);

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -114,7 +115,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     FirebaseUser user;
 
     public static DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    public static DatabaseReference mChildReferenceForInputHistory = databaseReference.child("pengguna");
+    public static DatabaseReference mChildReferenceForInputHistory = databaseReference.child("penukarSampah");
 
     StorageReference storageReference;
     //path where images of user profile will be stored
@@ -163,6 +164,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnNama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                simpan.setEnabled(true);
                 editNama.setEnabled(true);
                 editNama.requestFocus();
                 editNama.setFocusableInTouchMode(true);
@@ -174,6 +176,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnNoHp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                simpan.setEnabled(true);
                 editNoHp.setEnabled(true);
                 editNoHp.requestFocus();
                 editNoHp.setFocusableInTouchMode(true);
@@ -186,6 +189,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnPekerjaan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                simpan.setEnabled(true);
                 pekerjaann.setEnabled(true);
 
                 String[] pekerjaannn = new String[]{
@@ -220,6 +224,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnSandi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                simpan.setEnabled(true);
                 editPassword.setEnabled(true);
                 editPassword.requestFocus();
                 editPassword.setFocusableInTouchMode(true);
@@ -240,6 +245,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 ClickEditPekerjaan("pekerjaan");
                 ClickEditNoHP("noHP");
                 ClickEditPassword("password");
+
+                Fragment fragment = new HomeFragment();
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout_content_dashboard, fragment)
+                        .commit();
+                Toast.makeText(getActivity(), "Profil berhasil di edit", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -387,7 +400,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             result.put(key, value);
 
             firebaseDatabase.getReference()
-                    .child("pengguna")
+                    .child("penukarSampah")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -398,7 +411,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -415,7 +427,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             result.put(key, value);
 
             firebaseDatabase.getReference()
-                    .child("pengguna")
+                    .child("penukarSampah")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -427,7 +439,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
                         }
                     });
         }
@@ -444,7 +456,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             result.put(key, value);
 
             firebaseDatabase.getReference()
-                    .child("pengguna")
+                    .child("penukarSampah")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -456,7 +468,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -473,19 +484,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             result.put(key, value);
 
             firebaseDatabase.getReference()
-                    .child("pengguna")
+                    .child("penukarSampah")
                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
-                            Toast.makeText(getActivity(), "Profil berhasil di edit", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -598,7 +607,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private void uploadProfilePhoto(Uri uri) {
         pd.show();
         String filePathAndName = storagePath+ "" + profilePhoto + "_" + firebaseDatabase.getReference()
-                .child("pengguna")
+                .child("penukarSampah")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"));
 
         StorageReference storageReference2nd = storageReference.child(filePathAndName);
@@ -617,7 +626,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             results.put(profilePhoto, downloadUri.toString());
 
                             firebaseDatabase.getReference()
-                                    .child("pengguna")
+                                    .child("penukarSampah")
                                     .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(results)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override

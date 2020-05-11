@@ -36,6 +36,7 @@
     <string name="welcome_to_trashy">Welcome to Trashy</string>
 
     <array name="pekerjaan">
+        <item>Pekerjaan</item>
         <item>Staff</item>
         <item>Mahasiswa</item>
     </array>
@@ -120,9 +121,9 @@
         <item>Post Satpam</item>
         <item>Kantin Lama</item>
     </string-array>
-    <string name="tentang_info">Trashy adalah platform yang bertujuan untuk sebagai sarana dalam pengumpulan sampah dilingkungan kampus Institut Teknolodi Del.
+    <string name="tentang_info">Trashy adalah platform yang bertujuan sebagai sarana dalam pengumpulan sampah dilingkungan kampus Institut Teknologi Del.
         Aplikasi ini menghubungkan penukar sampah (mahasiswa, dosen/staff) dengan kolektor agen sampah yang ada dilingkungan kampus agar lebih mudah
-        melakukan transaksi sampah, seperti sampah non organik, pakaian, dan elektronik. Lakukan permintaan penukaran di aplikasi, ada pilihan untuk dijemput
+        melakukan transaksi sampah, seperti sampah non organik, pakaian, dan elektronik.Melakukan permintaan penukaran di aplikasi, ada pilihan untuk dijemput
         dan diantar, kolektor terdekat akan menjemput dan membayar sampahmu dalam bentuk poin.
         Kumpulkan poin sebanyak mungkin dan tukarkan dengan berbagai jenis kupon menarik yang ada.</string>
     <string name="pilih_sampah_yang_ingin_ditukar">Pilih sampah yang ingin ditukar:</string>

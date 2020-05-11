@@ -147,7 +147,7 @@ public class DaftarKupon extends AppCompatActivity {
                 for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
                     try {
                         Kupon kupon = dataItem.getValue(Kupon.class);
-                        if (kupon.getJeniskupon().equals("Kemahasiswaan")){
+                        if (kupon.getJeniskupon().equals("Sanksi Sosial")){
                             kemahasiswaan.add(kupon);
                         }
                     }catch (Exception e){
@@ -159,7 +159,6 @@ public class DaftarKupon extends AppCompatActivity {
             }
 
         });
-
     }
 
     private void loadPoinUser(){
@@ -307,6 +306,4 @@ public class DaftarKupon extends AppCompatActivity {
     public void hideProgress(){
         progressBar.setVisibility(View.GONE);
     }
-
-
 }

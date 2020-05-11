@@ -25,5 +25,8 @@
         android:text="@string/tentang_info"
         android:textColor="@color/text"
         android:layout_below="@+id/appbar"
-        />
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:fontFamily="@font/opensans_regular"
+               />
 </RelativeLayout>

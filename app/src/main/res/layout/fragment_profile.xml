@@ -320,6 +320,7 @@
             android:textColor="@color/colortext"
             android:layout_below="@+id/edit_profile"
             android:layout_centerHorizontal="true"
+            android:enabled="false"
             />
     </RelativeLayout>
 </ScrollView>

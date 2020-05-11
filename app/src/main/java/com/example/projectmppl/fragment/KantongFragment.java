@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.KantongActivity;
+import com.example.projectmppl.activity.MainActivity;
 import com.example.projectmppl.adapter.ListKantongAdapter;
 import com.example.projectmppl.adapter.ListNonOrganikAdapter;
 import com.example.projectmppl.adapter.ListRiwayatAdapter;
@@ -36,6 +38,7 @@ import com.example.projectmppl.model.KantongNonOrganik;
 import com.example.projectmppl.model.Transaksi;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -268,6 +271,40 @@ public class KantongFragment extends Fragment {
         loadDataFirebaseElektronik();
         loadDataFirebasePakaian();
         loadDataNonOrganik();
+    }
+
+    public void removeData(){
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child("kantong")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_"))
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        alertDialogBuilder.setTitle("Permintaan");
+                        alertDialogBuilder.setMessage("Sampah Anda sedang diproses. Terimakasih");
+                        alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> {
+
+                            dialogInterface.dismiss();
+
+                        });
+                        alertDialogBuilder.show();
+                        alertDialogBuilder.setCancelable(false);
+
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(intent);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
     }
 }
 

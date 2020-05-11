@@ -22,7 +22,7 @@ public class ViewModelFirebase extends androidx.lifecycle.ViewModel {
 
     private static final DatabaseReference databaseUser = FirebaseDatabase.getInstance()
             .getReference()
-            .child("pengguna");
+            .child("penukarSampah");
 
     private static final DatabaseReference dataTransaksi = FirebaseDatabase.getInstance()
             .getReference()

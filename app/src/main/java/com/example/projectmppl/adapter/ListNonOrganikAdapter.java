@@ -98,4 +98,8 @@ public class ListNonOrganikAdapter extends RecyclerView.Adapter<ListNonOrganikAd
         notifyItemRangeChanged(position, listKantong.size());
     }
 
+    public void removeAllData(){
+        listKantong.clear();
+        notifyDataSetChanged();
+    }
 }

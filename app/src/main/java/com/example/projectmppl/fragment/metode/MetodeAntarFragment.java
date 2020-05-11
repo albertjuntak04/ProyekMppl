@@ -151,7 +151,7 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
         }
         else {
             String metode = "Antar";
-            String status = "Diproses";
+            String status = "Menunggu";
             String datetime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             showProgress();
             String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
@@ -270,4 +270,6 @@ public class MetodeAntarFragment extends Fragment implements View.OnClickListene
                         }
                     });
         }
+
+
 }

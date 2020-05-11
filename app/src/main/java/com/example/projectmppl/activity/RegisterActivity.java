@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         initFirebase();
-        getReference = FirebaseDatabase.getInstance().getReference("pengguna");
+        getReference = FirebaseDatabase.getInstance().getReference("penukarSampah");
         hideProgress();
         spinnerPekerjaan.setPrompt("Pekerjaan");
         if(getSupportActionBar() != null){
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         }  else if (TextUtils.isEmpty(noHP)) {
             Snackbar.make(findViewById(android.R.id.content), R.string.error_message_noHP_empty, Snackbar.LENGTH_LONG)
                     .show();
-        } else if (TextUtils.isEmpty(pekerjaan)) {
+        } else if (TextUtils.isEmpty(pekerjaan)|| pekerjaan.equals("Pekerjaan")) {
             Snackbar.make(findViewById(android.R.id.content), R.string.error_message_pekerjaan_empty, Snackbar.LENGTH_LONG)
                     .show();
         } else if (TextUtils.isEmpty(password)) {
@@ -142,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 alertDialogBuilder.setMessage("Akun Anda berhasil di daftar. Silahkan masuk menggunakan akun Anda");
 
                                 // Save new User
-                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password, "",0,0));
+                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password, "url",0,0));
                                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {

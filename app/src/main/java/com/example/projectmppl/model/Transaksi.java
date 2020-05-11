@@ -10,7 +10,7 @@ public class Transaksi {
     private ArrayList<Kantong> kantongPakaian = null;
     private String metode;
     private String status;
-    private String taggalRequest;
+    private String tanggalRequest;
     private int totalPoin;
     private String lokasi;
 
@@ -19,12 +19,12 @@ public class Transaksi {
 
     }
 
-    public Transaksi(String gambar, ArrayList<Kantong> kantongElektronik, String metode, String status, String taggalRequest, int totalPoin, String lokasi, ArrayList<KantongNonOrganik>kantongNonOrganiks, ArrayList<Kantong>kantongPakaian) {
+    public Transaksi(String gambar, ArrayList<Kantong> kantongElektronik, String metode, String status, String tanggalRequest, int totalPoin, String lokasi, ArrayList<KantongNonOrganik>kantongNonOrganiks, ArrayList<Kantong>kantongPakaian) {
         this.gambar = gambar;
         this.kantongElektronik = kantongElektronik;
         this.metode = metode;
         this.status = status;
-        this.taggalRequest = taggalRequest;
+        this.tanggalRequest = tanggalRequest;
         this.totalPoin = totalPoin;
         this.lokasi = lokasi;
         this.kantongNonOrganiks = kantongNonOrganiks;
@@ -81,12 +81,12 @@ public class Transaksi {
         this.status = status;
     }
 
-    public String getTaggalRequest() {
-        return taggalRequest;
+    public String getTanggalRequest() {
+        return tanggalRequest;
     }
 
-    public void setTaggalRequest(String taggalRequest) {
-        this.taggalRequest = taggalRequest;
+    public void setTanggalRequest(String tanggalRequest) {
+        this.tanggalRequest = tanggalRequest;
     }
 
     public int getTotalPoin() {

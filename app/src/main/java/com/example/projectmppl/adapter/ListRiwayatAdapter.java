@@ -60,13 +60,13 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         int jumlahElektronik = 0;
         int totalBerat = 0;
         int jumlahPakaian = 0;
-        holder.tanggalPemesanan.setText(String.valueOf(transaksi.getTaggalRequest()));
+        holder.tanggalPemesanan.setText(String.valueOf(transaksi.getTanggalRequest()));
         holder.metode.setText(String.valueOf(transaksi.getMetode()));
         holder.elektronik.setText(String.valueOf(transaksi.getKantongElektronik()));
         holder.totalPoin.setText(String.valueOf(transaksi.getTotalPoin()));
         holder.status.setText(String.valueOf(transaksi.getStatus()));
 
-        if (String.valueOf(transaksi.getStatus()).equals("Diproses")){
+        if (String.valueOf(transaksi.getStatus()).equals("Menunggu") || String.valueOf(transaksi.getStatus()).equals("Diterima")){
             holder.status.setTextColor(Color.GREEN);
 //            holder.btnHapus.setEnabled(false);
         }else {

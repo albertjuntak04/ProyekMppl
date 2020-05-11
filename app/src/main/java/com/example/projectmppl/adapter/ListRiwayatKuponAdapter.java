@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectmppl.R;
 import com.example.projectmppl.activity.RiwayatActivity;
+import com.example.projectmppl.model.RiwayatKupon;
 import com.example.projectmppl.model.TransaksiKupon;
 import com.example.projectmppl.ui.ViewModelFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +43,7 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
     private ArrayList<String> listKeyRiwayat;
     private int currentKupon;
     private int updateKupon;
+    private ArrayList<RiwayatKupon>riwayatKupons;
     public ListRiwayatKuponAdapter(ArrayList<TransaksiKupon> transaksiKupons, Context context, ArrayList<String>listKey, ArrayList<String>listKeyRiwayat){
         this.transaksiKupons = transaksiKupons;
         this.context = context;
@@ -91,6 +93,8 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
                    }
                });
 
+
+
        holder.btnHapus.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
@@ -103,14 +107,13 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
                            @Override
                            public void onComplete(@NonNull Task<Void> task) {
                                itemRemove(position);
-                               updateJumlahKuponUser("kupon", updateKupon);
-
+                               updateKuponUser();
                            }
                        });
            }
        });
 
-        updateKuponUser();
+
 
 
     }
@@ -155,7 +158,7 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
         result.put(key, value);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("pengguna")
+                .child("penukarSampah")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replaceAll("\\.", "_")).updateChildren(result)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -172,28 +175,24 @@ public class ListRiwayatKuponAdapter extends RecyclerView.Adapter<ListRiwayatKup
     }
 
     private void updateKuponUser(){
-        updateKupon = 0;
-        currentKupon = 0;
+        riwayatKupons = new ArrayList<>();
         String currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getEmail()).replaceAll("\\.", "_");
-
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("pengguna")
+                .child("riwayatkupon")
                 .child(currentUser)
-                .child("kupon")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String kupon = dataSnapshot.getValue().toString();
-                        try {
-                            currentKupon = Integer.parseInt(kupon);
-                            updateKupon = currentKupon - 1;
-
+                        if (dataSnapshot != null){
+                            for (DataSnapshot dataItem : dataSnapshot.getChildren()) {
+                                RiwayatKupon riwayatKupon = dataItem.getValue(RiwayatKupon.class);
+                                riwayatKupons.add(riwayatKupon);
+                            }
+                            updateKupon = riwayatKupons.size();
                         }
-                        catch (Exception e){
-
-                        }
+                        updateJumlahKuponUser("kupon", updateKupon);
                     }
 
                     @Override
