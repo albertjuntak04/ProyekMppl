@@ -33,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,7 +160,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         loadKuponUser();
         loadPoinUser();
 
-        pd = new ProgressDialog(getActivity());
+        pd = new ProgressDialog(getContext());
 
         btnNama.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -395,7 +396,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void ClickEditNama(String key) {
         String value = editNama.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
-            pd.show();
+            showDialog();
             HashMap<String, Object> result = new HashMap<>();
             result.put(key, value);
 
@@ -405,7 +406,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            pd.dismiss();
+                            hideDialog();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -422,7 +423,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void ClickEditNoHP(String key) {
         String value = editNoHp.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
-            pd.show();
+            showDialog();
             HashMap<String, Object> result = new HashMap<>();
             result.put(key, value);
 
@@ -432,7 +433,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            pd.dismiss();
+                            hideDialog();
 
                         }
                     })
@@ -451,7 +452,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void ClickEditPekerjaan(String key) {
         String value = pekerjaann.getSelectedItem().toString().trim();
         if (!TextUtils.isEmpty(value)){
-            pd.show();
+           showDialog();
             HashMap<String, Object> result = new HashMap<>();
             result.put(key, value);
 
@@ -461,7 +462,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            pd.dismiss();
+                            hideDialog();
 
                         }
                     })
@@ -479,7 +480,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void ClickEditPassword(String key) {
         final String value = editPassword.getText().toString().trim();
         if (!TextUtils.isEmpty(value)){
-            pd.show();
+            showDialog();
             HashMap<String, Object> result = new HashMap<>();
             result.put(key, value);
 
@@ -489,7 +490,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            pd.dismiss();
+                            hideDialog();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -605,7 +606,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void uploadProfilePhoto(Uri uri) {
-        pd.show();
+        showDialog();
         String filePathAndName = storagePath+ "" + profilePhoto + "_" + firebaseDatabase.getReference()
                 .child("penukarSampah")
                 .child(firebaseAuth.getCurrentUser().getEmail().replaceAll("\\.", "_"));
@@ -631,21 +632,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            pd.dismiss();
+                                            hideDialog();
                                             Toast.makeText(getActivity(), "Gambar berhasil diperbaharui...", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            pd.dismiss();
+                                            hideDialog();
                                             Toast.makeText(getActivity(), "Error diperbaharui...", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
                         else {
                             //error
-                            pd.dismiss();
+                            hideDialog();
                             Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -653,7 +654,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();;
+                        hideDialog();
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -678,4 +679,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
     }
+
+    private void showDialog(){
+        pd.setMessage("Sedang Memuat..");
+        pd.show();
+    }
+
+    private void hideDialog(){
+        pd.dismiss();
+        pd.hide();
+    }
+
 }
