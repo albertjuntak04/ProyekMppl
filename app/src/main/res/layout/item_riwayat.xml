@@ -168,6 +168,30 @@
             android:orientation="horizontal"
             android:layout_marginLeft="3dp">
             <TextView
+                android:id="@+id/txt_lokasi"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Lokasi" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text=":" />
+            <TextView
+                android:id="@+id/lokasi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:paddingStart="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="3dp">
+            <TextView
                 android:id="@+id/poin"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"

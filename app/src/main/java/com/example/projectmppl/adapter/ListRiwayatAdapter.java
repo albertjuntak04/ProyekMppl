@@ -65,6 +65,7 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         holder.elektronik.setText(String.valueOf(transaksi.getKantongElektronik()));
         holder.totalPoin.setText(String.valueOf(transaksi.getTotalPoin()));
         holder.status.setText(String.valueOf(transaksi.getStatus()));
+        holder.lokasi.setText(String.valueOf(transaksi.getLokasi()));
 
         if (String.valueOf(transaksi.getStatus()).equals("Menunggu") || String.valueOf(transaksi.getStatus()).equals("Diterima")){
             holder.status.setTextColor(Color.GREEN);
@@ -160,6 +161,8 @@ public class ListRiwayatAdapter extends RecyclerView.Adapter<ListRiwayatAdapter.
         TextView metode;
         @BindView(R.id.total_poin)
         TextView totalPoin;
+        @BindView(R.id.lokasi)
+        TextView lokasi;
         @BindView(R.id.hapus)
         Button btnHapus;
         @BindView(R.id.status)

@@ -85,7 +85,7 @@ public class PenukaranKupon extends AppCompatActivity{
         loadInitView(kupon);
         loadPoinUser();
         updateKuponUser();
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String datetime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         btnTukarkan.setOnClickListener(view -> {
             showProgress();
             if (jumlahPoin>=kupon.getJumlahpoin()){
