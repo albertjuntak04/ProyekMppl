@@ -194,7 +194,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 pekerjaann.setEnabled(true);
 
                 String[] pekerjaannn = new String[]{
-                        "Staff",
+                        "Staf",
                         "Mahasiswa"
                 };
 

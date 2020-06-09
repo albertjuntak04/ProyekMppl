@@ -74,7 +74,12 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         hideProgress();
 
         String namaSampah = getIntent().getStringExtra("NamaSampah");
-        namaBarang.setText(namaSampah);
+        if (namaSampah.equals("PRT")){
+            namaBarang.setText("Perlengkapan Rumah Tangga");
+        }else{
+            namaBarang.setText(namaSampah);
+        }
+
         showSampah();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -86,10 +91,6 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
         }else if (TextUtils.isEmpty(editBerat.getText())){
             jumlahBerat = 0;
         }
-
-
-
-
     }
 
     private void initFirebase() {
@@ -239,7 +240,10 @@ public class KondisiActivity extends AppCompatActivity implements View.OnClickLi
                     .child(getIntent().getStringExtra("NamaSampah"))
                     .child("jenis")
                     .getValue().toString();
-            if (title.equals("komputer")){
+            if (title.equals("PRT")){
+                actionBar.setTitle("Perlengkapan Rumah Tangga");
+            }
+            else if (title.equals("komputer")){
                 actionBar.setTitle(title.replace("k","K"));
             }else {
                 actionBar.setTitle(title);

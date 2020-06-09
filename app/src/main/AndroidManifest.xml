@@ -33,7 +33,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.jenissampah.PerlengkapanRumahTanggaActivity"
-            android:label="Perlengkapan Rumah"
+            android:label="Perlengkapan Rumah Tangga"
             android:parentActivityName=".activity.jenissampah.ElektronikActivity"
             android:screenOrientation="portrait" />
         <activity
