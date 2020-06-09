@@ -8,13 +8,20 @@
     <LinearLayout
         android:layout_width="409dp"
         android:layout_height="729dp"
-        android:orientation="vertical">
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/img_pakaian"
                 android:layout_width="match_parent"
@@ -25,37 +32,41 @@
                 android:id="@+id/txt_pakaian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/pakaian"
-                android:textSize="24sp"
                 android:textColor="@color/text"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="24sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorKategori"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="100dp"
+            android:background="@color/colorKategori"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pilih sampah yang ingin ditukar:"
-                android:textSize="18sp"
+                android:text="@string/pilih_sampah_yang_ingin_ditukar"
+                android:textAlignment="center"
                 android:textColor="@color/text"
-                android:textAlignment="center"/>
+                android:textSize="18sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@color/colorList"
             android:orientation="vertical">
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_pakaian"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/rv_pakaian"
                 tools:listitem="@layout/item_daftar_sampah"></androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
     </LinearLayout>

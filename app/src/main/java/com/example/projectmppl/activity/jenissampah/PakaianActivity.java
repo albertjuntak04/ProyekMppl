@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class PakaianActivity extends AppCompatActivity {
     private RecyclerView rvPakaian;
-    private ArrayList<Sampah> list = new ArrayList<>();
+    private final ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class PakaianActivity extends AppCompatActivity {
 
     private void showRecylerView(){
         rvPakaian.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this);
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"Pakaian","pakaian");
         rvPakaian.setAdapter(listSampahAdapter);
     }
 }

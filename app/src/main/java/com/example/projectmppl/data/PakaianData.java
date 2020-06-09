@@ -5,10 +5,10 @@ import com.example.projectmppl.model.Sampah;
 import java.util.ArrayList;
 
 public class PakaianData {
-    private static String[] pakaianNames= {
+    private static final String[] pakaianNames= {
             "Kaos",
             "Kemeja",
-            "jaket",
+            "Jaket",
             "Selimut",
             "Sepatu",
             "Tas"
@@ -16,9 +16,9 @@ public class PakaianData {
 
     public static ArrayList<Sampah> getListData() {
         ArrayList<Sampah> list = new ArrayList<>();
-        for (int position = 0; position < pakaianNames.length; position++) {
+        for (String pakaianName : pakaianNames) {
             Sampah pakaian = new Sampah();
-            pakaian.setName(pakaianNames[position]);
+            pakaian.setName(pakaianName);
             list.add(pakaian);
         }
         return list;

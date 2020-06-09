@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         initFirebase();
-        getReference = FirebaseDatabase.getInstance().getReference("penukarsampah");
+        getReference = FirebaseDatabase.getInstance().getReference("penukarSampah");
         hideProgress();
         spinnerPekerjaan.setPrompt("Pekerjaan");
         if(getSupportActionBar() != null){
@@ -95,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                 int jenisKelamin = radioGroup.getCheckedRadioButtonId();
                 String password = editTextPassword.getText().toString().trim();
                 String confirmPassword = editTextConfirmPassword.getText().toString().trim();
-                radioButton = (RadioButton) findViewById(jenisKelamin);
+                radioButton = findViewById(jenisKelamin);
 
                 String genre = (String) radioButton.getText();
                 signup(name, email, noHP, pekerjaan, genre, password, confirmPassword);
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         }  else if (TextUtils.isEmpty(noHP)) {
             Snackbar.make(findViewById(android.R.id.content), R.string.error_message_noHP_empty, Snackbar.LENGTH_LONG)
                     .show();
-        } else if (TextUtils.isEmpty(pekerjaan)) {
+        } else if (TextUtils.isEmpty(pekerjaan)|| pekerjaan.equals("Pekerjaan")) {
             Snackbar.make(findViewById(android.R.id.content), R.string.error_message_pekerjaan_empty, Snackbar.LENGTH_LONG)
                     .show();
         } else if (TextUtils.isEmpty(password)) {
@@ -138,11 +138,11 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 //  signup success
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(RegisterActivity.this);
-                                alertDialogBuilder.setTitle("Signup");
-                                alertDialogBuilder.setMessage("Your account has been registered. Please sign in use your username and password.");
+                                alertDialogBuilder.setTitle("Daftar");
+                                alertDialogBuilder.setMessage("Akun Anda berhasil di daftar. Silahkan masuk menggunakan akun Anda");
 
                                 // Save new User
-                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password));
+                                addUSer(new User(name,email,noHP,pekerjaan,jenisKelamin,password, "",0,0));
                                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -155,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity {
                             } else {
                                 task.getException().printStackTrace();
                                 //  signup fail
-                                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "registered has been failed! Please try again.", Snackbar.LENGTH_INDEFINITE);
+                                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Proses pendaftaran gagal, silahkan coba lagi", Snackbar.LENGTH_INDEFINITE);
                                 snackbar.setAction("OK", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

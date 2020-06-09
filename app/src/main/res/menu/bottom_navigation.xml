@@ -8,7 +8,6 @@
 <item
     android:id="@+id/action_riwayat"
     android:icon="@drawable/ic_history_black_24dp"
-
     android:title="@string/riwayat"
     />
 <item
@@ -20,9 +19,7 @@
 
 <item
     android:id="@+id/action_tentang"
-    android:icon="@drawable/recyclingbox"
+    android:icon="@drawable/info"
     android:title="@string/tentang"
     />
-
-
 </menu>

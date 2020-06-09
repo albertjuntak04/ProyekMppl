@@ -4,120 +4,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    android:layout_height="wrap_content"
+    tools:context=".activity.KantongActivity">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <RelativeLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/colorlatar"
-            android:layout_margin="6dp">
-            <TextView
-                android:id="@+id/jenis_sampah"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="13dp"
-                android:text="@string/kantong1"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/txt_kantong12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/jenis_sampah"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:text="Total berat "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textStyle="bold"></TextView>
-
-                <TextView
-                    android:id="@+id/total_berat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="0"></TextView>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_hapus"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:background="@color/merahbutton"
-                android:text="@string/batal"
-                android:textColor="@color/colortext"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="50dp"
-                android:layout_marginRight="30dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txt_kantong12"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="117dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:text="Total Poin "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textStyle="bold"></TextView>
-
-                <TextView
-                    android:id="@+id/total_poin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="0"></TextView>
-            </LinearLayout>
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_sampah"
-            tools:itemCount="1"
-            android:layout_margin="5dp">
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <RelativeLayout
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/kantong_content">
+           <include layout="@layout/kantong_content"
+               >
+           </include>
+       </LinearLayout>
+        <LinearLayout
             android:id="@+id/kantongawal1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kantong_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/txt_metode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/metode"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:textStyle="bold"
                 android:layout_marginTop="6dp"/>
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_metode">
+                android:layout_height="wrap_content">
                 <com.google.android.material.bottomnavigation.BottomNavigationView
                     android:id="@+id/navigation"
                     android:layout_width="match_parent"
@@ -127,9 +45,8 @@
                     android:foreground="?attr/selectableItemBackground"
                     app:menu="@menu/metode_navigation" />
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        </RelativeLayout>
-        <include layout="@layout/content_dashboard" />
-    </LinearLayout>
+            <include layout="@layout/content_dashboard" />
+        </LinearLayout>
+    </RelativeLayout>
 </ScrollView>
 

@@ -27,39 +27,17 @@ public class ElektronikActivity extends AppCompatActivity  {
         ButterKnife.bind(this);
 
         // SetOnclickListener
-        imgKomputer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentKomputer = new Intent(ElektronikActivity.this, KomputerActivity.class);
-                startActivity(intentKomputer);
-            }
+        imgKomputer.setOnClickListener(view -> {
+            Intent intentKomputer = new Intent(ElektronikActivity.this, KomputerActivity.class);
+            startActivity(intentKomputer);
         });
-        imgHp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentHp = new Intent(ElektronikActivity.this, HandphoneActivity.class);
-                startActivity(intentHp);
-            }
+        imgHp.setOnClickListener(view -> {
+            Intent intentHp = new Intent(ElektronikActivity.this, HandphoneActivity.class);
+            startActivity(intentHp);
         });
-        imgPerRumah.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentRumah = new Intent(ElektronikActivity.this, PerlengkapanRumahTanggaActivity.class);
-                startActivity(intentRumah);
-            }
+        imgPerRumah.setOnClickListener(view -> {
+            Intent intentRumah = new Intent(ElektronikActivity.this, PerlengkapanRumahTanggaActivity.class);
+            startActivity(intentRumah);
         });
     }
-//
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()){
-//            case R.id.img_komputer:
-//
-//            case R.id.img_hp:
-//
-//            case R.id.img_prumah:
-//
-//        }
-//
-//    }
 }

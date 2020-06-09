@@ -17,12 +17,16 @@ import com.example.projectmppl.model.Sampah;
 import java.util.ArrayList;
 
 public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.ListViewHolder> {
-    private ArrayList<Sampah> listPakaian;
-    private Context context;
+    private final ArrayList<Sampah> listPakaian;
+    private final Context context;
+    private final String jenisSampah;
+    private final String kategoriSampah;
 
-    public ListSampahAdapter(ArrayList<Sampah> list, Context context){
+    public ListSampahAdapter(ArrayList<Sampah> list, Context context, String jenisSampah, String kategori){
         this.listPakaian = list;
         this.context = context;
+        this.jenisSampah = jenisSampah;
+        this.kategoriSampah = kategori;
     }
 
     @NonNull
@@ -40,7 +44,9 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, KondisiActivity.class);
-                intent.putExtra("Nama",listPakaian.get(holder.getAdapterPosition()).getName());
+                intent.putExtra("NamaSampah",listPakaian.get(holder.getAdapterPosition()).getName());
+                intent.putExtra("JenisSampah",jenisSampah);
+                intent.putExtra("KategoriSampah" ,kategoriSampah);
                 context.startActivity(intent);
             }
         });
@@ -52,8 +58,8 @@ public class ListSampahAdapter extends RecyclerView.Adapter<ListSampahAdapter.Li
     }
 
     public class ListViewHolder extends RecyclerView.ViewHolder {
-        TextView namePakaian;
-        public ListViewHolder(@NonNull View itemView) {
+        final TextView namePakaian;
+        ListViewHolder(@NonNull View itemView) {
             super(itemView);
             namePakaian = itemView.findViewById(R.id.txt_nama_sampah);
         }

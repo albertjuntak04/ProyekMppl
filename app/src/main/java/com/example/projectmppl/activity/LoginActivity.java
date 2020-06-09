@@ -1,26 +1,20 @@
 package com.example.projectmppl.activity;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.projectmppl.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -43,10 +37,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean loggedIn;
     private DatabaseReference getReference;
 
-    EditText _passwordText;
-    EditText _emailText;
-    Button _loginButton;
-    Button _registerButton;
+    private EditText _passwordText;
+    private EditText _emailText;
+    private Button _loginButton;
+    private Button _registerButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,15 +62,11 @@ public class LoginActivity extends AppCompatActivity {
 //        }
         hideProgress();
 
-        _loginButton.setOnClickListener(new View.OnClickListener() {
+        _loginButton.setOnClickListener(v -> {
+            String username = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            login(username, password);
 
-            @Override
-            public void onClick(View v) {
-                String username = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                login(username, password);
-
-            }
         });
 
 
@@ -103,19 +93,16 @@ public class LoginActivity extends AppCompatActivity {
             //  do login
             showProgress();
             firebaseAuth.signInWithEmailAndPassword(username, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            hideProgress();
-                            if (task.isSuccessful()) {
-                                //  login sucess
-                                //  go to dashboard
+                    .addOnCompleteListener(this, task -> {
+                        hideProgress();
+                        if (task.isSuccessful()) {
+                            //  login sucess
+                            //  go to dashboard
 
-                                goToDashboard();
-                            } else {
-                                //  login failed
-                                showMessageBox("Login failed. Your username and password is not matched");
-                            }
+                            goToDashboard();
+                        } else {
+                            //  login failed
+                            showMessageBox();
                         }
                     });
 
@@ -134,27 +121,18 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword.setEnabled(false);
     }
 
-    private void showMessageBox(String message) {
+    private void showMessageBox() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Login");
-        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setTitle("Masuk");
+        alertDialogBuilder.setMessage("Email dan Kata Sandi Anda Salah");
         alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        alertDialogBuilder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
         alertDialogBuilder.show();
     }
 
     public boolean isLoggedIn() {
-        if (firebaseAuth.getCurrentUser() != null) {
-            //  user logged in
-            return true;
-        } else {
-            return false;
-        }
+        //  user logged in
+        return firebaseAuth.getCurrentUser() != null;
     }
 
 }

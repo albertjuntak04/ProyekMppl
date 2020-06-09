@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.HomeFragment"
-    android:orientation="vertical">
+    android:layout_marginBottom="60dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="409dp"
@@ -32,17 +36,18 @@
             android:layout_margin="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
+            app:srcCompat="@drawable/kantong" />
 
-        <ImageView
+
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/dashboard_iv_profile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="64dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="55dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/woman"
+            app:srcCompat="@drawable/user"
             />
 
         <TextView
@@ -50,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Oky Purba"
+            android:text="@string/nama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dashboard_iv_profile" />
@@ -77,11 +82,11 @@
 
                     <ImageView
                         android:id="@+id/img_poin"
-                        android:layout_width="30dp"
+                        android:layout_width="26dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:layout_margin="3dp"
-                        android:src="@drawable/recyclingbox" />
+                        android:src="@drawable/savemoney" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -94,13 +99,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Poinku" />
+                            android:text="@string/poinku" />
 
                         <TextView
                             android:id="@+id/total_poin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1000" />
+                            android:text="@string/_0" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -123,7 +128,7 @@
 
                     <ImageView
                         android:id="@+id/img_kupon"
-                        android:layout_width="30dp"
+                        android:layout_width="26dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:layout_margin="3dp"
@@ -140,13 +145,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Kuponku" />
+                            android:text="@string/kuponku" />
 
                         <TextView
                             android:id="@+id/total_kupon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1000" />
+                            android:text="@string/_0" />
+
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -159,7 +165,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Tukar Sampah"
+        android:text="@string/tukar_sampah"
         android:textSize="24dp"
         android:layout_gravity="center_horizontal"/>
 
@@ -167,7 +173,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:padding="15dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -176,13 +183,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Non Organik">
+                android:text="@string/non_organik">
             </TextView>
             <ImageView
                 android:id="@+id/img_nonorganik"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/nonorga"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/nonorganik"
                 android:layout_gravity="center_horizontal"></ImageView>
         </LinearLayout>
         <LinearLayout
@@ -193,14 +200,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Elektronik">
+                android:text="@string/elektronik">
             </TextView>
             <ImageView
                 android:id="@+id/img_elektronik"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/electronic"
-                android:layout_gravity="center_horizontal"></ImageView>
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/elektronik"
+                android:layout_gravity="center_horizontal">
+            </ImageView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -210,16 +218,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pakaian">
+                android:text="@string/pakaian">
             </TextView>
             <ImageView
                 android:id="@+id/img_pakaian"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:src="@drawable/pakaian"
-                android:layout_gravity="center_horizontal"></ImageView>
+                android:layout_gravity="center_horizontal">
+            </ImageView>
         </LinearLayout>
     </LinearLayout>
-
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

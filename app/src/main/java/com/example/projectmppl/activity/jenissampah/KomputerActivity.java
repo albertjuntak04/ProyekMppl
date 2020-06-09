@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class KomputerActivity extends AppCompatActivity {
     private RecyclerView rvKomputer;
-    private ArrayList<Sampah> list = new ArrayList<>();
+    private final ArrayList<Sampah> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +28,12 @@ public class KomputerActivity extends AppCompatActivity {
         list.addAll(KomputerData.getListData());
         showRecylerview();
 
+
     }
 
     private void showRecylerview(){
         rvKomputer.setLayoutManager(new LinearLayoutManager(this));
-        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this);
+        ListSampahAdapter listSampahAdapter = new ListSampahAdapter(list,this,"komputer","elektronik");
         rvKomputer.setAdapter(listSampahAdapter);
     }
 }

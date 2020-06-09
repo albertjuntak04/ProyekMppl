@@ -1,105 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/login"
-        android:layout_width="111dp"
-        android:layout_height="56dp"
-        android:layout_gravity="start"
-        android:background="#276ABA"
-        android:enabled="false"
-        android:text="Tukarkan"
-        tools:layout_editor_absoluteX="284dp"
-        tools:layout_editor_absoluteY="544dp" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="61dp"
-        android:layout_height="39dp"
-        android:src="@drawable/savemoney"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="467dp" />
-
-    <ImageView
-        android:layout_width="283dp"
-        android:layout_height="180dp"
-        android:layout_marginBottom="312dp"
-        android:src="@drawable/kupon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="51dp"
-        android:layout_height="28dp"
-        android:text="9999"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="87dp"
-        tools:layout_editor_absoluteY="478dp" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="415dp"
-        android:layout_height="97dp"
-        android:background="#4CD964"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_chevron_left_black_24dp" />
-
-        <TextView
-            android:layout_width="335dp"
-            android:layout_height="68dp"
-            android:text="Kupon"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="46dp"
-            tools:layout_editor_absoluteY="5dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="409dp"
-        android:layout_height="96dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#b4e0a6"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="98dp">
+        android:padding="10dp">
 
         <ImageView
-            android:layout_width="61dp"
-            android:layout_height="39dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@drawable/savemoney"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poin ku"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="68dp"
+                android:layout_height="26dp"
+                android:text="100000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        style="?android:listSeparatorTextViewStyle"
+        >
+        <ImageView
+            android:id="@+id/img_kupon"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:src="@drawable/kupon"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:id="@+id/nama_kupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kupon Rp 10000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginTop="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kode Kupon"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            />
+        <TextView
+            android:id="@+id/txt_id_kupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jenis Kupon"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp" />
+        <TextView
+            android:id="@+id/txt_jns_kupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:src="@drawable/savemoney"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="33dp" />
+            android:padding="10dp"/>
 
         <TextView
-            android:layout_width="347dp"
-            android:layout_height="24dp"
-
-            android:text="Poin ku"
-            android:textSize="20dp"
+            android:id="@+id/poin"
+            android:layout_width="51dp"
+            android:layout_height="28dp"
+            android:text="100"
+            android:textSize="20sp"
             android:textStyle="bold"
-            tools:layout_editor_absoluteX="2dp"
-            tools:layout_editor_absoluteY="-1dp" />
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
-        <TextView
-            android:layout_width="68dp"
-            android:layout_height="26dp"
-            android:text="100000"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="77dp"
-            tools:layout_editor_absoluteY="44dp" />
+    <Button
+        android:id="@+id/tukarkan"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/btn_register"
+        android:enabled="false"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:text="Tukarkan" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

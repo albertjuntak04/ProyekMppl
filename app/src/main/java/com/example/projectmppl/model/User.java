@@ -12,17 +12,34 @@ public class User {
     private String pekerjaan;
     private String jenisKelamin;
     private String password;
+    private String image;
+    private int poin;
+    private int kupon;
 
-    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password) {
+    public User(String nama, String email, String noHP, String pekerjaan, String jenisKelamin, String password, String image, int poin, int kupon) {
         this.nama = nama;
         this.email = email;
         this.noHP = noHP;
         this.pekerjaan = pekerjaan;
         this.jenisKelamin = jenisKelamin;
         this.password = password;
+        this.image = image;
+        this.poin = poin;
+        this.kupon = kupon;
     }
 
+    public User(){
 
+
+    }
+
+    public int getPoin() {
+        return poin;
+    }
+
+    public void setPoin(int poin) {
+        this.poin = poin;
+    }
 
     public String getNama() {
         return nama;
@@ -64,6 +81,14 @@ public class User {
         this.jenisKelamin = jenisKelamin;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -73,6 +98,11 @@ public class User {
     }
 
 
+    public int getKupon() {
+        return kupon;
+    }
 
-
+    public void setKupon(int kupon) {
+        this.kupon = kupon;
+    }
 }

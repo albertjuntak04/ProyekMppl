@@ -23,6 +23,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_komputer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/komputer" />
 
             <ImageView
                 android:id="@+id/img_komputer"
@@ -30,12 +36,7 @@
                 android:layout_height="130dp"
                 app:srcCompat="@drawable/komputer" />
 
-            <TextView
-                android:id="@+id/txt_komputer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/komputer" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -43,6 +44,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_hp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/hp" />
 
             <ImageView
                 android:id="@+id/img_hp"
@@ -50,12 +57,7 @@
                 android:layout_height="130dp"
                 app:srcCompat="@drawable/hp" />
 
-            <TextView
-                android:id="@+id/txt_hp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/hp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -64,18 +66,19 @@
             android:layout_marginTop="50dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_prumah"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                app:srcCompat="@drawable/elekrumah" />
-
             <TextView
                 android:id="@+id/txt_prumah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/prumah" />
+
+            <ImageView
+                android:id="@+id/img_prumah"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                app:srcCompat="@drawable/elekrumah" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
